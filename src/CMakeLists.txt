@@ -3,26 +3,39 @@
 
 include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 
-#if (JFC_BUILD_APP)
+#######
+
+set(COMMON_CXX_FLAGS "-std=c++14 -Wall -Werror -Wno-c++11-narrowing -Wno-unused-local-typedef -pthread")
+set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
+#set(EMSCRIPTEN_OUT_FLAGS "--post-js ${CMAKE_CURRENT_SOURCE_DIR}/glue.js --embed-file test.jpg --emrun")
+
+# Set compile flags for emscripten clang
+if(UNIX)
+  set(CMAKE_CXX_FLAGS
+    "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS_RELEASE
+    "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS_DEBUG
+    "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+endif()
+
+########
+
+if (JFC_BUILD_APP)
     project("WebAssembly-C-Cpp-Reference"
         VERSION "1.0" 
-        DESCRIPTION "executable demo using the Vulkan API to draw 3D graphics")
+        DESCRIPTION "Compiling C or C++ to web assembly example")
 
     add_executable(${PROJECT_NAME} #MACOSX_BUNDLE
-        ${CMAKE_CURRENT_SOURCE_DIR}/temp.cpp
-        
-        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-        ${CMAKE_CURRENT_SOURCE_DIR}/Vertex.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Texture.cpp)
-
-    target_include_directories(${PROJECT_NAME} PRIVATE
+   #[[ target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_SOURCE_DIR}/include/vkrenderer
         ${glfw_INCLUDE_DIR}
         ${glm_INCLUDE_DIR}
         ${stb_INCLUDE_DIR}
-        ${tinyobjloader_INCLUDE_DIR})
+        ${tinyobjloader_INCLUDE_DIR})]]
 
 #    target_link_libraries(${PROJECT_NAME}
 #        ${glfw_LIBRARIES})
@@ -30,8 +43,10 @@ include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
     set_target_properties(${PROJECT_NAME} PROPERTIES
         RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
+    set_property(TARGET ${PROJECT_NAME} PROPERTY
+	C_STANDARD 11)
+      
     target_compile_features(${PROJECT_NAME}
-	${JFC_C_COMPILER_FEATURE_REQUIREMENTS}
         ${JFC_CXX_COMPILER_FEATURE_REQUIREMENTS})
 
     if(JFC_AUTO_RUN_APP)
@@ -41,7 +56,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
     else()
         jfc_log(STATUS "Auto Run" "Skipping auto run.")
     endif()
-#endif()
+endif()
 
 #[[! Format source files
     @param aDirectory: The directory to format ]]
