@@ -1,2 +1,3 @@
-Starting with bash scripts, move to CMake module. Should move to sepearte CMake lib repo
-Reference: https://developer.mozilla.org/en-US/docs/WebAssembly/C_to_wasm
+## WebAssembly-C-Cpp-Reference
+
+Reference project demonstrating how to compile C or C++ source to webassembly using CMake and Emscripten.
