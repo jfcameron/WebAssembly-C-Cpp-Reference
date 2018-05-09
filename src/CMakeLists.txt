@@ -3,24 +3,6 @@
 
 include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 
-#######
-
-set(COMMON_CXX_FLAGS "-std=c++14 -Wall -Werror -Wno-c++11-narrowing -Wno-unused-local-typedef -pthread")
-set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
-#set(EMSCRIPTEN_OUT_FLAGS "--post-js ${CMAKE_CURRENT_SOURCE_DIR}/glue.js --embed-file test.jpg --emrun")
-
-# Set compile flags for emscripten clang
-if(UNIX)
-  set(CMAKE_CXX_FLAGS
-    "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-  set(CMAKE_CXX_FLAGS_RELEASE
-    "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-  set(CMAKE_CXX_FLAGS_DEBUG
-    "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-endif()
-
-########
-
 if (JFC_BUILD_APP)
     project("WebAssembly-C-Cpp-Reference"
         VERSION "1.0" 
