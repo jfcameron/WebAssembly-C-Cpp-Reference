@@ -11,7 +11,7 @@ if (JFC_BUILD_APP)
     add_executable(${PROJECT_NAME} #MACOSX_BUNDLE
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-   #[[ target_include_directories(${PROJECT_NAME} PRIVATE
+     #[[target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_SOURCE_DIR}/include/vkrenderer
         ${glfw_INCLUDE_DIR}
