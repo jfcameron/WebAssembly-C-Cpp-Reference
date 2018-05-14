@@ -24,10 +24,7 @@ set(JFC_CXX_COMPILER_FEATURE_REQUIREMENTS
         cxx_nullptr
         cxx_lambdas)
 
-####### EMSCRIPTEN HACK STARTS
-#this include path has headers for a nubmer of libs including glfw, implemented on web via emscripten project.
-set (emscriptenAPIs_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/emscripten/system/include)
-    
+####### EMSCRIPTEN HACK STARTS   
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
   set(COMMON_CXX_FLAGS "-std=c++11 -Wall -Werror -Wno-c++11-narrowing -Wno-unused-local-typedef -pthread")
   set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
@@ -46,7 +43,7 @@ endif()
   
 #add_subdirectory(docs)
 #add_subdirectory(tests)
-#add_subdirectory(thirdparty)
+add_subdirectory(thirdparty)
 #add_subdirectory(shaders)
 #add_subdirectory(resources)
 add_subdirectory(src)

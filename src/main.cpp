@@ -3,7 +3,6 @@
 #include <exception>
 
 #include <GL/glfw.h>
-//#include <emscripten/emscripten.h>
 
 namespace jfc
 {
