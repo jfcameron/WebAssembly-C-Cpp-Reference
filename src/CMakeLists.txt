@@ -8,24 +8,15 @@ if (JFC_BUILD_APP)
         VERSION "1.0" 
         DESCRIPTION "Compiling C++ to web assembly example")
 
-    add_executable(${PROJECT_NAME} #MACOSX_BUNDLE
-        #${CMAKE_CURRENT_SOURCE_DIR}/glh.cpp
-        #${CMAKE_CURRENT_SOURCE_DIR}/color.cpp        
+    add_executable(${PROJECT_NAME} #MACOSX_BUNDLE                
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
     target_include_directories(${PROJECT_NAME} PRIVATE
+        ${lib_INCLUDE_DIR}
         ${emscripten_INCLUDE_DIR})
     
-     #[[target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/include/vkrenderer
-        ${glfw_INCLUDE_DIR}
-        ${glm_INCLUDE_DIR}
-        ${stb_INCLUDE_DIR}
-        ${tinyobjloader_INCLUDE_DIR})]]
-
-#    target_link_libraries(${PROJECT_NAME}
-#        ${glfw_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}
+        ${lib_LIBRARIES})
 
     set_target_properties(${PROJECT_NAME} PROPERTIES
         RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
