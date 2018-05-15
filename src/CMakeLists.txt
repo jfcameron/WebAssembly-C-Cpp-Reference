@@ -18,14 +18,18 @@ if (JFC_BUILD_APP)
     target_link_libraries(${PROJECT_NAME}
         ${lib_LIBRARIES})
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+    set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE
+        "${CMAKE_COMMAND} -E time")
 
-    set_property(TARGET ${PROJECT_NAME} PROPERTY
-	C_STANDARD 11)
-      
+    set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
+    
     target_compile_features(${PROJECT_NAME}
         ${JFC_CXX_COMPILER_FEATURE_REQUIREMENTS})
+
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS
+            "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1") #Move USE_GLFW=3 into the library. That is where the dependency is.
+    endif()
 
     if(JFC_AUTO_RUN_APP)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 

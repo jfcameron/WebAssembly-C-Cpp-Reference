@@ -6,7 +6,16 @@
 
 namespace gdk
 {
+    /// Allocates heap memory and initializes GDK context
     void init();
+
+    /// Renders a frame
+    void draw();
+
+    /// Updates all entities.
+    void update();
+
+    /// Frees heap memory, cleans up GDK context
     void free();
 }
 

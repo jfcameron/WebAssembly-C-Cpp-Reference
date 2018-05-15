@@ -9,6 +9,9 @@ if (JFC_BUILD_LIB)
         DESCRIPTION "WebAssembly project shareable code")
 
     add_library(${PROJECT_NAME} STATIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp        
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics_gl.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/color.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/glh.cpp)
@@ -18,8 +21,8 @@ if (JFC_BUILD_LIB)
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${emscripten_INCLUDE_DIR})
 
-#   target_link_libraries(${PROJECT_NAME}
-#       ${glfw_LIBRARIES})
+    #target_link_libraries(${PROJECT_NAME}
+    #${glfw_LIBRARIES})    
 
     set_target_properties(${PROJECT_NAME} PROPERTIES
         RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
@@ -36,6 +39,6 @@ if (JFC_BUILD_LIB)
         CACHE PATH "${PROJECT_NAME}_INCLUDE_DIR include directory" FORCE)
     
     set(${PROJECT_NAME}_LIBRARIES
-        ${PROJECT_BINARY_DIR}
+        ${PROJECT_BINARY_DIR}/${PROJECT_NAME}lib.a
         CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
 endif()
