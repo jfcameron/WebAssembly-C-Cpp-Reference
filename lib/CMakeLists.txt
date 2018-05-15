@@ -14,8 +14,9 @@ if (JFC_BUILD_LIB)
         ${CMAKE_CURRENT_SOURCE_DIR}/src/glh.cpp)
     
     target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${emscripten_INCLUDE_DIR})
 
 #   target_link_libraries(${PROJECT_NAME}
 #       ${glfw_LIBRARIES})

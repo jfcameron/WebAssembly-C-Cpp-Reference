@@ -1,7 +1,7 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 2017-06-25.
-#include "gdk/color.h"
+#include <gdk/color.h>
 //std inc
 #include <iostream>
 
@@ -23,13 +23,15 @@ namespace GDK
         1.0f);
 
     //operators
-    std::ostream &GDK::operator<< (std::ostream &s, const Color &a)
+    std::ostream &operator<< (std::ostream &s, const Color &a)
     {
-        s.clear(); s << "{"
-                     << "r: " << a.r << ", "
-                     << "g: " << a.g << ", "
-                     << "b: " << a.b << ", "
-                     << "a: " << a.a << "}";
+        s.clear();
+        
+        s << "{"
+          << "r: " << a.r << ", "
+          << "g: " << a.g << ", "
+          << "b: " << a.b << ", "
+          << "a: " << a.a << "}";
     
         return s;
     }

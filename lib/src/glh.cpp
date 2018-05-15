@@ -6,7 +6,10 @@
 #include <gdk/glh.h>
 #include <gdk/color.h>
 
-void GLH::ClearColor(const GDK::GFX::Color &aColor)
+namespace GLH
 {
-    glClearColor(aColor.r, aColor.g, aColor.b, aColor.a);
+    void ClearColor(const GDK::Color &aColor)
+    {
+        glClearColor(aColor.r, aColor.g, aColor.b, aColor.a);
+    }
 }

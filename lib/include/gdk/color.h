@@ -42,7 +42,7 @@ namespace GDK
         static const Color CornflowerBlue;
     };
         
-    std::ostream &operator<< (std::ostream &stream, const GFX::Color &aColor);
+    std::ostream &operator<< (std::ostream &stream, const Color &aColor);
 }
 
 #endif /* GDK_GFX_COLOR_H */

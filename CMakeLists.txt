@@ -45,5 +45,5 @@ add_subdirectory(thirdparty)
 #add_subdirectory(shaders)
 #add_subdirectory(resources)
 add_subdirectory(lib)
-add_subdirectory(src)
+#add_subdirectory(src)
  
