@@ -4,7 +4,7 @@
 #include <gdk/texture.h>
 
 //Thirdparty inc
-#include <stb/stb_image.h>
+//#include <stb/stb_image.h>
 //std inc
 #include <iostream>
 #include <vector>
@@ -23,12 +23,12 @@ std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Texture &a)
     return s;
 }
 
-Texture::Texture(const std::string &aName, std::vector<GFXbyte> &aTextureData)
+Texture::Texture(const std::string &aName, std::vector<GLbyte> &aTextureData)
 : m_Name(aName)
 {
-    //decode the png rgba32 data
+    /*//decode the png rgba32 data
     int width, height, components;
-    GFXbyte *decodedData = stbi_load_from_memory(&aTextureData[0], (int)aTextureData.size(), &width, &height, &components, 4);
+    GLbyte *decodedData = stbi_load_from_memory(&aTextureData[0], (int)aTextureData.size(), &width, &height, &components, 4);
     
     //Copy the texture data to video memory
     glGenTextures(1, &m_Handle);
@@ -42,7 +42,7 @@ Texture::Texture(const std::string &aName, std::vector<GFXbyte> &aTextureData)
     
     //Cleanup
     glBindTexture( GL_TEXTURE_2D,0);
-    stbi_image_free(decodedData);
+    stbi_image_free(decodedData);*/
 }
 
 Texture::Texture(Texture&& other)
@@ -64,7 +64,7 @@ std::string const &Texture::getName()const
     return m_Name;
 }
 
-GFXuint Texture::getHandle()const
+GLuint Texture::getHandle()const
 {
     return m_Handle;
 }

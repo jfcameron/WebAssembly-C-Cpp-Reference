@@ -23,19 +23,19 @@ namespace GDK
             
             // Data members
             std::string m_Name = {};
-            GFXuint m_Handle = 0;
+            GLuint m_Handle = 0;
     
         public:
             // Accessors
             std::string const &getName() const;
-            GFXuint getHandle() const;
+            GLuint getHandle() const;
             
             // Mutating operators
             Texture &operator=(const Texture&) = delete;
             Texture &operator=(Texture&&) = delete;
       
             // Constructors, destructors
-            Texture(const std::string &aName, std::vector<GFXbyte>& aRGBA32PNGTextureData /*GFXuint repeatmode = 0, GFXuint magfilter = 0*/);
+            Texture(const std::string &aName, std::vector<GLbyte>& aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
             Texture() = delete;
             Texture(const Texture&) = delete;
             Texture(Texture&&);
