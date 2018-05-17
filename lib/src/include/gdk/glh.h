@@ -8,7 +8,9 @@
  includes gl functions from glew and declares C++ friendly helpers in the GLH namespace
  */
 
-namespace GDK{struct Color;}
+#include <string>
+
+namespace gdk{struct Color;}
 /*namespace GDK{namespace Math{struct IntVector2;}}
 namespace GDK{namespace Math{struct Vector2;}}
 namespace GDK{namespace Math{struct Vector3;}}
@@ -18,21 +20,22 @@ namespace GDK{namespace Math{struct Mat4x4;}}*/
 namespace GLH
 {
     // GDK-type friendly conveniences
-    void ClearColor(const GDK::Color &aColor);
+    void ClearColor(const gdk::Color &aColor);
     /*void Viewport(const GDK::Math::IntVector2 &aPos, const GDK::Math::IntVector2 &aSize);
       void Scissor(const GDK::Math::IntVector2 &aPos, const GDK::Math::IntVector2 &aSize);
     
     // Error detection & logging
     std::string GetShaderInfoLog(const GLuint aShaderStageHandle);
-    std::string GetProgramInfoLog(const GLuint aShaderProgramHandle);
+    std::string GetProgramInfoLog(const GLuint aShaderProgramHandle);*/
     bool GetError(std::string *aErrorCode = nullptr);
-    //std::vector<std::string> GetErrors();
+/*    //std::vector<std::string> GetErrors();
     //void LogErrors(const bool &aDoNotLogIfNoErrors = false);
-    void ClearErrors();
+    void ClearErrors();*/
 
     // Vertex binding
-    bool EnableVertexAttribute(const std::string &aAttributeName, const GLuint aProgramHandle, const int aAttributeSize, const int aAttributeOffset, const int aTotalNumberOfVertexAttributeComponents);
-
+    bool EnableVertexAttribute(const std::string &aAttributeName, const GLuint aProgramHandle, const int aAttributeSize,
+                               const int aAttributeOffset, const int aTotalNumberOfVertexAttributeComponents);
+/*
     //Uniform binding
     bool BindTextureUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GLuint aTextureHandle, const int aTextureUnit);//, final GLenum &aTextureType);
     bool Bind1FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const float aScalar);
@@ -42,4 +45,4 @@ namespace GLH
     bool BindMatrix4x4     (const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Mat4x4  &aMatrix4x4);*/
 }
 
-#endif /* GDK_GL_H  */
+#endif

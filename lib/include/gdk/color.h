@@ -6,7 +6,7 @@
 //std inc
 #include <iosfwd>
 
-namespace GDK
+namespace gdk
 {
     /*!
       Represents a 4 channel color: {Red, Green, Blue, Alpha}.
@@ -44,4 +44,4 @@ namespace GDK
     std::ostream &operator<< (std::ostream &stream, const Color &aColor);
 }
 
-#endif /* GDK_GFX_COLOR_H */
+#endif

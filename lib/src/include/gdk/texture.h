@@ -27,7 +27,7 @@ namespace GDK
     
         public:
             // Accessors
-            std::string const &getName() const;
+            std::string getName() const;
             GLuint getHandle() const;
             
             // Mutating operators
@@ -35,16 +35,15 @@ namespace GDK
             Texture &operator=(Texture&&) = delete;
       
             // Constructors, destructors
-            Texture(const std::string &aName, std::vector<GLbyte>& aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
+            Texture(const std::string &aName, const std::vector<const GLubyte>& aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
             Texture() = delete;
             Texture(const Texture&) = delete;
             Texture(Texture&&);
-            ~Texture();
-      
+            ~Texture();      
         };
 
         std::ostream &operator<< (std::ostream &, const GFX::Texture &);
     }
 }
 
-#endif /* GDK_GFX_TEXTURE_H  */
+#endif

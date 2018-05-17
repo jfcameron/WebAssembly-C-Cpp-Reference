@@ -3,14 +3,18 @@
 // Created on 17-07-03.
 #include <gdk/texture.h>
 
-//Thirdparty inc
-//#include <stb/stb_image.h>
-//std inc
+#include <stb/stb_image.h>
+
 #include <iostream>
 #include <vector>
 
 using namespace GDK;
 using namespace GFX;
+
+namespace
+{
+    constexpr char TAG[] = "Texture";
+}
 
 std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Texture &a)
 {
@@ -23,29 +27,31 @@ std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Texture &a)
     return s;
 }
 
-Texture::Texture(const std::string &aName, std::vector<GLbyte> &aTextureData)
-: m_Name(aName)
+Texture::Texture(const std::string &aName, const std::vector<const GLubyte> &aTextureData)
+    : m_Name(aName)
 {
-    /*//decode the png rgba32 data
+    //decode the png rgba32 data
     int width, height, components;
-    GLbyte *decodedData = stbi_load_from_memory(&aTextureData[0], (int)aTextureData.size(), &width, &height, &components, 4);
+    if (GLubyte *const decodedData = stbi_load_from_memory(&aTextureData[0], static_cast<int>(aTextureData.size()), &width, &height, &components, 4))
+    {
+        //Copy the texture data to video memory
+        glGenTextures(1, &m_Handle);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_Handle);
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, decodedData );
     
-    //Copy the texture data to video memory
-    glGenTextures(1, &m_Handle);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_Handle);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, decodedData );
+        //Apply texture parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     
-    //Apply texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    
-    //Cleanup
-    glBindTexture( GL_TEXTURE_2D,0);
-    stbi_image_free(decodedData);*/
+        //Cleanup
+        glBindTexture( GL_TEXTURE_2D,0);
+        stbi_image_free(decodedData);
+    }
+    else throw std::runtime_error(std::string(TAG).append(" could not decode RGBA32 PNG data"));//throw GDK::Exception(TAG, message.str());
 }
 
-Texture::Texture(Texture&& other)
+Texture::Texture(Texture &&other)
 {
     m_Name   = other.m_Name;
     m_Handle = other.m_Handle;
@@ -55,11 +61,10 @@ Texture::Texture(Texture&& other)
 
 Texture::~Texture()
 {
-    if (m_Handle > 0)
-        glDeleteBuffers(1, &m_Handle);
+    if (m_Handle > 0) glDeleteBuffers(1, &m_Handle);
 }
 
-std::string const &Texture::getName()const
+std::string Texture::getName()const
 {
     return m_Name;
 }

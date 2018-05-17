@@ -5,7 +5,7 @@
 //std inc
 #include <iostream>
 
-namespace GDK
+namespace gdk
 {
     //static const
     const Color Color::Black      (0.0f,0.0f,0.0f,1.0f);
@@ -17,10 +17,10 @@ namespace GDK
     const Color Color::DeathlyPink(1.0f,0.2f,0.8f,1.0f);
 
     const Color Color::CornflowerBlue(
-        0.3921568627450980392156862745098f,
-        0.58431372549019607843137254901961f,
-        0.92941176470588235294117647058824f,
-        1.0f);
+        0.3921568627450980392156862745098,
+        0.58431372549019607843137254901961,
+        0.92941176470588235294117647058824,
+        1.);
 
     //operators
     std::ostream &operator<< (std::ostream &s, const Color &a)

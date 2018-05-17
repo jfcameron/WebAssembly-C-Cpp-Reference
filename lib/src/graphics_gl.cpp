@@ -10,14 +10,14 @@ namespace gdk
     {   
         void init()
         {
-            GLH::ClearColor(GDK::Color::CornflowerBlue);
+            GLH::ClearColor(gdk::Color::CornflowerBlue);
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
 
         void draw()
         {
-            GLH::ClearColor(GDK::Color::CornflowerBlue);
+            GLH::ClearColor(gdk::Color::CornflowerBlue);
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
