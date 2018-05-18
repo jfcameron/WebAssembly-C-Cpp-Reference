@@ -2,6 +2,7 @@
 // Project: GDK
 // Created on 17-07-03.
 #include <gdk/texture.h>
+#include <gdk/exception.h>
 
 #include <stb/stb_image.h>
 
@@ -11,10 +12,7 @@
 using namespace GDK;
 using namespace GFX;
 
-namespace
-{
-    constexpr char TAG[] = "Texture";
-}
+static constexpr char TAG[] = "Texture";
 
 std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Texture &a)
 {
@@ -48,7 +46,7 @@ Texture::Texture(const std::string &aName, const std::vector<const GLubyte> &aTe
         glBindTexture( GL_TEXTURE_2D,0);
         stbi_image_free(decodedData);
     }
-    else throw std::runtime_error(std::string(TAG).append(" could not decode RGBA32 PNG data"));//throw GDK::Exception(TAG, message.str());
+    else throw gdk::Exception(TAG, "Could not decode RGBA32 data.");
 }
 
 Texture::Texture(Texture &&other)

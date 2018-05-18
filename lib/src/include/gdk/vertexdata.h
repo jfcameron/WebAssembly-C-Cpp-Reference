@@ -17,9 +17,9 @@ namespace GDK
         /*!
          Vertex data representing a 3D graphical object
          */
-        class Mesh final
+        class VertexData final
         {
-            friend std::ostream &operator<< (std::ostream &, const GFX::Mesh &);
+            friend std::ostream &operator<< (std::ostream &, const GFX::VertexData &);
             
         public:
             /*!
@@ -65,22 +65,22 @@ namespace GDK
             
             // Public functions
             void draw(const GLuint aShaderProgramHandle) const;
-            void updateVertexData(const std::vector<GLfloat> &aNewVertexData, const VertexFormat &aNewVertexFormat, const Mesh::Type &aNewType = Type::Dynamic);
+            void updateVertexData(const std::vector<GLfloat> &aNewVertexData, const VertexFormat &aNewVertexFormat, const VertexData::Type &aNewType = Type::Dynamic);
             
             // Mutating operators
-            Mesh &operator=(const Mesh &) = delete;
-            Mesh &operator=(Mesh &&) = delete;
+            VertexData &operator=(const VertexData &) = delete;
+            VertexData &operator=(VertexData &&) = delete;
       
             // Constructors, destructors
-            Mesh(const std::string &aName, const Mesh::Type &aType, const VertexFormat &aVertexFormat,
+            VertexData(const std::string &aName, const VertexData::Type &aType, const VertexFormat &aVertexFormat,
                  const std::vector<GLfloat> &aVertexData, const std::vector<GLushort> &aIndexData = std::vector<GLushort>(), const PrimitiveMode &aPrimitiveMode = PrimitiveMode::Triangles);
-            Mesh() = delete;
-            Mesh(const Mesh &) = delete;
-            Mesh(Mesh &&);
-            ~Mesh();
+            VertexData() = delete;
+            VertexData(const VertexData &) = delete;
+            VertexData(VertexData &&);
+            ~VertexData();
         };
 
-        std::ostream &operator<< (std::ostream &, const GFX::Mesh &);
+        std::ostream &operator<< (std::ostream &, const GFX::VertexData &);
     }
 }
 

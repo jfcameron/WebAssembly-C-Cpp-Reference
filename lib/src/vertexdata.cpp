@@ -1,9 +1,9 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-03.
-#include <gdk/mesh.h>
+#include <gdk/vertexdata.h>
 #include <gdk/glh.h>
-//#include "Debug/Exception.h"
+#include "gdk/exception.h"
 //#include "Debug/Logger.h"
 
 #include <GLES2/gl2.h>
@@ -13,12 +13,9 @@
 using namespace GDK;
 using namespace GFX;
 
-namespace
-{
-    //constexpr char TAG[] = "Mesh";
-}
+static constexpr char TAG[] = "VertexData";
 
-std::ostream& GDK::GFX::operator<<(std::ostream &s, const GFX::Mesh &a)
+std::ostream& GDK::GFX::operator<<(std::ostream &s, const GFX::VertexData &a)
 {
     s.clear(); s
     << "{"
@@ -31,34 +28,34 @@ std::ostream& GDK::GFX::operator<<(std::ostream &s, const GFX::Mesh &a)
     return s;
 }
 
-static GLenum MeshTypeToOpenGLDrawType(const Mesh::Type &aType)
+static GLenum VertexDataTypeToOpenGLDrawType(const VertexData::Type &aType)
 {
     switch (aType)
     {
-        case Mesh::Type::Dynamic:
+        case VertexData::Type::Dynamic:
             return GL_DYNAMIC_DRAW;
         
-        case Mesh::Type::Static:
+        case VertexData::Type::Static:
             return GL_STATIC_DRAW;
     }
 }
 
-static GLenum PrimitiveModeToOpenGLPrimitiveType(const Mesh::PrimitiveMode &aPrimitiveMode)
+static GLenum PrimitiveModeToOpenGLPrimitiveType(const VertexData::PrimitiveMode &aPrimitiveMode)
 {
     switch (aPrimitiveMode)
     {
-        case Mesh::PrimitiveMode::Triangles:
+        case VertexData::PrimitiveMode::Triangles:
             return GL_TRIANGLES;
             
-        case Mesh::PrimitiveMode::Lines:
+        case VertexData::PrimitiveMode::Lines:
             return GL_LINES;
         
-        case Mesh::PrimitiveMode::Points:
+        case VertexData::PrimitiveMode::Points:
             return GL_POINTS;
     }
 }
 
-void Mesh::draw(const GLuint aShaderProgramHandle) const
+void VertexData::draw(const GLuint aShaderProgramHandle) const
 {
     glBindBuffer( GL_ARRAY_BUFFER, m_VertexBufferHandle);
     
@@ -76,20 +73,17 @@ void Mesh::draw(const GLuint aShaderProgramHandle) const
             primitiveMode,
             m_IndexCount,
             GL_UNSIGNED_SHORT,
-            static_cast<void*>(0)
+            static_cast<void *>(0)
         );
     }
-    else
-    {
-        glDrawArrays( primitiveMode, 0, m_VertexCount );
-    }
+    else glDrawArrays( primitiveMode, 0, m_VertexCount );
 }
 
-void Mesh::updateVertexData(const std::vector<GLfloat> &aNewVertexData, const VertexFormat &aNewVertexFormat, const Mesh::Type &aNewType)
+void VertexData::updateVertexData(const std::vector<GLfloat> &aNewVertexData, const VertexFormat &aNewVertexFormat, const VertexData::Type &aNewType)
 {
     m_VertexFormat = aNewVertexFormat;
     m_VertexCount  = static_cast<GLsizei>(aNewVertexData.size()/aNewVertexFormat.getSumOfAttributeComponents());
-    GLint type = MeshTypeToOpenGLDrawType(aNewType);
+    GLint type = VertexDataTypeToOpenGLDrawType(aNewType);
     
     glBindBuffer (GL_ARRAY_BUFFER, m_VertexBufferHandle);
     glBufferData (GL_ARRAY_BUFFER, sizeof(GLfloat) * aNewVertexData.size(), &aNewVertexData[0], type);
@@ -97,7 +91,7 @@ void Mesh::updateVertexData(const std::vector<GLfloat> &aNewVertexData, const Ve
 }
 
 // Constructors & Destructors
-Mesh::Mesh(const std::string &aName, const Mesh::Type &aType, const VertexFormat &aVertexFormat,
+VertexData::VertexData(const std::string &aName, const VertexData::Type &aType, const VertexFormat &aVertexFormat,
            const std::vector<GLfloat> &aVertexData, const std::vector<GLushort> &aIndexData,
            const PrimitiveMode &aPrimitiveMode)
 : m_Name(aName)
@@ -111,12 +105,12 @@ Mesh::Mesh(const std::string &aName, const Mesh::Type &aType, const VertexFormat
         glGenBuffers(1, &ibo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * aIndexData.size(), &aIndexData[0],
-                     MeshTypeToOpenGLDrawType(aType));
+                     VertexDataTypeToOpenGLDrawType(aType));
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
     
         std::string errorCode;
-        if (GLH::GetError(&errorCode))
-            throw std::runtime_error(errorCode);//GDK::Exception(TAG, errorCode);
+        
+        if (GLH::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
     }
     
     return ibo;
@@ -124,20 +118,19 @@ Mesh::Mesh(const std::string &aName, const Mesh::Type &aType, const VertexFormat
 , m_IndexCount((GLsizei)aIndexData.size())
 , m_VertexBufferHandle([&aVertexData, &aType]() -> GLuint
 {
-    if (aVertexData.size() <= 0)
-        throw std::runtime_error("Bad vertex data");//GDK::Exception(TAG, "bad vertex data");
+    if (aVertexData.size() <= 0) gdk::Exception(TAG, "bad vertex data");
     
     // Create and populate a VBO
     GLuint vbo = 0;
     
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * aVertexData.size(), &aVertexData[0], MeshTypeToOpenGLDrawType(aType));
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * aVertexData.size(), &aVertexData[0], VertexDataTypeToOpenGLDrawType(aType));
     glBindBuffer(GL_ARRAY_BUFFER,0);
     
     std::string errorCode;
-    if (GLH::GetError(&errorCode))
-        throw std::runtime_error(errorCode);//GDK::Exception(TAG, errorCode);
+
+    if (GLH::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
     
     return vbo;
 }())
@@ -146,7 +139,7 @@ Mesh::Mesh(const std::string &aName, const Mesh::Type &aType, const VertexFormat
 , m_PrimitiveMode(aPrimitiveMode)
 {}
 
-Mesh::~Mesh()
+VertexData::~VertexData()
 {
     if (m_VertexBufferHandle > 0)
         glDeleteBuffers(1, &m_VertexBufferHandle);
@@ -155,7 +148,7 @@ Mesh::~Mesh()
         glDeleteBuffers(1, &m_IndexBufferHandle);
 }
 
-Mesh::Mesh(Mesh&& a)
+VertexData::VertexData(VertexData &&a)
 {
     m_Name               = std::move(a.m_Name);
     m_IndexBufferHandle  = std::move(a.m_IndexBufferHandle);
@@ -170,12 +163,12 @@ Mesh::Mesh(Mesh&& a)
 }
 
 // Accessors
-std::string const &Mesh::getName()const
+std::string const &VertexData::getName()const
 {
     return m_Name;
 }
 
-GLuint Mesh::getHandle()const
+GLuint VertexData::getHandle()const
 {
     return m_VertexBufferHandle;
 }

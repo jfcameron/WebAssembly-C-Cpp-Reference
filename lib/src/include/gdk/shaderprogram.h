@@ -31,7 +31,7 @@ namespace GDK
             
             // Accessors
             std::string getName() const;
-            //GLuint getHandle() const;
+            GLuint getHandle() const;
             
             // Mutating operators
             ShaderProgram &operator=(const ShaderProgram &) = delete;

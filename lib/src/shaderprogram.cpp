@@ -7,15 +7,12 @@
 #include <sstream>
 //gdk inc
 //#include "Debug/Logger.h"
-//#include "Debug/Exception.h"
+#include "gdk/exception.h"
 
 using namespace GDK;
 using namespace GFX;
 
-namespace
-{
-    //constexpr char TAG[] = "ShaderProgram";
-}
+static constexpr char TAG[] = "ShaderProgram";
 
 std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::ShaderProgram &a) 
 {
@@ -68,8 +65,8 @@ ShaderProgram::ShaderProgram(const std::string &aName, const std::string &aVerte
         << std::endl << "vertex shader compilation log: " <<   GLH::GetShaderInfoLog(vs) << std::endl
         << std::endl << "fragment shader compilation log: " << GLH::GetShaderInfoLog(fs);*/
         
-        //throw std::runtime_error(message.str());//throw GDK::Exception(TAG, message.str());
-        throw std::runtime_error("Shader failed to compile");
+        //throw gdk::Exception(TAG, message.str());//throw gdk::Exception(TAG, message.str());
+        throw gdk::Exception(TAG, "Shader failed to compile");
     }
 
     return programHandle;
@@ -102,7 +99,7 @@ std::string ShaderProgram::getName() const
     return m_Name;
 }
     
-/*GLuint ShaderProgram::getHandle() const 
+GLuint ShaderProgram::getHandle() const 
 {
     return m_ProgramHandle;
-}*/
+}

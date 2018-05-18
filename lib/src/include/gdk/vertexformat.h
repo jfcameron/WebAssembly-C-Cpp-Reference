@@ -19,9 +19,9 @@ namespace GDK
     {
         /*!
          Vertex data is arbitrary and user defined. Vertexformat is used to inform the
-         device how to interpret the vertex data in your mesh. An example of a typical format would be
+         device how to interpret your vertex data. An example of a typical format would be
          something like this: {Position,UV,Normal,Tangent}. The important thing is that this matches
-         the actual vertex data in the mesh's vertex buffer.
+         the actual vertex data in the vertex buffer.
          */
         class VertexFormat final
         {

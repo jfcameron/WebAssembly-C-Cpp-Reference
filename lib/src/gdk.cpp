@@ -13,7 +13,7 @@
 #include <vector>
 #include <gdk/texture.h>
 #include <gdk/shaderprogram.h>
-#include <gdk/mesh.h>
+#include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
 namespace
 {
@@ -50,8 +50,7 @@ namespace
 
             void main ()
             {
-                gl_Position = _MVP * vec4(a_Position,1.0);
-                //gl_Position = vec4(0.0,0.0,0.0,0.0);
+                gl_Position = _MVP * vec4(a_Position,1.0); //Make use of actual verts
             }
             )V0G0N";
 
@@ -69,7 +68,7 @@ namespace
             return GDK::GFX::ShaderProgram("MySuperCoolShader", vertexShaderSource, fragmentShaderSource);
         }());
 
-        std::shared_ptr<GDK::GFX::Mesh> pMesh = std::make_shared<GDK::GFX::Mesh>([]()
+        std::shared_ptr<GDK::GFX::VertexData> pVertexData = std::make_shared<GDK::GFX::VertexData>([]()
         {
             float size  = 1.;
             float hsize = size/2.;
@@ -83,8 +82,12 @@ namespace
                         size -hsize, 0.0f -hsize, 0.0f, 1.0f, 1.0f, // 1--2
                         });
 
-            return GDK::GFX::Mesh("Quad",GDK::GFX::Mesh::Type::Static,GDK::GFX::VertexFormat::Pos3uv2,data);
+            return GDK::GFX::VertexData("Quad",GDK::GFX::VertexData::Type::Static,GDK::GFX::VertexFormat::Pos3uv2,data);
         }());
+
+        //Draw hack
+        pShader->useProgram();
+        pVertexData->draw(pShader->getHandle());
     }
 }
 

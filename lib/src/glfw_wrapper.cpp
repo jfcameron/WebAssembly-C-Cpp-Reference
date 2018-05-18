@@ -7,7 +7,11 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Math
+#include <gdk/exception.h>
+
+static constexpr char TAG[] = "GLFW Wrapper";
+
+namespace Math //Should be refactored
 {
     struct IntVector2
     {
@@ -15,17 +19,17 @@ namespace Math
     };
 }
 
-namespace GLFW
+namespace
 {
     void initContext()
     {       
         glfwSetErrorCallback(
             [](int, const char *msg)
             {
-                throw std::runtime_error(msg);
+                throw gdk::Exception(TAG, msg);
             });
                 
-        if(!glfwInit()) throw std::runtime_error("glfwInit failed");
+        if(!glfwInit()) throw gdk::Exception(TAG, "glfwInit failed");
     }
 
     GLFWwindow *const initWindow(const Math::IntVector2 &aScreenSize, const std::string &aName)
@@ -38,7 +42,7 @@ namespace GLFW
     
         aGLFWWindow = glfwCreateWindow(aScreenSize.x, aScreenSize.y, aName.c_str(), nullptr, nullptr);
     
-        if (!aGLFWWindow) throw std::runtime_error("glfwCreateWindow failed. Can your hardware handle OpenGL 3.2?");
+        if (!aGLFWWindow) throw gdk::Exception(TAG, "glfwCreateWindow failed. Can your hardware handle OpenGL 3.2?");
     
         glfwMakeContextCurrent(aGLFWWindow);
     
@@ -47,13 +51,16 @@ namespace GLFW
 
     GLFWwindow *const pWindow = []()
     {        
-        GLFW::initContext();
+        ::initContext();
         
-        return GLFW::initWindow({800,600}, "GDK Window");
+        return ::initWindow({800,600}, "GDK Window");
     }();
+}
 
+namespace GLFW
+{
     void SwapBuffer()
     {
-        glfwSwapBuffers(pWindow);
+        glfwSwapBuffers(::pWindow);
     }
 }
