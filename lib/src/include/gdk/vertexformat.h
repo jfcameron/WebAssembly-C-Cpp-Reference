@@ -29,7 +29,7 @@ namespace GDK
     
             // Data members
             std::vector<VertexAttribute> m_Format = {};
-            int m_SumOfAttributeComponents = 0;
+            int m_SumOfAttributeComponents = {0};
             
         public:
             // Public methods

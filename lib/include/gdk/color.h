@@ -14,7 +14,7 @@ namespace gdk
     struct Color final
     {
         // Data
-        float r = 0.f, g = 0.f, b = 0.f, a = 1.f;
+        float r = {0.f}, g = {0.f}, b = {0.f}, a = {1.f};
             
         // instancing rules
         Color();

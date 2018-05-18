@@ -23,7 +23,7 @@ namespace GDK
             
             // Data members
             std::string m_Name = {};
-            GLuint m_ProgramHandle = 0;
+            GLuint m_ProgramHandle = {0};
             
         public: // Public interface
             /// Installs a program object as part of current rendering state

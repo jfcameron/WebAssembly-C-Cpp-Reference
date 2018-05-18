@@ -48,11 +48,11 @@ namespace GDK
             // Data members
             std::string m_Name = {};
             
-            GLuint m_IndexBufferHandle = 0;
-            GLsizei m_IndexCount       = 0;
+            GLuint m_IndexBufferHandle = {0};
+            GLsizei m_IndexCount       = {0};
             
-            GLuint m_VertexBufferHandle = 0;
-            GLsizei m_VertexCount       = 0;
+            GLuint m_VertexBufferHandle = {0};
+            GLsizei m_VertexCount       = {0};
             
             VertexFormat m_VertexFormat = VertexFormat::Pos3uv2;
             

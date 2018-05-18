@@ -20,7 +20,7 @@ namespace GDK
         {
             // Data members
             std::string    name = "attribute";
-            unsigned short size = 0;
+            unsigned short size = {0};
             
             // Mutating operators
             VertexAttribute &operator=(const VertexAttribute &) = default;

@@ -23,7 +23,7 @@ namespace GDK
             
             // Data members
             std::string m_Name = {};
-            GLuint m_Handle = 0;
+            GLuint m_Handle = {0};
     
         public:
             // Accessors

@@ -53,8 +53,8 @@ Texture::Texture(const std::string &aName, const std::vector<const GLubyte> &aTe
 
 Texture::Texture(Texture &&other)
 {
-    m_Name   = other.m_Name;
-    m_Handle = other.m_Handle;
+    m_Name   = std::move(other.m_Name);
+    m_Handle = std::move(other.m_Handle);
     
     other.m_Handle = 0;
 }
