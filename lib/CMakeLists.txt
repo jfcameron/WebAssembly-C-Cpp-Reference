@@ -9,7 +9,7 @@ if (JFC_BUILD_LIB)
         DESCRIPTION "WebAssembly project shareable code")
 
     add_library(${PROJECT_NAME} STATIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/color.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
