@@ -2,15 +2,16 @@
 // Created on 2017-06-25.
 #include <iostream>
 
+//#include "GL.h"
+
 #include "gdk/camera.h"
 #include "gdk/color.h"
 #include "gdk/exception.h"
-#include "GL.h"
-#include "Math/IntVector2.h"
-#include "Math/Mat4x4.h"
-#include "Math/Quaternion.h"
-#include "Math/Vector2.h"
-#include "Math/Vector3.h"
+#include "gdk/intvector2.h"
+#include "gdk/mat4x4.h"
+#include "gdk/quaternion.h"
+#include "gdk/vector2.h"
+#include "gdk/vector3.h"
 
 using namespace GDK;
 using namespace GFX;

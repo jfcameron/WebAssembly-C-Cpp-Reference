@@ -5,9 +5,9 @@
 #define GDK_GFX_CAMERA_H
 
 //gdk inc
-#include "Color.h"
-#include "Math/Vector2.h"
-#include "Math/Mat4x4.h"
+#include "gdk/color.h"
+#include "gdk/vector2.h"
+#include "gdk/mat4x4.h"
 //std inc
 #include <iosfwd>
 
