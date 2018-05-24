@@ -2,7 +2,7 @@
 // Created on 2017-06-25.
 #include <iostream>
 
-//#include "GL.h"
+#include <gdk/opengl.h>
 
 #include "gdk/camera.h"
 #include "gdk/color.h"

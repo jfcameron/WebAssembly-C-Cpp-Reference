@@ -1,4 +1,4 @@
-#include <GLES2/gl2.h>
+#include <gdk/opengl.h>
 
 #include <gdk/color.h>
 #include <gdk/glh.h>

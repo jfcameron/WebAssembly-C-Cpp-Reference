@@ -5,7 +5,7 @@
 #include <gdk/glh.h>
 //#include "Debug/Logger.h"
 
-#include <GLES2/gl2.h>
+#include <gdk/opengl.h>
 
 #include <iostream>
 

@@ -7,7 +7,7 @@
 #include <iosfwd>
 #include <string>
 
-#include <GLES2/gl2.h>
+#include <gdk/opengl.h>
 
 namespace GDK
 {

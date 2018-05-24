@@ -1,7 +1,7 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Created on 17-07-02.
 
-#include <GLES2/gl2.h>
+#include <gdk/opengl.h>
 
 #include <gdk/glh.h>
 #include <gdk/color.h>

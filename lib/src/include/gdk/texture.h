@@ -4,7 +4,7 @@
 #ifndef GDK_GFX_TEXTURE_H
 #define GDK_GFX_TEXTURE_H
 
-#include <GLES2/gl2.h>
+#include <gdk/opengl.h>
 
 //std inc
 #include <iosfwd>

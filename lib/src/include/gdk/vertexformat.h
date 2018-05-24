@@ -4,7 +4,7 @@
 #ifndef GDK_GFX_VERTEXFORMAT_H
 #define GDK_GFX_VERTEXFORMAT_H
 
-#include <GLES2/gl2.h>
+#include <gdk/opengl.h>
 
 #include <gdk/vertexattribute.h>
 
