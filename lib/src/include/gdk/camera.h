@@ -11,9 +11,9 @@
 //std inc
 #include <iosfwd>
 
-namespace GDK{namespace Math{struct IntVector2;}}
-//namespace GDK{namespace Math{struct Vector3;   }}
-//namespace GDK{namespace Math{struct Quaternion;}}
+namespace GDK{struct IntVector2;}
+namespace GDK{struct Vector3;   }
+namespace GDK{struct Quaternion;}
 
 namespace GDK
 {
@@ -48,13 +48,13 @@ namespace GDK
               Math::Mat4x4   m_ProjectionMatrix  = Math::Mat4x4::Identity;*/
             
             ClearMode      m_ClearMode         = ClearMode::Color;
-            Color          m_ClearColor        = Color::CornflowerBlue;
+            gdk::Color     m_ClearColor        = Color::CornflowerBlue;
             
-            Math::Vector2  m_ViewportPosition  = Math::Vector2::Zero;
-            Math::Vector2  m_ViewportSize      = Math::Vector2(1.,1.);
+            gdk::Vector2  m_ViewportPosition  = gdk::Vector2::Zero;
+            gdk::Vector2  m_ViewportSize      = gdk::Vector2(1.,1.);
             
             ProjectionMode m_ProjectionMode    = ProjectionMode::Perspective;
-            Math::Vector2  m_OrthoSize         = {10,10};
+            gdk::Vector2  m_OrthoSize         = {10,10};
             float          m_FieldOfView       = 90.;
             float          m_NearClippingPlane = 0.001f;
             float          m_FarClippingPlane  = 20.;
@@ -63,15 +63,15 @@ namespace GDK
             
         public:
             // Accessors
-            void setViewportPosition(const Math::Vector2 &);
+            void setViewportPosition(const gdk::Vector2 &);
             void setViewportPosition(const float x, const float y);
-            Math::Vector2 getViewportPosition() const;
+            gdk::Vector2 getViewportPosition() const;
             
-            void setViewportSize(const Math::Vector2 &);
+            void setViewportSize(const gdk::Vector2 &);
             void setViewportSize(const float x, const float y);
-            Math::Vector2 getViewportSize() const;
+            gdk::Vector2 getViewportSize() const;
             
-            //void setOrthographicProjection(const Math::Vector2 &aOrthoSize, const float &aNearClippingPlane, const float &aFarClippingPlane, const float &aViewportAspectRatio);
+            //void setOrthographicProjection(const gdk::Vector2 &aOrthoSize, const float &aNearClippingPlane, const float &aFarClippingPlane, const float &aViewportAspectRatio);
             //void setPerspectiveProjection(const float &aFieldOfView, const float &aNearClippingPlane, const float &aFarClippingPlane, const float &aViewportAspectRatio);
             /*const Math::Mat4x4 &getProjectionMatrix() const;
             
@@ -79,7 +79,7 @@ namespace GDK
             const Math::Mat4x4 &getViewMatrix() const;*/
             
             // Public methods
-            void draw(const Math::IntVector2 &aFrameBufferSize);
+            void draw(const GDK::IntVector2 &aFrameBufferSize);
             
             // Mutating operators
             Camera& operator=(const Camera &) = delete;

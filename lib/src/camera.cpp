@@ -3,15 +3,14 @@
 #include <iostream>
 
 #include <gdk/opengl.h>
-
-#include "gdk/camera.h"
-#include "gdk/color.h"
-#include "gdk/exception.h"
-#include "gdk/intvector2.h"
-#include "gdk/mat4x4.h"
-#include "gdk/quaternion.h"
-#include "gdk/vector2.h"
-#include "gdk/vector3.h"
+#include <gdk/camera.h>
+#include <gdk/color.h>
+#include <gdk/exception.h>
+#include <gdk/intvector2.h>
+#include <gdk/mat4x4.h>
+#include <gdk/quaternion.h>
+#include <gdk/vector2.h>
+#include <gdk/vector3.h>
 
 using namespace GDK;
 using namespace GFX;
@@ -40,7 +39,7 @@ Camera::Camera()
     glEnable(GL_SCISSOR_TEST);   
 }
 
-static inline void calculateOrthographicProjection(Math::Mat4x4 &aProjectionMatrix, const Math::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
+static inline void calculateOrthographicProjection(Math::Mat4x4 &aProjectionMatrix, const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
 {
     (void)aProjectionMatrix;
     (void)aOrthoSize;
@@ -99,7 +98,7 @@ void Camera::setViewMatrix(const Math::Vector3 &aWorldPos, const Math::Quaternio
     m_ViewMatrix.translate(aWorldPos * -1.f);
 }
 
-void Camera::setViewportPosition(const Math::Vector2 &a)
+void Camera::setViewportPosition(const gdk::Vector2 &a)
 {
     m_ViewportPosition = a;
 }
@@ -110,12 +109,12 @@ void Camera::setViewportPosition(const float x, const float y)
     m_ViewportPosition.y = y;
 }
 
-Math::Vector2 Camera::getViewportPosition() const
+gdk::Vector2 Camera::getViewportPosition() const
 {
     return m_ViewportPosition;
 }
 
-void Camera::setViewportSize(const Math::Vector2 &a)
+void Camera::setViewportSize(const gdk::Vector2 &a)
 {
     m_ViewportSize = a;
 }
@@ -126,7 +125,7 @@ void Camera::setViewportSize(const float x, const float y)
     m_ViewportSize.y = y;
 }
 
-Math::Vector2 Camera::getViewportSize() const
+gdk::Vector2 Camera::getViewportSize() const
 {
     return m_ViewportSize;
 }
