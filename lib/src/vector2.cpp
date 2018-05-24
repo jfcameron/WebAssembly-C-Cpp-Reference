@@ -7,7 +7,6 @@
 #include <iostream>
 
 using namespace gdk;
-using namespace Math;
 
 //static const
 const Vector2 Vector2::Up    = Vector2( 0.f, 1.f);

@@ -1,16 +1,15 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-22.
-#include "Trigonometry.h"
-//std inc
+#include <gdk/trigonometry.h>
+
 #include <iostream>
-#include <math.h>
+#include <math.h> //hmm
 
 using namespace GDK;
-using namespace Math;
 
-const double Trig::Double::PI = 4*::atan(1);
-const float  Trig        ::PI = static_cast<float>(Trig::Double::PI);
+const double Trig::Double::PI = 4*::atan(1); //constexpr? Eval at cmake time?
+const float  Trig        ::PI = static_cast<float>(Trig::Double::PI); //above
 
 float Trig::cos(const float a)
 {

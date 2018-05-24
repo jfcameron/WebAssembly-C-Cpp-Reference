@@ -12,21 +12,28 @@ if (JFC_BUILD_LIB)
 	${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/color.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/floatuniformcollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/glh.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graphics_gl.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/include
 	${CMAKE_CURRENT_SOURCE_DIR}/src/intvector2.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4uniformcollection.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/model.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/quaternion.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/shaderprogram.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/trigonometry.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/textureuniformcollection.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/trigonometry.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vector2.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vector2uniformcollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vector3.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vector3uniformcollection.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vector4.cpp        
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vector4uniformcollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexattribute.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexdata.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexformat.cpp

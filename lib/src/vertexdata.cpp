@@ -57,7 +57,7 @@ static GLenum PrimitiveModeToOpenGLPrimitiveType(const VertexData::PrimitiveMode
 
 void VertexData::draw(const GLuint aShaderProgramHandle) const
 {
-    glBindBuffer( GL_ARRAY_BUFFER, m_VertexBufferHandle);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferHandle);
     
     m_VertexFormat.enableAttributes(aShaderProgramHandle);
     
@@ -76,7 +76,7 @@ void VertexData::draw(const GLuint aShaderProgramHandle) const
             static_cast<void *>(0)
         );
     }
-    else glDrawArrays( primitiveMode, 0, m_VertexCount );
+    else glDrawArrays(primitiveMode, 0, m_VertexCount);
 }
 
 void VertexData::updateVertexData(const std::vector<GLfloat> &aNewVertexData, const VertexFormat &aNewVertexFormat, const VertexData::Type &aNewType)

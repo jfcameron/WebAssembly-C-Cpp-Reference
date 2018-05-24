@@ -1,32 +1,33 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-16.
-#include "Time.h"
-//thirdparty inc
-#include <glfw/include/GLFW/glfw3.h> // must come after GL
+#include <gdk/time.h>
+#include <gdk/glfw_wrapper.h>
 
 using namespace GDK;
-using namespace Time;
 
 static double currentTime(0.);
 static double lastTime(0.);
 
-double Time::getTime(void) noexcept
+namespace Time
 {
-    return glfwGetTime();
-}
+    double getTime(void) noexcept
+    {
+        return GLFW::GetTime();
+    }
 
-double Time::getDeltaTime(void) noexcept
-{
-    return currentTime;
-}
+    double getDeltaTime(void) noexcept
+    {
+        return currentTime;
+    }
 
-double Time::updateDeltaTime(void) noexcept
-{
-    double time = currentTime;
+    double updateDeltaTime(void) noexcept
+    {
+        double time = currentTime;
     
-    currentTime = glfwGetTime() - lastTime;
-    lastTime = glfwGetTime();
+        currentTime = GLFW::GetTime() - lastTime;
+        lastTime = GLFW::GetTime();
 
-    return time;
+        return time;
+    }
 }

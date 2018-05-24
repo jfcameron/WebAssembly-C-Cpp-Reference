@@ -6,29 +6,26 @@
 
 namespace GDK
 {
-    namespace Math
+    /*!
+      Trigonometry functions
+    */
+    namespace Trig
     {
-        /*!
-         Trigonometry functions
-         */
-        namespace Trig
+        extern const float PI;
+            
+        float cos(const float);
+        float sin(const float);
+        float abs(const float);
+            
+        namespace Double
         {
-            extern const float PI;
-            
-            float cos(const float);
-            float sin(const float);
-            float abs(const float);
-            
-            namespace Double
-            {
-                extern const double PI;
+            extern const double PI;
                 
-                double cos(const double);
-                double sin(const double);
-                double abs(const double);
-            }
+            double cos(const double);
+            double sin(const double);
+            double abs(const double);
         }
     }
 }
 
-#endif /* GDK_MATH_TRIGONOMETRY_H  */
+#endif

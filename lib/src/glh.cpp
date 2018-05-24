@@ -5,6 +5,10 @@
 #include <gdk/glh.h>
 #include <gdk/color.h>
 #include <gdk/intvector2.h>
+#include <gdk/vector2.h>
+#include <gdk/vector3.h>
+#include <gdk/vector4.h>
+#include <gdk/mat4x4.h>
 
 namespace glh
 {
@@ -47,6 +51,66 @@ namespace glh
     {
         glScissor(aPos.x, aPos.y, aSize.x, aSize.y);
     }
+
+    bool Bind1FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const float aValue)
+{
+    GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
+    
+    if (uniformHandle == -1)
+        return false;
+    
+    glUniform1f(uniformHandle, aValue);
+    
+    return true;
+}
+
+bool Bind2FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector2 &aVector2)
+{
+    GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
+    
+    if (uniformHandle == -1)
+        return false;
+    
+    glUniform2f(uniformHandle, aVector2.x, aVector2.y);
+    
+    return true;
+}
+
+bool Bind3FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector3 &aVector3)
+{
+    GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
+    
+    if (uniformHandle == -1)
+        return false;
+    
+    glUniform3f(uniformHandle, aVector3.x, aVector3.y, aVector3.z);
+    
+    return true;
+}
+
+bool Bind4FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector4 &aVector4)
+{
+    GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
+    
+    if (uniformHandle == -1)
+        return false;
+    
+    glUniform4f(uniformHandle, aVector4.x, aVector4.y, aVector4.z, aVector4.w);
+    
+    return true;
+}
+
+bool BindMatrix4x4(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Mat4x4 &aMatrix4x4)
+{
+    GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
+    
+    if (uniformHandle == -1)
+        return false;
+    
+    glUniformMatrix4fv(uniformHandle, 1, GL_FALSE, &aMatrix4x4.m[0][0]);
+    
+    return true;
+}
 }
 ///////////////////////////////////////////////////////////////////////
 /*

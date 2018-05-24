@@ -8,8 +8,10 @@ namespace GDK
 {
     namespace Time
     {
+        //getEpoch
+        
         /// Get time since program started
-        double getTime(void) noexcept;
+        double getTime(void) noexcept; //getTimeSinceStart?
         
         /// Gets delta time without resetting the delta timer
         double getDeltaTime(void) noexcept;
@@ -19,4 +21,4 @@ namespace GDK
     }
 }
 
-#endif /* GDK_TIME_TIME_H  */
+#endif

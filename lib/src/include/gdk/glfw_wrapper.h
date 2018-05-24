@@ -3,5 +3,7 @@
 
 namespace GLFW
 {
-    void SwapBuffer();    
+    void SwapBuffer();
+
+    double GetTime();
 }

@@ -9,16 +9,28 @@
 
 //hacks
 #include <memory>
-
 #include <vector>
+
 #include <gdk/texture.h>
 #include <gdk/shaderprogram.h>
 #include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
+#include <gdk/camera.h>
+#include <gdk/intvector2.h>
+#include <gdk/glfw_wrapper.h>
+#include <gdk/color.h>
+#include <gdk/glh.h>
+
 namespace
 {
     void hack()
     {
+        //clear buffer hack. Why does this need to be called first? GLFW is probably initializing weird. Look at wrapper
+        glh::ClearColor(gdk::Color::CornflowerBlue);            
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        GLFW::SwapBuffer();
+        //END
+        
         std::shared_ptr<gdk::GFX::Texture> pTexture = std::make_shared<gdk::GFX::Texture>([]()
         {
             std::vector<const GLubyte> textureData({
@@ -85,9 +97,18 @@ namespace
             return gdk::GFX::VertexData("Quad",gdk::GFX::VertexData::Type::Static,gdk::GFX::VertexFormat::Pos3uv2,data);
         }());
 
-        //Draw hack
+        std::shared_ptr<gdk::Camera> pCamera = std::make_shared<gdk::Camera>([]()
+        {
+            return gdk::Camera();
+        }());
+
+        //Draw hack. Note: Missing uniform data upload step. Need to import uniform handlers from GDK
+        std::cout << "Draw hack begins\n";
+        
+        pCamera->draw((gdk::IntVector2){800, 600});        
         pShader->useProgram();
         pVertexData->draw(pShader->getHandle());
+        //END
     }
 }
 
@@ -95,14 +116,14 @@ namespace gdk
 {
     void init()
     {        
-        gfx::init();
+        //gfx::init();
 
         hack();
     }
 
     void draw()
     {
-        gfx::draw();
+//        gfx::draw();
     }
     
     void update()

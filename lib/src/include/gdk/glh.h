@@ -14,7 +14,7 @@ namespace gdk{struct Color;}
 namespace gdk{struct IntVector2;}
 namespace gdk{struct Vector2;}
 namespace gdk{struct Vector3;}
-//namespace gdk{struct Vector4;}
+namespace gdk{struct Vector4;}
 namespace gdk{struct Mat4x4;}
 
 namespace glh
@@ -35,14 +35,14 @@ namespace glh
     // Vertex binding
     bool EnableVertexAttribute(const std::string &aAttributeName, const GLuint aProgramHandle, const int aAttributeSize,
                                const int aAttributeOffset, const int aTotalNumberOfVertexAttributeComponents);
-/*
+
     //Uniform binding
     bool BindTextureUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GLuint aTextureHandle, const int aTextureUnit);//, final GLenum &aTextureType);
     bool Bind1FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const float aScalar);
     bool Bind2FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector2 &aVector2);
     bool Bind3FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector3 &aVector3);
     bool Bind4FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector4 &aVector4);
-    bool BindMatrix4x4     (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Mat4x4  &aMatrix4x4);*/
+    bool BindMatrix4x4     (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Mat4x4  &aMatrix4x4);
 }
 
 #endif

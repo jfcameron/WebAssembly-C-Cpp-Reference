@@ -46,7 +46,7 @@ namespace
     {        
         ::initContext();
         
-        return ::initWindow({800,600}, "gdk Window");
+        return ::initWindow({800,600}, "gdk Window"); //Refactor this
     }();
 }
 
@@ -55,5 +55,10 @@ namespace GLFW
     void SwapBuffer()
     {
         glfwSwapBuffers(::pWindow);
+    }
+
+    double GetTime()
+    {
+        return glfwGetTime();
     }
 }

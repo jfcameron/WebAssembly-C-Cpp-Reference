@@ -14,11 +14,10 @@
 #include <gdk/vector3.h>
 
 using namespace gdk;
-using namespace GFX;
 
 static constexpr char TAG[] = "Camera";
 
-std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::Camera &a)
+std::ostream &gdk::operator<<(std::ostream &s, const Camera &a)
 {
     s.clear(); s
     << "{"

@@ -1,8 +1,8 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 2017-06-26.
-#include "Vector3.h"
-//std inc
+#include <gdk/vector3.h>
+
 #include <math.h>
 #include <iostream>
 
@@ -20,11 +20,14 @@ const Vector3 Vector3::Zero     = Vector3( 0.f, 0.f, 0.f);
 //stringify
 std::ostream& gdk::operator<<(std::ostream& s,const gdk::Vector3& a)
 {
-    s.clear(); s << "{"
-    << "x: " << a.x << ", "
-    << "y: " << a.y << ", "
-    << "z: " << a.z
-    << "}"; return s;
+    s.clear();
+
+    s << "{"
+      << "x: " << a.x << ", "
+      << "y: " << a.y << ", "
+      << "z: " << a.z << "}";
+
+    return s;
 }
 
 //ctors
