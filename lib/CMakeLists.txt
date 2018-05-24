@@ -23,6 +23,8 @@ if (JFC_BUILD_LIB)
 	${CMAKE_CURRENT_SOURCE_DIR}/src/quaternion.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/shaderprogram.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/trigonometry.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vector2.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vector3.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexattribute.cpp
@@ -34,6 +36,7 @@ if (JFC_BUILD_LIB)
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${stb_INCLUDE_DIR}
+        ${glm_INCLUDE_DIR}        
         ${emscripten_INCLUDE_DIR})
 
     set_target_properties(${PROJECT_NAME} PROPERTIES

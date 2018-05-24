@@ -1,13 +1,12 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-26.
 #include "Vector3.h"
 //std inc
 #include <math.h>
 #include <iostream>
 
-using namespace GDK;
-using namespace Math;
+using namespace gdk;
 
 //static const
 const Vector3 Vector3::Up       = Vector3( 0.f, 1.f, 0.f);
@@ -19,7 +18,7 @@ const Vector3 Vector3::Backward = Vector3( 0.f, 0.f,-1.f);
 const Vector3 Vector3::Zero     = Vector3( 0.f, 0.f, 0.f);
 
 //stringify
-std::ostream& GDK::Math::operator<<(std::ostream& s,const Math::Vector3& a)
+std::ostream& gdk::operator<<(std::ostream& s,const gdk::Vector3& a)
 {
     s.clear(); s << "{"
     << "x: " << a.x << ", "

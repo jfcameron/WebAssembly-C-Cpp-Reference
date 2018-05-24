@@ -1,5 +1,5 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-01.
 #include "gdk/exception.h"
 //std inc

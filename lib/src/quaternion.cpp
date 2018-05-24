@@ -1,23 +1,21 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-27.
-#include "Quaternion.h"
-//math inc
-#include "Vector3.h"
-#include "Math/Trigonometry.h"
-//implementation inc
+#include <gdk/quaternion.h>
+#include <gdk/vector3.h>
+#include <gdk/trigonometry.h>
+
 #include <glm/gtc/quaternion.hpp>
-//std inc
+
 #include <iostream>
 
-using namespace GDK;
-using namespace Math;
+using namespace gdk;
 
 //static const
 const Quaternion Quaternion::Identity = Quaternion();
 
 //stringify
-std::ostream &GDK::Math::operator<< (std::ostream &s, const Math::Quaternion &a)
+std::ostream &gdk::operator<< (std::ostream &s, const gdk::Quaternion &a)
 {
     s.clear(); s
     << "{"
@@ -60,9 +58,9 @@ void Quaternion::setFromEuler(const Vector3 &aEulerAngles)
     //convert from euler to radian
     glm::vec3 buff = {aEulerAngles.x, aEulerAngles.y, aEulerAngles.z};
     
-    //buff.x *= Math::Trig::PI/180.f;
-    //buff.y *= Math::Trig::PI/180.f;
-    //buff.z *= Math::Trig::PI/180.f;
+    //buff.x *= gdk::Trig::PI/180.f;
+    //buff.y *= gdk::Trig::PI/180.f;
+    //buff.z *= gdk::Trig::PI/180.f;
     
     glm::quat quat(buff);
     
@@ -80,9 +78,9 @@ Vector3 Quaternion::toEuler() const
     //convert from radian to euler
     glm::vec3 buff = glm::eulerAngles(quaternion);
     
-    /*buff.x *= 180.f/Math::Trig::PI;
-    buff.y *= 180.f/Math::Trig::PI;
-    buff.z *= 180.f/Math::Trig::PI;*/
+    /*buff.x *= 180.f/gdk::Trig::PI;
+    buff.y *= 180.f/gdk::Trig::PI;
+    buff.z *= 180.f/gdk::Trig::PI;*/
     
     
     return {buff.x, buff.y, buff.z};

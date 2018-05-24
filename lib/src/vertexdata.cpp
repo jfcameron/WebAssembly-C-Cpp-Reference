@@ -1,5 +1,5 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-03.
 #include <gdk/vertexdata.h>
 #include <gdk/glh.h>
@@ -10,12 +10,12 @@
 
 #include <iostream>
 
-using namespace GDK;
+using namespace gdk;
 using namespace GFX;
 
 static constexpr char TAG[] = "VertexData";
 
-std::ostream& GDK::GFX::operator<<(std::ostream &s, const GFX::VertexData &a)
+std::ostream& gdk::GFX::operator<<(std::ostream &s, const GFX::VertexData &a)
 {
     s.clear(); s
     << "{"
@@ -110,7 +110,7 @@ VertexData::VertexData(const std::string &aName, const VertexData::Type &aType, 
     
         std::string errorCode;
         
-        if (GLH::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
+        if (glh::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
     }
     
     return ibo;
@@ -130,7 +130,7 @@ VertexData::VertexData(const std::string &aName, const VertexData::Type &aType, 
     
     std::string errorCode;
 
-    if (GLH::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
+    if (glh::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
     
     return vbo;
 }())

@@ -8,16 +8,9 @@
 #include <GLFW/glfw3.h>
 
 #include <gdk/exception.h>
+#include <gdk/intvector2.h>
 
 static constexpr char TAG[] = "GLFW Wrapper";
-
-namespace Math //Should be refactored
-{
-    struct IntVector2
-    {
-        float x, y;
-    };
-}
 
 namespace
 {
@@ -32,7 +25,7 @@ namespace
         if(!glfwInit()) throw gdk::Exception(TAG, "glfwInit failed");
     }
 
-    GLFWwindow *const initWindow(const Math::IntVector2 &aScreenSize, const std::string &aName)
+    GLFWwindow *const initWindow(const gdk::IntVector2 &aScreenSize, const std::string &aName)
     {    
         GLFWwindow* aGLFWWindow = nullptr;
     
@@ -53,7 +46,7 @@ namespace
     {        
         ::initContext();
         
-        return ::initWindow({800,600}, "GDK Window");
+        return ::initWindow({800,600}, "gdk Window");
     }();
 }
 

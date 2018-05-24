@@ -17,7 +17,7 @@ const Vector2 Vector2::Right = Vector2( 1.f, 0.f);
 const Vector2 Vector2::Zero  = Vector2( 0.f, 0.f);
 
 //stringify
-std::ostream &gdk::Math::operator<<(std::ostream &s, const Math::Vector2 &a)
+std::ostream &gdk::operator<<(std::ostream &s, const gdk::Vector2 &a)
 {
     s.clear(); s
     << "{"

@@ -1,8 +1,8 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-03.
-#ifndef GDK_GFX_MESH_H
-#define GDK_GFX_MESH_H
+#ifndef gdk_GFX_MESH_H
+#define gdk_GFX_MESH_H
 
 //#include "DataTypes.h"
 #include <gdk/vertexformat.h>
@@ -10,7 +10,7 @@
 #include <iosfwd>
 #include <string>
 
-namespace GDK
+namespace gdk
 {
     namespace GFX
     {

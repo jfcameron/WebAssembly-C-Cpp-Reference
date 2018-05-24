@@ -1,21 +1,20 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-28.
-#include "Mat4x4.h"
-//gdk inc
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Quaternion.h"
-#include "Trigonometry.h"
-#include "Debug/Exception.h"
-#include "Time/Time.h"
-#include "Debug/Logger.h"
-//std inc
+#include "gdk/mat4x4.h"
+#include "gdk/vector2.h"
+#include "gdk/vector3.h"
+#include "gdk/quaternion.h"
+#include "gdk/logger.h"
+
+#include "gdk/trigonometry.h"
+#include "gdk/exception.h"
+#include "gdk/time.h"
+
 #include <iostream>
 #include <math.h>
 
-using namespace GDK;
-using namespace Math;
+using namespace gdk;
 
 static constexpr auto TAG = "Mat4x4";
 
@@ -23,7 +22,7 @@ static constexpr auto TAG = "Mat4x4";
 const Mat4x4 Mat4x4::Identity = Mat4x4();
 
 //Stringify
-std::ostream& GDK::Math::operator<< (std::ostream &s, const Math::Mat4x4& aMat)
+std::ostream& gdk::operator<< (std::ostream &s, const gdk::Mat4x4& aMat)
 {
     s.clear();s
     << "{" << aMat.m[0][0] << ", " << aMat.m[1][0] << ", " << aMat.m[2][0] << ", " << aMat.m[3][0] << "}\n"
@@ -42,14 +41,14 @@ void Mat4x4::setIdentity()
     m[0][3] = 0.; m[1][3] = 0.; m[2][3] = 0.; m[3][3] = 1.;
 }
 
-void Mat4x4::setOrthographic(const Math::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
+void Mat4x4::setOrthographic(const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
 {
     (void)aOrthoSize;
     (void)aNearClippingPlane;
     (void)aFarClippingPlane;
     (void)aViewportAspectRatio;
     
-    throw GDK::Exception(TAG, "Mat4x4::setOrthographic not implemented!");
+    throw gdk::Exception(TAG, "Mat4x4::setOrthographic not implemented!");
 }
 
 void Mat4x4::translate(const Vector3 &a) //TODO: CONSIDER
@@ -159,7 +158,7 @@ void Mat4x4::rotate(const Quaternion &aRotation)
 
 void Mat4x4::scale(const Vector3 &aPosition)
 {
-    throw GDK::Exception(TAG, "Mat4x4::scale not implemented!");
+    throw gdk::Exception(TAG, "Mat4x4::scale not implemented!");
 }
 
 void Mat4x4::setPerspective(const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)

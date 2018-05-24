@@ -2,11 +2,11 @@
 // Created on 17-07-02.
 
 #include <gdk/opengl.h>
-
 #include <gdk/glh.h>
 #include <gdk/color.h>
+#include <gdk/intvector2.h>
 
-namespace GLH
+namespace glh
 {
     void ClearColor(const gdk::Color &aColor)
     {
@@ -16,33 +16,42 @@ namespace GLH
     bool EnableVertexAttribute(
         const std::string &aAttributeName, const GLuint aProgramHandle, const int aAttributeSize,
         const int aAttributeOffset, const int aTotalNumberOfVertexAttributeComponents)
-{
-    GLint attribute = glGetAttribLocation(aProgramHandle, aAttributeName.c_str());
+    {
+        GLint attribute = glGetAttribLocation(aProgramHandle, aAttributeName.c_str());
     
-    if (attribute ==-1) // The attribute either does not exist or is not used in the current shader program
-        return false;
+        if (attribute ==-1) // The attribute either does not exist or is not used in the current shader program
+            return false;
     
-    glEnableVertexAttribArray(attribute);
+        glEnableVertexAttribArray(attribute);
     
-    //Create vertex attribute pointers..
-    glVertexAttribPointer
-    (
-        attribute, //Position attribute index
-        aAttributeSize, //Pos size
-        GL_FLOAT, //data type of each member of the format (must be uniform, look at glbindbufferdata, it takes an array or ptr to an array, so no suprise)
-        GL_FALSE,
-        sizeof(GLfloat)*aTotalNumberOfVertexAttributeComponents,
-        (void*)(sizeof(GLfloat)*aAttributeOffset)
-     
-    );
+        //Create vertex attribute pointers..
+        glVertexAttribPointer
+            (
+                attribute, //Position attribute index
+                aAttributeSize, //Pos size
+                GL_FLOAT, //data type of each member of the format (must be uniform,
+                          //look at glbindbufferdata, it takes an array or ptr to an array, so no suprise)
+                GL_FALSE,
+                sizeof(GLfloat)*aTotalNumberOfVertexAttributeComponents,
+                (void*)(sizeof(GLfloat)*aAttributeOffset));
     
-    return true;
-}
+        return true;
+    }
+
+    void Viewport(const gdk::IntVector2& aPos, const gdk::IntVector2& aSize)
+    {
+        glViewport(aPos.x, aPos.y, aSize.x, aSize.y);
+    }
+
+    void Scissor(const gdk::IntVector2& aPos, const gdk::IntVector2& aSize)
+    {
+        glScissor(aPos.x, aPos.y, aSize.x, aSize.y);
+    }
 }
 ///////////////////////////////////////////////////////////////////////
 /*
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-02.
 #include "GL.h"
 //gdk inc
@@ -55,26 +64,25 @@ namespace GLH
 #include "Math/Vector4.h"
 //std inc
 #include <vector>
-
-using namespace GDK;
+using namespace gdk;
 using namespace GFX;
 
-void GLH::Viewport(const GDK::Math::IntVector2& aPos, const GDK::Math::IntVector2& aSize)
+void glh::Viewport(const gdk::IntVector2& aPos, const gdk::IntVector2& aSize)
 {
-    glViewport(aPos.x, aPos.y, aSize.x, aSize.y);
+glViewport(aPos.x, aPos.y, aSize.x, aSize.y);
 }
 
-void GLH::Scissor(const GDK::Math::IntVector2& aPos, const GDK::Math::IntVector2& aSize)
+void glh::Scissor(const gdk::IntVector2& aPos, const gdk::IntVector2& aSize)
 {
-    glScissor(aPos.x, aPos.y, aSize.x, aSize.y);
+glScissor(aPos.x, aPos.y, aSize.x, aSize.y);
 }
 
-void GLH::ClearColor(const GDK::GFX::Color &aColor)
+void glh::ClearColor(const gdk::GFX::Color &aColor)
 {
     glClearColor(aColor.r, aColor.g, aColor.b, aColor.a);
 }
 
-std::string GLH::GetShaderInfoLog(const GLuint aShaderStageHandle)
+std::string glh::GetShaderInfoLog(const GLuint aShaderStageHandle)
 {
     GLint bufflen = 0;
     glGetShaderiv(aShaderStageHandle, GL_INFO_LOG_LENGTH, &bufflen);
@@ -90,7 +98,7 @@ std::string GLH::GetShaderInfoLog(const GLuint aShaderStageHandle)
     return "clear";
 }
 
-std::string GLH::GetProgramInfoLog(const GLuint aShaderProgramHandle)
+std::string glh::GetProgramInfoLog(const GLuint aShaderProgramHandle)
 {
     GLint maxLength = 0;
     glGetProgramiv(aShaderProgramHandle, GL_INFO_LOG_LENGTH, &maxLength);
@@ -101,7 +109,7 @@ std::string GLH::GetProgramInfoLog(const GLuint aShaderProgramHandle)
     return std::string(infoLog.begin(),infoLog.end());
 }
 */
-bool GLH::GetError(std::string *aErrorCode)
+bool glh::GetError(std::string *aErrorCode)
 {
     std::string errorcodebuffer = "";
     
@@ -127,7 +135,7 @@ bool GLH::GetError(std::string *aErrorCode)
             errorcodebuffer = "GL_OUT_OF_MEMORY";
         
         default:
-            errorcodebuffer = "GDK_UNHANDLED_GL_ERROR_CODE";
+            errorcodebuffer = "gdk_UNHANDLED_GL_ERROR_CODE";
         
     }
     
@@ -139,7 +147,7 @@ bool GLH::GetError(std::string *aErrorCode)
     return true;
 }
 
-/*std::vector<std::string> GLH::GetErrors()
+/*std::vector<std::string> glh::GetErrors()
 {
     std::vector<std::string> errors;
     
@@ -156,7 +164,7 @@ bool GLH::GetError(std::string *aErrorCode)
     
 }*/
 
-/*void GLH::LogErrors(const bool &aDoNotLogIfNoErrors)
+/*void glh::LogErrors(const bool &aDoNotLogIfNoErrors)
 {
     std::vector<std::string> errors = GetErrors();
     size_t s = errors.size();
@@ -183,12 +191,12 @@ bool GLH::GetError(std::string *aErrorCode)
     
 }*/
 /*
-void GLH::ClearErrors()
+void glh::ClearErrors()
 {
     while (glGetError() != GL_NO_ERROR);
 }
 
-bool GLH::BindTextureUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GLuint aTextureHandle, const int aTextureUnit*//*, final GLenum &aTextureType*//*)
+bool glh::BindTextureUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GLuint aTextureHandle, const int aTextureUnit*//*, final GLenum &aTextureType*//*)
 {
     GLint uniformHandle  = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
     int theTextureType = GL_TEXTURE_2D;
@@ -215,7 +223,7 @@ bool GLH::BindTextureUniform(const GLuint aShaderHandle, const std::string &aUni
     return true;
 }
 
-bool GLH::Bind1FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const float aValue)
+bool glh::Bind1FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const float aValue)
 {
     GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
     
@@ -227,7 +235,7 @@ bool GLH::Bind1FloatUniform(const GLuint aShaderHandle, const std::string &aUnif
     return true;
 }
 
-bool GLH::Bind2FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Vector2 &aVector2)
+bool glh::Bind2FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector2 &aVector2)
 {
     GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
     
@@ -239,7 +247,7 @@ bool GLH::Bind2FloatUniform(const GLuint aShaderHandle, const std::string &aUnif
     return true;
 }
 
-bool GLH::Bind3FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Vector3 &aVector3)
+bool glh::Bind3FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector3 &aVector3)
 {
     GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
     
@@ -251,7 +259,7 @@ bool GLH::Bind3FloatUniform(const GLuint aShaderHandle, const std::string &aUnif
     return true;
 }
 
-bool GLH::Bind4FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Vector4 &aVector4)
+bool glh::Bind4FloatUniform(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector4 &aVector4)
 {
     GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
     
@@ -263,7 +271,7 @@ bool GLH::Bind4FloatUniform(const GLuint aShaderHandle, const std::string &aUnif
     return true;
 }
 
-bool GLH::BindMatrix4x4(const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Mat4x4 &aMatrix4x4)
+bool glh::BindMatrix4x4(const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Mat4x4 &aMatrix4x4)
 {
     GLint uniformHandle = glGetUniformLocation(aShaderHandle, aUniformName.c_str());
     

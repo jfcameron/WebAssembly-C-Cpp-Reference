@@ -1,14 +1,14 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-03.
-#ifndef GDK_GFX_VERTEXATTRIBUTE_H
-#define GDK_GFX_VERTEXATTRIBUTE_H
+#ifndef gdk_GFX_VERTEXATTRIBUTE_H
+#define gdk_GFX_VERTEXATTRIBUTE_H
 
 //std inc
 #include <iosfwd>
 #include <string>
 
-namespace GDK
+namespace gdk
 {
     namespace GFX
     {

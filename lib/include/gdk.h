@@ -1,12 +1,12 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 // Created on 2018-05-14.
 
-#ifndef GDK_GDK_H
-#define GDK_GDK_H
+#ifndef gdk_gdk_H
+#define gdk_gdk_H
 
 namespace gdk
 {
-    /// Allocates heap memory and initializes GDK context
+    /// Allocates heap memory and initializes gdk context
     void init();
 
     /// Renders a frame
@@ -15,7 +15,7 @@ namespace gdk
     /// Updates all entities.
     void update();
 
-    /// Frees heap memory, cleans up GDK context
+    /// Frees heap memory, cleans up gdk context
     void free();
 }
 

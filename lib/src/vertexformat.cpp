@@ -1,5 +1,5 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-03.
 #include <gdk/vertexformat.h>
 #include <gdk/glh.h>
@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-using namespace GDK;
+using namespace gdk;
 using namespace GFX;
 
 static constexpr char TAG[] = "VertexFormat";
@@ -33,7 +33,7 @@ VertexFormat const VertexFormat::Pos3(
     {"a_Position",3}
 });
 
-std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::VertexFormat &a)
+std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::VertexFormat &a)
 {
     (void)a;
     
@@ -67,7 +67,7 @@ void VertexFormat::enableAttributes(const GLuint aShaderProgramHandle) const
         std::string attributeName = attribute.name;
         int attributeSize = attribute.size;
         
-        GLH::EnableVertexAttribute(attributeName, aShaderProgramHandle, attributeSize, attributeOffset,
+        glh::EnableVertexAttribute(attributeName, aShaderProgramHandle, attributeSize, attributeOffset,
                                    m_SumOfAttributeComponents);
         
         attributeOffset += attributeSize;

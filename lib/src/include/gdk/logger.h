@@ -1,13 +1,13 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Created on 2017-06-29.
-#ifndef GDK_DEBUG_LOGGER_H
-#define GDK_DEBUG_LOGGER_H
+#ifndef gdk_DEBUG_LOGGER_H
+#define gdk_DEBUG_LOGGER_H
 
 #include <functional>
 #include <sstream>
 #include <string>
 
-namespace GDK
+namespace gdk
 {
     namespace Debug
     {
@@ -19,16 +19,16 @@ namespace GDK
          however this can be changed by passing a function of sig void(const std::string&) to the constructor. 
          In this way, Logger can be used to output to files, pipes, over the network, etc.
          
-         This header also declares the free standing functions Debug::log and Debug::error, which are GDK wrappers for
+         This header also declares the free standing functions Debug::log and Debug::error, which are gdk wrappers for
          std::clog and std::cerr respectively.
          */
         class Logger final
         {
-            template<typename ...Args> friend void GDK::Debug::log(const char aTag[], Args &&...args);
-            template<typename ...Args> friend void GDK::Debug::error(const char aTag[], Args &&...args);
+            template<typename ...Args> friend void gdk::Debug::log(const char aTag[], Args &&...args);
+            template<typename ...Args> friend void gdk::Debug::error(const char aTag[], Args &&...args);
             
-            static Logger s_GDKLogger;
-            static Logger s_GDKErrorLogger;
+            static Logger s_gdkLogger;
+            static Logger s_gdkErrorLogger;
             
             std::function<void(const std::string &)> m_LoggingBehaviourCallback;
             
@@ -70,13 +70,13 @@ namespace GDK
         template<typename ...Args>
         void log(const char aTag[], Args &&...args)
         {
-            Logger::s_GDKLogger.log(aTag, ": ", std::forward<Args>(args)...);
+            Logger::s_gdkLogger.log(aTag, ": ", std::forward<Args>(args)...);
         }
         
         template<typename ...Args>
         void error(const char aTag[], Args &&...args)
         {
-            Logger::s_GDKErrorLogger.log(aTag, ": ", std::forward<Args>(args)...);
+            Logger::s_gdkErrorLogger.log(aTag, ": ", std::forward<Args>(args)...);
         }
     }
 }

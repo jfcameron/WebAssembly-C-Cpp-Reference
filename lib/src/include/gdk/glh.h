@@ -1,31 +1,31 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 // Created on 17-07-02.
-#ifndef GDK_GLH_H
-#define GDK_GLH_H
+#ifndef gdk_GLH_H
+#define gdk_GLH_H
 
 /*!
- OpenGL header for GDK
+ OpenGL header for gdk
  includes gl functions from glew and declares C++ friendly helpers in the GLH namespace
  */
 
 #include <string>
 
 namespace gdk{struct Color;}
-/*namespace GDK{namespace Math{struct IntVector2;}}
-namespace GDK{namespace Math{struct Vector2;}}
-namespace GDK{namespace Math{struct Vector3;}}
-namespace GDK{namespace Math{struct Vector4;}}
-namespace GDK{namespace Math{struct Mat4x4;}}*/
+namespace gdk{struct IntVector2;}
+namespace gdk{struct Vector2;}
+namespace gdk{struct Vector3;}
+//namespace gdk{struct Vector4;}
+namespace gdk{struct Mat4x4;}
 
-namespace GLH
+namespace glh
 {
-    // GDK-type friendly conveniences
+    // gdk-type friendly conveniences
     void ClearColor(const gdk::Color &aColor);
-    /*void Viewport(const GDK::Math::IntVector2 &aPos, const GDK::Math::IntVector2 &aSize);
-      void Scissor(const GDK::Math::IntVector2 &aPos, const GDK::Math::IntVector2 &aSize);
+    void Viewport(const gdk::IntVector2 &aPos, const gdk::IntVector2 &aSize);
+    void Scissor(const gdk::IntVector2 &aPos, const gdk::IntVector2 &aSize);
     
     // Error detection & logging
-    std::string GetShaderInfoLog(const GLuint aShaderStageHandle);
+    /*  std::string GetShaderInfoLog(const GLuint aShaderStageHandle);
     std::string GetProgramInfoLog(const GLuint aShaderProgramHandle);*/
     bool GetError(std::string *aErrorCode = nullptr);
 /*    //std::vector<std::string> GetErrors();
@@ -39,10 +39,10 @@ namespace GLH
     //Uniform binding
     bool BindTextureUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GLuint aTextureHandle, const int aTextureUnit);//, final GLenum &aTextureType);
     bool Bind1FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const float aScalar);
-    bool Bind2FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Vector2 &aVector2);
-    bool Bind3FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Vector3 &aVector3);
-    bool Bind4FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Vector4 &aVector4);
-    bool BindMatrix4x4     (const GLuint aShaderHandle, const std::string &aUniformName, const GDK::Math::Mat4x4  &aMatrix4x4);*/
+    bool Bind2FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector2 &aVector2);
+    bool Bind3FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector3 &aVector3);
+    bool Bind4FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector4 &aVector4);
+    bool BindMatrix4x4     (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Mat4x4  &aMatrix4x4);*/
 }
 
 #endif

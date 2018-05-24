@@ -1,5 +1,5 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-02.
 #include "gdk/shaderprogram.h"
 //std inc
@@ -9,12 +9,12 @@
 //#include "Debug/Logger.h"
 #include "gdk/exception.h"
 
-using namespace GDK;
+using namespace gdk;
 using namespace GFX;
 
 static constexpr char TAG[] = "ShaderProgram";
 
-std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::ShaderProgram &a) 
+std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::ShaderProgram &a) 
 {
     GLint activeAttribs = 0, activeUniforms = 0;
     glGetProgramiv(a.m_ProgramHandle, GL_ACTIVE_ATTRIBUTES, &activeAttribs);
@@ -61,9 +61,9 @@ ShaderProgram::ShaderProgram(const std::string &aName, const std::string &aVerte
         /*std::ostringstream message;
         
         message << "The shader: \"" << aName << "\" has failed to compile!" << std::endl
-        << std::endl << "program compilation log: " <<         GLH::GetProgramInfoLog(programHandle) << std::endl
-        << std::endl << "vertex shader compilation log: " <<   GLH::GetShaderInfoLog(vs) << std::endl
-        << std::endl << "fragment shader compilation log: " << GLH::GetShaderInfoLog(fs);*/
+        << std::endl << "program compilation log: " <<         glh::GetProgramInfoLog(programHandle) << std::endl
+        << std::endl << "vertex shader compilation log: " <<   glh::GetShaderInfoLog(vs) << std::endl
+        << std::endl << "fragment shader compilation log: " << glh::GetShaderInfoLog(fs);*/
         
         //throw gdk::Exception(TAG, message.str());//throw gdk::Exception(TAG, message.str());
         throw gdk::Exception(TAG, "Shader failed to compile");

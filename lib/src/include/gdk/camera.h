@@ -1,8 +1,8 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-25.
-#ifndef GDK_GFX_CAMERA_H
-#define GDK_GFX_CAMERA_H
+#ifndef gdk_GFX_CAMERA_H
+#define gdk_GFX_CAMERA_H
 
 //gdk inc
 #include "gdk/color.h"
@@ -11,11 +11,11 @@
 //std inc
 #include <iosfwd>
 
-namespace GDK{struct IntVector2;}
-namespace GDK{struct Vector3;   }
-namespace GDK{struct Quaternion;}
+namespace gdk{struct IntVector2;}
+namespace gdk{struct Vector3;   }
+namespace gdk{struct Quaternion;}
 
-namespace GDK
+namespace gdk
 {
     namespace GFX
     {
@@ -44,8 +44,8 @@ namespace GDK
             
         private:
             // Data members
-/*            Math::Mat4x4   m_ViewMatrix        = Math::Mat4x4::Identity;
-              Math::Mat4x4   m_ProjectionMatrix  = Math::Mat4x4::Identity;*/
+            gdk::Mat4x4   m_ViewMatrix        = gdk::Mat4x4::Identity;
+            gdk::Mat4x4   m_ProjectionMatrix  = gdk::Mat4x4::Identity;
             
             ClearMode      m_ClearMode         = ClearMode::Color;
             gdk::Color     m_ClearColor        = Color::CornflowerBlue;
@@ -71,15 +71,19 @@ namespace GDK
             void setViewportSize(const float x, const float y);
             gdk::Vector2 getViewportSize() const;
             
-            //void setOrthographicProjection(const gdk::Vector2 &aOrthoSize, const float &aNearClippingPlane, const float &aFarClippingPlane, const float &aViewportAspectRatio);
-            //void setPerspectiveProjection(const float &aFieldOfView, const float &aNearClippingPlane, const float &aFarClippingPlane, const float &aViewportAspectRatio);
-            /*const Math::Mat4x4 &getProjectionMatrix() const;
-            
-            void setViewMatrix(const Math::Vector3 &aWorldPos, const Math::Quaternion &aRotation);
-            const Math::Mat4x4 &getViewMatrix() const;*/
+            void setOrthographicProjection(
+                const gdk::Vector2 &aOrthoSize, const float &aNearClippingPlane,
+                const float &aFarClippingPlane, const float &aViewportAspectRatio);            
+            void setPerspectiveProjection(
+                const float &aFieldOfView, const float &aNearClippingPlane,
+                const float &aFarClippingPlane, const float &aViewportAspectRatio);
+            const gdk::Mat4x4 &getProjectionMatrix() const;
+             
+            void setViewMatrix(const gdk::Vector3 &aWorldPos, const gdk::Quaternion &aRotation);
+            const gdk::Mat4x4 &getViewMatrix() const;
             
             // Public methods
-            void draw(const GDK::IntVector2 &aFrameBufferSize);
+            void draw(const gdk::IntVector2 &aFrameBufferSize);
             
             // Mutating operators
             Camera& operator=(const Camera &) = delete;

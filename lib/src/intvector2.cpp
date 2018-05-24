@@ -1,14 +1,12 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-26.
-#include "IntVector2.h"
-//math inc
-#include "Vector2.h"
-//std inc
+#include <gdk/intvector2.h>
+#include <gdk/vector2.h>
+
 #include <iostream>
 
-using namespace GDK;
-using namespace Math;
+using namespace gdk;
 
 // Special values
 const IntVector2 IntVector2::Up    = IntVector2( 0, 1);
@@ -18,7 +16,7 @@ const IntVector2 IntVector2::Right = IntVector2( 1, 0);
 const IntVector2 IntVector2::Zero  = IntVector2( 0, 0);
 
 // Stringify
-std::ostream &GDK::Math::operator<<(std::ostream &s, const Math::IntVector2 &a)
+std::ostream &gdk::operator<<(std::ostream &s, const gdk::IntVector2 &a)
 {
     s.clear(); s
     << "{"

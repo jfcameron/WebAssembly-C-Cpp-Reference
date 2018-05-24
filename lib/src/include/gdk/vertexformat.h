@@ -1,8 +1,8 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-03.
-#ifndef GDK_GFX_VERTEXFORMAT_H
-#define GDK_GFX_VERTEXFORMAT_H
+#ifndef gdk_GFX_VERTEXFORMAT_H
+#define gdk_GFX_VERTEXFORMAT_H
 
 #include <gdk/opengl.h>
 
@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace GDK
+namespace gdk
 {
     namespace GFX
     {

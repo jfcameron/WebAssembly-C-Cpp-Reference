@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <gdk/opengl.h>
+#include <gdk/glh.h>
 #include <gdk/camera.h>
 #include <gdk/color.h>
 #include <gdk/exception.h>
@@ -12,12 +13,12 @@
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
 
-using namespace GDK;
+using namespace gdk;
 using namespace GFX;
 
 static constexpr char TAG[] = "Camera";
 
-std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Camera &a)
+std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::Camera &a)
 {
     s.clear(); s
     << "{"
@@ -39,7 +40,7 @@ Camera::Camera()
     glEnable(GL_SCISSOR_TEST);   
 }
 
-static inline void calculateOrthographicProjection(Math::Mat4x4 &aProjectionMatrix, const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
+static inline void calculateOrthographicProjection(gdk::Mat4x4 &aProjectionMatrix, const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
 {
     (void)aProjectionMatrix;
     (void)aOrthoSize;
@@ -47,21 +48,21 @@ static inline void calculateOrthographicProjection(Math::Mat4x4 &aProjectionMatr
     (void)aFarClippingPlane;
     (void)aViewportAspectRatio;
     
-    throw GDK::Exception(TAG, "Camera::setOrthographicProjection not implemented!");
+    throw gdk::Exception(TAG, "Camera::setOrthographicProjection not implemented!");
 }
 
-static inline void calculatePerspectiveProjection(Math::Mat4x4& aProjectionMatrix, const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
+static inline void calculatePerspectiveProjection(gdk::Mat4x4& aProjectionMatrix, const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
 {
     aProjectionMatrix.setPerspective(aFieldOfView, aNearClippingPlane, aFarClippingPlane, aViewportAspectRatio);
 }
 
-void Camera::draw(const Math::IntVector2 &aFrameBufferSize)
+void Camera::draw(const gdk::IntVector2 &aFrameBufferSize)
 {
-    Math::IntVector2 viewportPixelPosition(aFrameBufferSize * m_ViewportPosition);
-    Math::IntVector2 viewportPixelSize    (aFrameBufferSize * m_ViewportSize);
+    gdk::IntVector2 viewportPixelPosition(aFrameBufferSize * m_ViewportPosition);
+    gdk::IntVector2 viewportPixelSize    (aFrameBufferSize * m_ViewportSize);
     
-    GLH::Viewport(viewportPixelPosition, viewportPixelSize);
-    GLH::Scissor (viewportPixelPosition, viewportPixelSize);
+    glh::Viewport(viewportPixelPosition, viewportPixelSize);
+    glh::Scissor (viewportPixelPosition, viewportPixelSize);
     
     switch(m_ProjectionMode)
     {
@@ -77,7 +78,7 @@ void Camera::draw(const Math::IntVector2 &aFrameBufferSize)
     switch(m_ClearMode)
     {
         case ClearMode::Color:
-            GLH::ClearColor(m_ClearColor);
+            glh::ClearColor(m_ClearColor);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             break;
             
@@ -91,7 +92,7 @@ void Camera::draw(const Math::IntVector2 &aFrameBufferSize)
     }
 }
 
-void Camera::setViewMatrix(const Math::Vector3 &aWorldPos, const Math::Quaternion &aRotation)
+void Camera::setViewMatrix(const gdk::Vector3 &aWorldPos, const gdk::Quaternion &aRotation)
 {
     m_ViewMatrix.setIdentity();
     m_ViewMatrix.rotate({aRotation.toEuler() * -1.f});
@@ -130,12 +131,12 @@ gdk::Vector2 Camera::getViewportSize() const
     return m_ViewportSize;
 }
 
-const Math::Mat4x4 &Camera::getProjectionMatrix() const
+const gdk::Mat4x4 &Camera::getProjectionMatrix() const
 {
     return m_ProjectionMatrix;
 }
 
-const Math::Mat4x4 &Camera::getViewMatrix() const
+const gdk::Mat4x4 &Camera::getViewMatrix() const
 {
     return m_ViewMatrix;
 }

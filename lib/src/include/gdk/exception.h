@@ -1,8 +1,8 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-01.
-#ifndef GDK_EXCEPTION_H
-#define GDK_EXCEPTION_H
+#ifndef gdk_EXCEPTION_H
+#define gdk_EXCEPTION_H
 
 //std inc
 #include <stdexcept>
@@ -12,7 +12,7 @@
 namespace gdk
 {
     /*!
-     GDK runtime exception type. This allows users to differentiate between nonGDK and GDK exceptions.
+     gdk runtime exception type. This allows users to differentiate between nongdk and gdk exceptions.
      */
     class Exception : public std::runtime_error
     {

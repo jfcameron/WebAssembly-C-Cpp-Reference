@@ -1,7 +1,7 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 // Created on 2017-06-25.
-#ifndef GDK_GFX_COLOR_H
-#define GDK_GFX_COLOR_H
+#ifndef gdk_GFX_COLOR_H
+#define gdk_GFX_COLOR_H
 
 //std inc
 #include <iosfwd>

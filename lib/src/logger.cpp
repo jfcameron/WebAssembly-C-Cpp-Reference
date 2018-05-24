@@ -1,15 +1,15 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-29.
 #include <gdk/logger.h>
 
 #include <iostream>
 #include <string>
 
-using namespace GDK;
+using namespace gdk;
 using namespace Debug;
 
-Logger Logger::s_GDKLogger
+Logger Logger::s_gdkLogger
 (
     [](const std::string &aMessage)
     {
@@ -17,7 +17,7 @@ Logger Logger::s_GDKLogger
     }
 );
 
-Logger Logger::s_GDKErrorLogger
+Logger Logger::s_gdkErrorLogger
 (
     [](const std::string &aMessage)
     {

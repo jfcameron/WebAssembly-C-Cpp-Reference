@@ -1,15 +1,15 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 17-07-02.
-#ifndef GDK_GFX_SHADERPROGRAM_H
-#define GDK_GFX_SHADERPROGRAM_H
+#ifndef gdk_GFX_SHADERPROGRAM_H
+#define gdk_GFX_SHADERPROGRAM_H
 
 #include <iosfwd>
 #include <string>
 
 #include <gdk/opengl.h>
 
-namespace GDK
+namespace gdk
 {
     namespace GFX
     {

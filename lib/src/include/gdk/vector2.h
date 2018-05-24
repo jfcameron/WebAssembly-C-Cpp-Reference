@@ -1,8 +1,8 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-26.
-#ifndef GDK_MATH_VECTOR2_H
-#define GDK_MATH_VECTOR2_H
+#ifndef gdk_MATH_VECTOR2_H
+#define gdk_MATH_VECTOR2_H
 
 //std inc
 #include <iosfwd>

@@ -1,5 +1,5 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-25.
 #include <gdk/color.h>
 //std inc

@@ -19,7 +19,7 @@ namespace
 {
     void hack()
     {
-        std::shared_ptr<GDK::GFX::Texture> pTexture = std::make_shared<GDK::GFX::Texture>([]()
+        std::shared_ptr<gdk::GFX::Texture> pTexture = std::make_shared<gdk::GFX::Texture>([]()
         {
             std::vector<const GLubyte> textureData({
                     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
@@ -35,11 +35,11 @@ namespace
                         0xa4, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42,
                         0x60, 0x82});
 
-            //GDK::GFX::Texture myTexture("CheckerboardOfDeath", textureData);
-            return GDK::GFX::Texture("CheckerboardOfDeath", textureData);
+            //gdk::GFX::Texture myTexture("CheckerboardOfDeath", textureData);
+            return gdk::GFX::Texture("CheckerboardOfDeath", textureData);
         }());
 
-        std::shared_ptr<GDK::GFX::ShaderProgram> pShader = std::make_shared<GDK::GFX::ShaderProgram>([]()
+        std::shared_ptr<gdk::GFX::ShaderProgram> pShader = std::make_shared<gdk::GFX::ShaderProgram>([]()
         {
             const std::string vertexShaderSource = R"V0G0N(
             //Uniforms
@@ -65,10 +65,10 @@ namespace
             }
             )V0G0N";
             
-            return GDK::GFX::ShaderProgram("MySuperCoolShader", vertexShaderSource, fragmentShaderSource);
+            return gdk::GFX::ShaderProgram("MySuperCoolShader", vertexShaderSource, fragmentShaderSource);
         }());
 
-        std::shared_ptr<GDK::GFX::VertexData> pVertexData = std::make_shared<GDK::GFX::VertexData>([]()
+        std::shared_ptr<gdk::GFX::VertexData> pVertexData = std::make_shared<gdk::GFX::VertexData>([]()
         {
             float size  = 1.;
             float hsize = size/2.;
@@ -82,7 +82,7 @@ namespace
                         size -hsize, 0.0f -hsize, 0.0f, 1.0f, 1.0f, // 1--2
                         });
 
-            return GDK::GFX::VertexData("Quad",GDK::GFX::VertexData::Type::Static,GDK::GFX::VertexFormat::Pos3uv2,data);
+            return gdk::GFX::VertexData("Quad",gdk::GFX::VertexData::Type::Static,gdk::GFX::VertexFormat::Pos3uv2,data);
         }());
 
         //Draw hack

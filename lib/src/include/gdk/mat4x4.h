@@ -1,20 +1,18 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
+// Project: gdk
 // Created on 2017-06-28.
-#ifndef GDK_MATH_MAT4x4_H
-#define GDK_MATH_MAT4x4_H
+#ifndef gdk_MATH_MAT4x4_H
+#define gdk_MATH_MAT4x4_H
 
 //std inc
 #include <iosfwd>
 
-namespace GDK{namespace Math{struct Vector2;}}
-namespace GDK{namespace Math{struct Vector3;}}
-namespace GDK{namespace Math{struct Quaternion;}}
+namespace gdk{struct Vector2;}
+namespace gdk{struct Vector3;}
+namespace gdk{struct Quaternion;}
 
-namespace GDK
+namespace gdk
 {
-    namespace Math
-    {
         /*!
          used to store 3D transformations.
          */
@@ -26,7 +24,7 @@ namespace GDK
             // Mutating operations
             void setIdentity();
             
-            void setOrthographic(const Math::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio);
+            void setOrthographic(const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio);
             void setPerspective(const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio);
             
             void translate(const Vector3 &aTranslation);
@@ -65,8 +63,7 @@ namespace GDK
             static const Mat4x4 Identity;
         };
         
-        std::ostream& operator<< (std::ostream&, const Math::Mat4x4&);
-    }
+        std::ostream& operator<< (std::ostream&, const gdk::Mat4x4&);
 }
 
-#endif /* GDK_MATH_MAT4x4_H */
+#endif /* gdk_MATH_MAT4x4_H */
