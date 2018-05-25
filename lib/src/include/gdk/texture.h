@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-03.
 #ifndef gdk_GFX_TEXTURE_H
@@ -12,38 +12,35 @@
 
 namespace gdk
 {
-    namespace GFX
+    /*!
+      Texture represents an image. RGBA32, 2D.
+    */
+    class Texture final
     {
-        /*!
-         Texture represents an image. RGBA32, 2D.
-         */
-        class Texture final
-        {
-            friend std::ostream &operator<< (std::ostream &, const GFX::Texture &);
+        friend std::ostream &operator<< (std::ostream &, const Texture &);
             
-            // Data members
-            std::string m_Name = {};
-            GLuint m_Handle = {0};
+        // Data members
+        std::string m_Name = {};
+        GLuint m_Handle = {0};
     
-        public:
-            // Accessors
-            std::string getName() const;
-            GLuint getHandle() const;
+    public:
+        // Accessors
+        std::string getName() const;
+        GLuint getHandle() const;
             
-            // Mutating operators
-            Texture &operator=(const Texture&) = delete;
-            Texture &operator=(Texture&&) = delete;
+        // Mutating operators
+        Texture &operator=(const Texture&) = delete;
+        Texture &operator=(Texture&&) = delete;
       
-            // Constructors, destructors
-            Texture(const std::string &aName, const std::vector<const GLubyte>& aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
-            Texture() = delete;
-            Texture(const Texture&) = delete;
-            Texture(Texture&&);
-            ~Texture();      
-        };
+        // Constructors, destructors
+        Texture(const std::string &aName, const std::vector<const GLubyte>& aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
+        Texture() = delete;
+        Texture(const Texture&) = delete;
+        Texture(Texture&&);
+        ~Texture();      
+    };
 
-        std::ostream &operator<< (std::ostream &, const GFX::Texture &);
-    }
+    std::ostream &operator<< (std::ostream &, const Texture &);
 }
 
 #endif

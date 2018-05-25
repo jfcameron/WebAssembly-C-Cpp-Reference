@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-09.
 #ifndef GDK_GFX_UNIFORMCOLLECTION_H
@@ -17,8 +17,7 @@ namespace gdk
       It is a baseclass that manages, binds and unbinds a collection of T to a
       shaderprogram
     */
-    template<typename T>
-    class UniformCollection
+    template<typename T> class UniformCollection
     {
     protected:
         // Data members
@@ -45,7 +44,7 @@ namespace gdk
       
         // Constructors, destructors
         UniformCollection() = default;
-        UniformCollection(const UniformCollection &) = delete;
+        UniformCollection(const UniformCollection &) = default;
         UniformCollection(UniformCollection &&) = default;
         virtual ~UniformCollection() = default;
     };

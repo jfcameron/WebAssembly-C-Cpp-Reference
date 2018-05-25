@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created 2017-06-27.
 #ifndef GDK_MATH_VECTOR4_H

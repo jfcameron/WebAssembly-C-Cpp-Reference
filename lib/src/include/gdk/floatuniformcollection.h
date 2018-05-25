@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-09.
 #ifndef GDK_GFX_FLOATUNIFORMCOLLECTION_H
@@ -29,8 +29,8 @@ namespace gdk
       
         // Constructors, destructors
         FloatUniformCollection() = default;
-        FloatUniformCollection(const FloatUniformCollection &) = delete;
-        FloatUniformCollection(FloatUniformCollection &&) = delete;
+        FloatUniformCollection(const FloatUniformCollection &) = default;
+        FloatUniformCollection(FloatUniformCollection &&) = default;
         ~FloatUniformCollection() = default;
     };
 

@@ -20,6 +20,8 @@
 #include <gdk/glfw_wrapper.h>
 #include <gdk/color.h>
 #include <gdk/glh.h>
+#include <gdk/model.h>
+#include <gdk/defaultresources.h>
 
 namespace
 {
@@ -31,7 +33,7 @@ namespace
         GLFW::SwapBuffer();
         //END
         
-        std::shared_ptr<gdk::GFX::Texture> pTexture = std::make_shared<gdk::GFX::Texture>([]()
+        std::shared_ptr<gdk::Texture> pTexture = std::make_shared<gdk::Texture>([]()
         {
             std::vector<const GLubyte> textureData({
                     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
@@ -47,13 +49,13 @@ namespace
                         0xa4, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42,
                         0x60, 0x82});
 
-            //gdk::GFX::Texture myTexture("CheckerboardOfDeath", textureData);
-            return gdk::GFX::Texture("CheckerboardOfDeath", textureData);
+            //gdk::Texture myTexture("CheckerboardOfDeath", textureData);
+            return gdk::Texture("CheckerboardOfDeath", textureData);
         }());
 
-        std::shared_ptr<gdk::GFX::ShaderProgram> pShader = std::make_shared<gdk::GFX::ShaderProgram>([]()
+        std::shared_ptr<gdk::ShaderProgram> pShader = std::make_shared<gdk::ShaderProgram>([]()
         {
-            const std::string vertexShaderSource = R"V0G0N(
+            /*const std::string vertexShaderSource = R"V0G0N(
             //Uniforms
             uniform mat4 _MVP;
 
@@ -62,25 +64,73 @@ namespace
 
             void main ()
             {
-                gl_Position = _MVP * vec4(a_Position,1.0); //Make use of actual verts
+                gl_Position = _MVP * vec4(a_Position,1.0);
             }
             )V0G0N";
 
             const std::string fragmentShaderSource = R"V0G0N(
             precision mediump float;
             
-            //const highp vec4 DeathlyPink(1,0.2,0.8,1);
+            const vec4 DEATHLY_PINK = vec4(1,0.2,0.8,1);
 
             void main()
             {
-                gl_FragColor = vec4(1,0.2,0.8,1);//DeathlyPink;
+                gl_FragColor = DEATHLY_PINK;
+            }
+            )V0G0N";*/
+
+            const std::string vertexShaderSource = R"V0G0N(
+            #version 100
+
+            //Uniforms
+            uniform mat4  _MVP;
+            uniform mat4  _Model;
+            uniform mat4  _View;
+            uniform mat4  _Projection;
+            uniform float _Time;
+          
+            //VertIn
+            attribute highp vec3 a_Position;
+            attribute highp vec2 a_UV;
+
+            //FragIn
+            varying lowp vec2 v_UV;
+
+            void main ()
+            {
+                gl_Position = _MVP * vec4(a_Position,1.0);
+                
+                v_UV = a_UV;
+            }
+            )V0G0N";
+
+            const std::string fragmentShaderSource = R"V0G0N(
+            #version 100
+            precision mediump float;
+            
+            //Uniforms
+            uniform sampler2D _Texture;
+            
+            //FragIn
+            varying lowp vec2 v_UV;
+
+            void main()
+            {
+                vec4 frag = texture2D(_Texture, v_UV);
+                
+                if (frag[3] < 1.0) discard;
+                
+                gl_FragColor = frag;
+                
+                
+                //gl_FragColor = vec4(1,0.2,0.8,1);//DeathlyPink;
             }
             )V0G0N";
             
-            return gdk::GFX::ShaderProgram("MySuperCoolShader", vertexShaderSource, fragmentShaderSource);
+            return gdk::ShaderProgram("MySuperCoolShader", vertexShaderSource, fragmentShaderSource);
         }());
 
-        std::shared_ptr<gdk::GFX::VertexData> pVertexData = std::make_shared<gdk::GFX::VertexData>([]()
+        std::shared_ptr<gdk::VertexData> pVertexData = std::make_shared<gdk::VertexData>([]()
         {
             float size  = 1.;
             float hsize = size/2.;
@@ -94,7 +144,7 @@ namespace
                         size -hsize, 0.0f -hsize, 0.0f, 1.0f, 1.0f, // 1--2
                         });
 
-            return gdk::GFX::VertexData("Quad",gdk::GFX::VertexData::Type::Static,gdk::GFX::VertexFormat::Pos3uv2,data);
+            return gdk::VertexData("Quad",gdk::VertexData::Type::Static,gdk::VertexFormat::Pos3uv2,data);
         }());
 
         std::shared_ptr<gdk::Camera> pCamera = std::make_shared<gdk::Camera>([]()
@@ -102,12 +152,21 @@ namespace
             return gdk::Camera();
         }());
 
-        //Draw hack. Note: Missing uniform data upload step. Need to import uniform handlers from GDK
-        std::cout << "Draw hack begins\n";
+        std::shared_ptr<gdk::Model> pModel = std::make_shared<gdk::Model>([&]()
+        {
+            //Model(const std::string &aName, const default_ptr<VertexData> &, const default_ptr<ShaderProgram> &);
+            return gdk::Model("MySuperCoolModel", gdk::DefaultResources::getQuad(), gdk::default_ptr<gdk::ShaderProgram>(pShader));
+        }());
+
+
+        //void setTexture(const std::string &aUniformName, const default_ptr<Texture>     &aTexture);
+        pModel->setTexture("_Texture", gdk::default_ptr<gdk::Texture>(pTexture));
         
-        pCamera->draw((gdk::IntVector2){800, 600});        
-        pShader->useProgram();
-        pVertexData->draw(pShader->getHandle());
+        //Draw hack. Note: Missing uniform data upload step. Need to import uniform handlers from GDK
+        std::cout << "Draw hack begins\n";       
+        pCamera->draw((gdk::IntVector2){800, 600});
+        
+        pModel->draw(gdk::Mat4x4::Identity, gdk::Mat4x4::Identity);        
         //END
     }
 }

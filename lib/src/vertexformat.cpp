@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-03.
 #include <gdk/vertexformat.h>
@@ -10,7 +10,7 @@
 #include <iostream>
 
 using namespace gdk;
-using namespace GFX;
+
 
 static constexpr char TAG[] = "VertexFormat";
 
@@ -33,7 +33,7 @@ VertexFormat const VertexFormat::Pos3(
     {"a_Position",3}
 });
 
-std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::VertexFormat &a)
+std::ostream &gdk::operator<<(std::ostream &s, const VertexFormat &a)
 {
     (void)a;
     

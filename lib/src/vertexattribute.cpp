@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-03.
 #include <gdk/vertexattribute.h>
@@ -6,9 +6,8 @@
 #include <iostream>
 
 using namespace gdk;
-using namespace GFX;
 
-std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::VertexAttribute &a)
+std::ostream &gdk::operator<<(std::ostream &s, const VertexAttribute &a)
 {
     s.clear(); s
     << "{"

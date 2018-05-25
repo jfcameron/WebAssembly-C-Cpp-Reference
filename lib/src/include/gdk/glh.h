@@ -10,12 +10,15 @@
 
 #include <string>
 
-namespace gdk{struct Color;}
-namespace gdk{struct IntVector2;}
-namespace gdk{struct Vector2;}
-namespace gdk{struct Vector3;}
-namespace gdk{struct Vector4;}
-namespace gdk{struct Mat4x4;}
+namespace gdk
+{
+    struct Color;
+    struct IntVector2;
+    struct Vector2;
+    struct Vector3;
+    struct Vector4;
+    struct Mat4x4;
+}
 
 namespace glh
 {

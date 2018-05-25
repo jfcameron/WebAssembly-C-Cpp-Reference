@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-03.
 #ifndef gdk_GFX_VERTEXATTRIBUTE_H
@@ -10,32 +10,30 @@
 
 namespace gdk
 {
-    namespace GFX
+    /*!
+      A vertex attribute is a component of a vertex (eg: position, uv, normal, color).
+      Vertexes are made up of an arbitrary set of components.
+      In the context of OpenGL, a component is a floating-point value.
+    */
+    struct VertexAttribute final
     {
-        /*!
-         A vertex attribute is a component of a vertex (eg: position, uv, normal, color).
-         Vertexes are made up of an arbitrary set of components.
-         */
-        struct VertexAttribute final
-        {
-            // Data members
-            std::string    name = "attribute";
-            unsigned short size = {0};
+        // Data members
+        std::string    name = "attribute";
+        unsigned short size = {0};
             
-            // Mutating operators
-            VertexAttribute &operator=(const VertexAttribute &) = default;
-            VertexAttribute &operator=(VertexAttribute &&) = default;
+        // Mutating operators
+        VertexAttribute &operator=(const VertexAttribute &) = default;
+        VertexAttribute &operator=(VertexAttribute &&) = default;
       
-            // Constructors, destructors
-            VertexAttribute() = delete;
-            VertexAttribute(const std::string &aName, const unsigned short &aSize);
-            VertexAttribute(const VertexAttribute &) = default;
-            VertexAttribute(VertexAttribute &&) = default;
-            ~VertexAttribute() = default;
-        };
+        // Constructors, destructors
+        VertexAttribute() = delete;
+        VertexAttribute(const std::string &aName, const unsigned short &aSize);
+        VertexAttribute(const VertexAttribute &) = default;
+        VertexAttribute(VertexAttribute &&) = default;
+        ~VertexAttribute() = default;
+    };
 
-        std::ostream &operator<< (std::ostream &, const GFX::VertexAttribute &);
-    }
+    std::ostream &operator<< (std::ostream &, const VertexAttribute &);
 }
 
 #endif

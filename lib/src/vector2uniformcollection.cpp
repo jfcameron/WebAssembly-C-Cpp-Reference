@@ -1,17 +1,16 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-09.
-#include "Vector2UniformCollection.h"
-//gdk inc
-#include "GL.h"
-#include "Math/Vector2.h"
-//std inc
+#include <gdk/vector2uniformcollection.h>
+#include <gdk/opengl.h>
+#include <gdk/glh.h>
+#include <gdk/vector2.h>
+
 #include <iostream>
 
-using namespace GDK;
-using namespace GFX;
+using namespace gdk;
 
-std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Vector2UniformCollection &a)
+std::ostream &gdk::operator<<(std::ostream &s, const Vector2UniformCollection &a)
 {
     s.clear(); s
     
@@ -27,14 +26,14 @@ std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Vector2UniformCol
     return s;
 }
 
-void Vector2UniformCollection::bind(const GFXuint aProgramHandle)
+void Vector2UniformCollection::bind(const GLuint aProgramHandle)
 {
     for (auto &pair : m_Map)
-        GLH::Bind2FloatUniform(aProgramHandle, pair.first, *pair.second.get());
+        glh::Bind2FloatUniform(aProgramHandle, pair.first, *pair.second.get());
 }
 
-void Vector2UniformCollection::unbind(const GFXuint aProgramHandle)
+void Vector2UniformCollection::unbind(const GLuint aProgramHandle)
 {
     for (auto &pair : m_Map)
-        GLH::Bind2FloatUniform(aProgramHandle, pair.first, Math::Vector2::Zero);
+        glh::Bind2FloatUniform(aProgramHandle, pair.first, Vector2::Zero);
 }

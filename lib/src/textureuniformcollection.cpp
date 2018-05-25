@@ -1,16 +1,15 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-09.
-#include "TextureUniformCollection.h"
-//gdk inc
-#include "GL.h"
-//std inc
+#include <gdk/textureuniformcollection.h>
+#include <gdk/opengl.h>
+#include <gdk/glh.h>
+
 #include <iostream>
 
-using namespace GDK;
-using namespace GFX;
+using namespace gdk;
 
-std::ostream& GDK::GFX::operator<<(std::ostream& s, const GFX::TextureUniformCollection& a)
+std::ostream& gdk::operator<<(std::ostream& s, const TextureUniformCollection& a)
 {
     s.clear(); s
     
@@ -29,19 +28,19 @@ std::ostream& GDK::GFX::operator<<(std::ostream& s, const GFX::TextureUniformCol
     return s;
 }
 
-void TextureUniformCollection::bind(const GFXuint aProgramHandle)
+void TextureUniformCollection::bind(const GLuint aProgramHandle)
 {
     int i = 0;
     for (auto &pair : m_Map)
     {
         auto texture = pair.second.lock();
-        GLH::BindTextureUniform(aProgramHandle, pair.first, texture->getHandle(), i++);
+        glh::BindTextureUniform(aProgramHandle, pair.first, texture->getHandle(), i++);
     }
 }
 
-void TextureUniformCollection::unbind(const GFXuint aProgramHandle)
+void TextureUniformCollection::unbind(const GLuint aProgramHandle)
 {
     int i = 0;
     for (auto &pair : m_Map)
-        GLH::BindTextureUniform(aProgramHandle, pair.first, 0, i++);
+        glh::BindTextureUniform(aProgramHandle, pair.first, 0, i++);
 }

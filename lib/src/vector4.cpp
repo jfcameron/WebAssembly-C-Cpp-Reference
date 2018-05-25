@@ -1,20 +1,19 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created 2017-06-27.
-#include "Vector4.h"
-//GDK inc
-#include "Vector3.h"
-//std inc
+#include <gdk/vector4.h>
+#include <gdk/vector3.h>
+
 #include <iostream>
 
-using namespace GDK;
-using namespace Math;
+using namespace gdk;
+
 
 //static const
 const Vector4 Vector4::Zero = Vector4( 0.,0.,0.,0.);
 
 //Stringify
-std::ostream& GDK::Math::operator<<(std::ostream& s, const Math::Vector4& a)
+std::ostream& gdk::operator<<(std::ostream& s, const Vector4& a)
 {
     s.clear(); s << "{"
     << "x: " << a.x << ", "

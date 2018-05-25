@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-22.
 #include <gdk/trigonometry.h>
@@ -6,7 +6,7 @@
 #include <iostream>
 #include <math.h> //hmm
 
-using namespace GDK;
+using namespace gdk;
 
 const double Trig::Double::PI = 4*::atan(1); //constexpr? Eval at cmake time?
 const float  Trig        ::PI = static_cast<float>(Trig::Double::PI); //above

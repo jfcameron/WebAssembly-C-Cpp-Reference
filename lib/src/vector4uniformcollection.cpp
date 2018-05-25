@@ -1,17 +1,16 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-09.
-#include "Vector4UniformCollection.h"
-//gdk inc
-#include "GL.h"
-#include "Math/Vector4.h"
-//std inc
+#include "gdk/vector4uniformcollection.h"
+#include "gdk/opengl.h"
+#include "gdk/glh.h"
+#include "gdk/vector4.h"
+
 #include <iostream>
 
-using namespace GDK;
-using namespace GFX;
+using namespace gdk;
 
-std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Vector4UniformCollection &a)
+std::ostream &gdk::operator<<(std::ostream &s, const Vector4UniformCollection &a)
 {
     s.clear(); s
     
@@ -27,14 +26,14 @@ std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Vector4UniformCol
     return s;
 }
 
-void Vector4UniformCollection::bind(const GFXuint aProgramHandle)
+void Vector4UniformCollection::bind(const GLuint aProgramHandle)
 {
     for (auto &pair : m_Map)
-        GLH::Bind4FloatUniform(aProgramHandle, pair.first, *pair.second.get());
+        glh::Bind4FloatUniform(aProgramHandle, pair.first, *pair.second.get());
 }
 
-void Vector4UniformCollection::unbind(const GFXuint aProgramHandle)
+void Vector4UniformCollection::unbind(const GLuint aProgramHandle)
 {
     for (auto &pair : m_Map)
-        GLH::Bind4FloatUniform(aProgramHandle, pair.first, Math::Vector4::Zero);
+        glh::Bind4FloatUniform(aProgramHandle, pair.first, Vector4::Zero);
 }

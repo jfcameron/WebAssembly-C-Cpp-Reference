@@ -1,11 +1,9 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-03.
 #ifndef gdk_GFX_VERTEXFORMAT_H
 #define gdk_GFX_VERTEXFORMAT_H
-
 #include <gdk/opengl.h>
-
 #include <gdk/vertexattribute.h>
 
 #include <iosfwd>
@@ -15,46 +13,48 @@
 
 namespace gdk
 {
-    namespace GFX
+    /*!
+      The purpose of VertexFormat is to inform the context how to interpret Vertex data.
+      Vertex data [in the context of OpenGL] is reprented as an array of floating-point values.
+      The data and the format of that data is completely arbitrary and user defined. 
+      An example of a typical format would be something like this: {Position3, UV2, Normal3, Tangent3}.
+      In the above example, the context would know to interpret your vertex data (array of floats) like this:
+      floats  0..2 will be uploaded to the position attribute, 3 & 4 to the UV attribute, 5..7 to Normal,
+      8..10 Tangent, then repeat (11-13 goes to Position etc...). Attributes, within the context of the graphics pipeline
+      represents instanced data. In the context of the Vertex Shader stage, you will be able to access a set of attributes,
+      representing a single full vertex.
+    */
+    class VertexFormat final
     {
-        /*!
-         Vertex data is arbitrary and user defined. Vertexformat is used to inform the
-         device how to interpret your vertex data. An example of a typical format would be
-         something like this: {Position,UV,Normal,Tangent}. The important thing is that this matches
-         the actual vertex data in the vertex buffer.
-         */
-        class VertexFormat final
-        {
-            friend std::ostream &operator<< (std::ostream &, const GFX::VertexFormat &);
+        friend std::ostream &operator<< (std::ostream &, const VertexFormat &);
     
-            // Data members
-            std::vector<VertexAttribute> m_Format = {};
-            int m_SumOfAttributeComponents = {0};
+        // Data members
+        std::vector<VertexAttribute> m_Format = {};
+        int m_SumOfAttributeComponents = {0};
             
-        public:
-            // Public methods
-            void enableAttributes(const GLuint aShaderProgramHandle) const;
-            int getSumOfAttributeComponents() const;
+    public:
+        // Public methods
+        void enableAttributes(const GLuint aShaderProgramHandle) const;
+        int getSumOfAttributeComponents() const;
             
-            // Mutating operators
-            VertexFormat& operator=(const VertexFormat &) = default;
-            VertexFormat& operator=(VertexFormat &&) = default;
+        // Mutating operators
+        VertexFormat& operator=(const VertexFormat &) = default;
+        VertexFormat& operator=(VertexFormat &&) = default;
       
-            // Constructors, destructors
-            VertexFormat(const std::vector<VertexAttribute> &aAttributes);
-            VertexFormat() = delete;
-            VertexFormat(const VertexFormat &) = default;
-            VertexFormat(VertexFormat &&) = default;
-            ~VertexFormat() = default;
+        // Constructors, destructors
+        VertexFormat(const std::vector<VertexAttribute> &aAttributes);
+        VertexFormat() = delete;
+        VertexFormat(const VertexFormat &) = default;
+        VertexFormat(VertexFormat &&) = default;
+        ~VertexFormat() = default;
             
-            // Special values
-            static const VertexFormat Pos3uv2Norm3;
-            static const VertexFormat Pos3uv2;
-            static const VertexFormat Pos3;
-        };
+        // Hardcoded formats
+        static const VertexFormat Pos3uv2Norm3;
+        static const VertexFormat Pos3uv2;
+        static const VertexFormat Pos3;
+    };
 
-        std::ostream &operator<< (std::ostream &, const GFX::VertexFormat &);
-    }
+    std::ostream &operator<< (std::ostream &, const VertexFormat &);
 }
 
 #endif

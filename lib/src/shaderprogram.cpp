@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-02.
 #include "gdk/shaderprogram.h"
@@ -10,11 +10,10 @@
 #include "gdk/exception.h"
 
 using namespace gdk;
-using namespace GFX;
 
 static constexpr char TAG[] = "ShaderProgram";
 
-std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::ShaderProgram &a) 
+std::ostream &gdk::operator<<(std::ostream &s, const ShaderProgram &a) 
 {
     GLint activeAttribs = 0, activeUniforms = 0;
     glGetProgramiv(a.m_ProgramHandle, GL_ACTIVE_ATTRIBUTES, &activeAttribs);

@@ -1,10 +1,10 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-16.
 #ifndef GDK_TIME_TIME_H
 #define GDK_TIME_TIME_H
 
-namespace GDK
+namespace gdk
 {
     namespace Time
     {

@@ -1,4 +1,4 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-03.
 #include <gdk/texture.h>
@@ -10,11 +10,10 @@
 #include <vector>
 
 using namespace gdk;
-using namespace GFX;
 
 static constexpr char TAG[] = "Texture";
 
-std::ostream &gdk::GFX::operator<<(std::ostream &s, const GFX::Texture &a)
+std::ostream &gdk::operator<<(std::ostream &s, const Texture &a)
 {
     s.clear(); s
     << "{"

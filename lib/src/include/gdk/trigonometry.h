@@ -1,10 +1,10 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-22.
 #ifndef GDK_MATH_TRIGONOMETRY_H
 #define GDK_MATH_TRIGONOMETRY_H
 
-namespace GDK
+namespace gdk
 {
     /*!
       Trigonometry functions

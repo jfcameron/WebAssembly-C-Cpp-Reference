@@ -1,14 +1,14 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-16.
 #include <gdk/time.h>
 #include <gdk/glfw_wrapper.h>
 
-using namespace GDK;
-
 static double currentTime(0.);
 static double lastTime(0.);
 
+namespace gdk
+{
 namespace Time
 {
     double getTime(void) noexcept
@@ -30,4 +30,5 @@ namespace Time
 
         return time;
     }
+}
 }

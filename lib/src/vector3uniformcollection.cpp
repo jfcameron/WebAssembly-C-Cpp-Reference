@@ -1,16 +1,17 @@
-// © 2017 Joseph Cameron - All Rights Reserved
+// © 2018 Joseph Cameron - All Rights Reserved
 // Project: GDK
 // Created on 17-07-09.
-#include "Vector3UniformCollection.h"
-#include "Math/Vector3.h"
-#include "GL.h"
-//std inc
+
+#include <gdk/vector3uniformcollection.h>
+#include <gdk/vector3.h>
+#include <gdk/opengl.h>
+#include <gdk/glh.h>
+
 #include <iostream>
 
-using namespace GDK;
-using namespace GFX;
+using namespace gdk;
 
-std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Vector3UniformCollection &a)
+std::ostream &gdk::operator<<(std::ostream &s, const Vector3UniformCollection &a)
 {
     s.clear(); s
     
@@ -26,14 +27,14 @@ std::ostream &GDK::GFX::operator<<(std::ostream &s, const GFX::Vector3UniformCol
     return s;
 }
 
-void Vector3UniformCollection::bind(const GFXuint aProgramHandle)
+void Vector3UniformCollection::bind(const GLuint aProgramHandle)
 {
     for (auto &pair : m_Map)
-        GLH::Bind3FloatUniform(aProgramHandle, pair.first, *pair.second.get());
+        glh::Bind3FloatUniform(aProgramHandle, pair.first, *pair.second.get());
 }
 
-void Vector3UniformCollection::unbind(const GFXuint aProgramHandle)
+void Vector3UniformCollection::unbind(const GLuint aProgramHandle)
 {
     for (auto &pair : m_Map)
-        GLH::Bind3FloatUniform(aProgramHandle, pair.first, Math::Vector3::Zero);
+        glh::Bind3FloatUniform(aProgramHandle, pair.first, Vector3::Zero);
 }
