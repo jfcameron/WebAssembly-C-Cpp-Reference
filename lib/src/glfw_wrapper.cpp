@@ -21,25 +21,23 @@ namespace
             {
                 throw gdk::Exception(TAG, msg);
             });
-                
+        
         if(!glfwInit()) throw gdk::Exception(TAG, "glfwInit failed");
     }
 
     GLFWwindow *const initWindow(const gdk::IntVector2 &aScreenSize, const std::string &aName)
-    {    
-        GLFWwindow* aGLFWWindow = nullptr;
-    
+    {        
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, true);
     
-        aGLFWWindow = glfwCreateWindow(aScreenSize.x, aScreenSize.y, aName.c_str(), nullptr, nullptr);
+        GLFWwindow *const pGLFWWindow = glfwCreateWindow(aScreenSize.x, aScreenSize.y, aName.c_str(), nullptr, nullptr);
     
-        if (!aGLFWWindow) throw gdk::Exception(TAG, "glfwCreateWindow failed. Can your hardware handle OpenGL 3.2?");
+        if (!pGLFWWindow) throw gdk::Exception(TAG, "glfwCreateWindow failed. Can the environment provide a GLES2.0/WebGL1.0 context?");
     
-        glfwMakeContextCurrent(aGLFWWindow);
+        glfwMakeContextCurrent(pGLFWWindow);
     
-        return aGLFWWindow;
+        return pGLFWWindow;
     }
 
     GLFWwindow *const pWindow = []()
