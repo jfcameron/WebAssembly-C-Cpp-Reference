@@ -28,7 +28,7 @@ if (JFC_BUILD_APP)
 
     if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
         set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-            "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1") #Move USE_GLFW=3 into the library. That is where the dependency is.
+            "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s \'EXTRA_EXPORTED_RUNTIME_METHODS=[\"ccall\", \"cwrap\"]\' -s EXPORTED_FUNCTIONS=\"[\'_js_to_cpp_test\']\"") #Move USE_GLFW=3 into the library. That is where the dependency is.
     endif()
 
     if(JFC_AUTO_RUN_APP)

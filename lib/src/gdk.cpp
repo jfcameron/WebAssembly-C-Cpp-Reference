@@ -11,6 +11,7 @@
 #include <memory>
 #include <vector>
 
+//draw hack stuff
 #include <gdk/texture.h>
 #include <gdk/shaderprogram.h>
 #include <gdk/vertexdata.h>
@@ -23,9 +24,41 @@
 #include <gdk/model.h>
 #include <gdk/defaultresources.h>
 
+//jscpp
+#include <gdk.h>
+#include <gdk/logger.h>
+#include <emscripten/emscripten.h>
+
+extern "C" float js_to_cpp_test(float a)
+{
+    //gdk::Debug::log("BLAR", "BLORT");
+    return a;
+}
+
 namespace
 {
-    void hack()
+    EM_JS(void, call_alert, (),
+          {
+              console.log("C++ says \"Hello\" to the console.log api.");
+
+              var canvas = document.getElementById("canvas");
+
+              console.log("canvas info: " + "size: {" + canvas.width + ", " + canvas.height + "}");
+
+              var c_javascript_add = Module.cwrap(
+                  'js_to_cpp_test', // name of C function
+                  'number', // return type
+                  ['number']); // argument types
+
+//console.log(c_javascript_add(10));
+          });
+
+    void jscpphack()
+    {
+        call_alert();
+    }
+    
+    void drawhack()
     {
         //clear buffer hack. Why does this need to be called first? GLFW is probably initializing weird. Look at wrapper
         glh::ClearColor(gdk::Color::CornflowerBlue);            
@@ -174,15 +207,13 @@ namespace
 namespace gdk
 {
     void init()
-    {        
-        //gfx::init();
-
-        hack();
+    {
+        jscpphack();
+        drawhack();
     }
 
     void draw()
     {
-//        gfx::draw();
     }
     
     void update()
