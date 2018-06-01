@@ -10,6 +10,8 @@
 
 #include <string>
 
+#include <gdk/opengl.h>
+
 namespace gdk
 {
     struct Color;

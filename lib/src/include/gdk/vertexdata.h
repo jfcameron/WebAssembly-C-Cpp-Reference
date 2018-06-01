@@ -5,6 +5,7 @@
 #define gdk_GFX_MESH_H
 
 #include <gdk/vertexformat.h>
+#include <gdk/lazy_ptr.h>
 
 #include <iosfwd>
 #include <string>
@@ -67,6 +68,8 @@ namespace gdk
         VertexData(const VertexData &) = delete;
         VertexData(VertexData &&);
         ~VertexData();
+
+        static const gdk::lazy_ptr<gdk::VertexData> Quad;
     };
 
     std::ostream &operator<< (std::ostream &, const VertexData &);

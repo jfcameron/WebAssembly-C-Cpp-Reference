@@ -12,8 +12,23 @@
 
 using namespace gdk;
 
-
 static constexpr char TAG[] = "VertexData";
+
+const gdk::lazy_ptr<gdk::VertexData> VertexData::Quad([](){
+        float size  = 1.;
+        float hsize = size/2.;
+        std::vector<GLfloat> data({
+                //        x,           y,    z,    u,    v,
+                size -hsize, size -hsize, 0.0f, 1.0f, 0.0f, // 1--0
+                    0.0f -hsize, size -hsize, 0.0f, 0.0f, 0.0f, // | /
+                    0.0f -hsize, 0.0f -hsize, 0.0f, 0.0f, 1.0f, // 2
+                    size -hsize, size -hsize, 0.0f, 1.0f, 0.0f, //    0
+                    0.0f -hsize, 0.0f -hsize, 0.0f, 0.0f, 1.0f, //  / |
+                    size -hsize, 0.0f -hsize, 0.0f, 1.0f, 1.0f, // 1--2
+                    });
+
+        return new gdk::VertexData("Quad", gdk::VertexData::Type::Static, gdk::VertexFormat::Pos3uv2, data);
+    });
 
 std::ostream& gdk::operator<<(std::ostream &s, const VertexData &a)
 {

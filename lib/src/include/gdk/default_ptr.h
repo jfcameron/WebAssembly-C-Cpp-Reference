@@ -10,22 +10,20 @@
 namespace gdk
 {
         /*! 
-         a non-owning smart pointer that returns a default instance of T if the internal weak_ptr returns nullptr.
-         The design of default_ptr assumes the pointee of m_Default is guaranteed to be valid during the lifetime 
-         of the default_ptr instance; It is up to the user of this class to guarantee this is the case.
-         */
+          a pointer that returns a default instance of T if the target instance has become null.
+        */
         template<typename T>
         class default_ptr final
         {
         private: //Data members
-            std::weak_ptr<T> m_WeakPtr;
+            std::weak_ptr<T> m_Target;
             std::shared_ptr<T> m_Default;
             
         public:
             // Public methods
             std::shared_ptr<T> lock() const 
             {
-                if (auto ptr = m_WeakPtr.lock()) return ptr;
+                if (auto pTarget = m_Target.lock()) return pTarget;
                 
                 return m_Default;
             }
@@ -34,8 +32,8 @@ namespace gdk
             bool operator== (const default_ptr &a) const
             {
                 return 
-                    m_Default ==        a.m_Default && 
-                    m_WeakPtr.lock() == a.m_WeakPtr.lock();
+                    m_Default == a.m_Default && 
+                    m_Target.lock() == a.m_Target.lock();
             }
 
             // Mutating operators
@@ -44,7 +42,7 @@ namespace gdk
             
             // Instancing rules
             default_ptr(const std::shared_ptr<T> &aDefault, const std::shared_ptr<T> &aWeakPtr = {}) 
-            : m_WeakPtr(aWeakPtr)
+            : m_Target(aWeakPtr)
             , m_Default(aDefault)
             {}
             

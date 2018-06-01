@@ -13,6 +13,87 @@ using namespace gdk;
 
 static constexpr char TAG[] = "ShaderProgram";
 
+const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
+{
+    const std::string vertexShaderSource = R"V0G0N(
+    //Uniforms
+    uniform mat4 _MVP;
+
+    //VertIn
+    attribute highp vec3 a_Position;
+
+    void main ()
+    {
+        gl_Position = _MVP * vec4(a_Position,1.0);
+    }
+    )V0G0N";
+
+    const std::string fragmentShaderSource = R"V0G0N(
+    precision mediump float;
+            
+    const vec4 DEATHLY_PINK = vec4(1,0.2,0.8,1);
+
+    void main()
+    {
+        gl_FragColor = DEATHLY_PINK;
+    }
+    )V0G0N";
+
+    return new gdk::ShaderProgram("PinkShaderOfDeath", vertexShaderSource, fragmentShaderSource);
+});
+
+const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
+{
+    const std::string vertexShaderSource = R"V0G0N(
+    #version 100
+
+    //Uniforms
+    uniform mat4  _MVP;
+    uniform mat4  _Model;
+    uniform mat4  _View;
+    uniform mat4  _Projection;
+    uniform float _Time;
+          
+    //VertIn
+    attribute highp vec3 a_Position;
+    attribute highp vec2 a_UV;
+
+    //FragIn
+    varying lowp vec2 v_UV;
+
+    void main ()
+    {
+        gl_Position = _MVP * vec4(a_Position,1.0);
+               
+        v_UV = a_UV;
+    }
+    )V0G0N";
+
+    const std::string fragmentShaderSource = R"V0G0N(
+    #version 100
+    precision mediump float;
+            
+    //Uniforms
+    uniform sampler2D _Texture;
+            
+    //FragIn
+    varying lowp vec2 v_UV;
+
+    void main()
+    {
+        vec4 frag = texture2D(_Texture, v_UV);
+                
+        if (frag[3] < 1.0) discard;
+                
+        gl_FragColor = frag;
+                
+        //gl_FragColor = vec4(1,0.2,0.8,1);//DeathlyPink;
+    }
+    )V0G0N";
+            
+    return new gdk::ShaderProgram("AlphaCutOff", vertexShaderSource, fragmentShaderSource);
+});
+
 std::ostream &gdk::operator<<(std::ostream &s, const ShaderProgram &a) 
 {
     GLint activeAttribs = 0, activeUniforms = 0;

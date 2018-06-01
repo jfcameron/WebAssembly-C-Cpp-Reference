@@ -5,6 +5,8 @@
 #include <exception>
 #include <functional>
 
+#include <emscripten/bind.h>
+#include <emscripten/emscripten.h>
 #include <GLFW/glfw3.h>
 
 #include <gdk/exception.h>
@@ -14,6 +16,28 @@ static constexpr char TAG[] = "GLFW Wrapper";
 
 namespace
 {
+/* //#ifdef EMSCRIPTEN
+    static void private_ResizeFrameBuffer(float canvasWidth, float canvasHeight)
+    {
+        std::cout << "resize handler thinks canvas size is: w" << canvasWidth << ", h" << canvasHeight << ". IS NOT IMPLEMENTED" << std::endl;      
+    }
+    EMSCRIPTEN_BINDINGS(gdk){ emscripten::function("private_ResizeFrameBuffer", &private_ResizeFrameBuffer); }
+    
+    EM_JS(void, emscripten_init, (),
+          {
+              var canvas = document.getElementById("canvas");
+
+              console.log("canvas info: " + "size: {" + canvas.width + ", " + canvas.height + "}");
+
+              window.addEventListener("resize",function()
+              {
+                  console.log("resize detection from cpp");
+
+                  Module.private_ResizeFrameBuffer(canvas.width, canvas.height);
+              });
+          });
+//#endif */
+    
     void initContext()
     {       
         glfwSetErrorCallback(
@@ -22,7 +46,7 @@ namespace
                 throw gdk::Exception(TAG, msg);
             });
         
-        if(!glfwInit()) throw gdk::Exception(TAG, "glfwInit failed");
+        if (!glfwInit()) throw gdk::Exception(TAG, "glfwInit failed");
     }
 
     GLFWwindow *const initWindow(const gdk::IntVector2 &aScreenSize, const std::string &aName)
@@ -40,9 +64,11 @@ namespace
         return pGLFWWindow;
     }
 
-    GLFWwindow *const pWindow = []()
+    static GLFWwindow *const pWindow = []()
     {        
         ::initContext();
+
+        //emscripten_init();
         
         return ::initWindow({800,600}, "gdk Window"); //Refactor this
     }();
@@ -50,9 +76,14 @@ namespace
 
 namespace GLFW
 {
+    void InitEarly()
+    {
+        static_cast<void>(pWindow);
+    }
+    
     void SwapBuffer()
     {
-        glfwSwapBuffers(::pWindow);
+        glfwSwapBuffers(pWindow);
     }
 
     double GetTime()

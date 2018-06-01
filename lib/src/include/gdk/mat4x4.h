@@ -66,4 +66,4 @@ namespace gdk
         std::ostream& operator<< (std::ostream&, const gdk::Mat4x4&);
 }
 
-#endif /* gdk_MATH_MAT4x4_H */
+#endif

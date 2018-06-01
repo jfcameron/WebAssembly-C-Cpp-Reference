@@ -4,7 +4,7 @@
 include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 
 if (JFC_BUILD_APP)
-    project("main" #"WebAssembly-C-Cpp-Reference"
+    project("main"
         VERSION "1.0" 
         DESCRIPTION "Compiling C++ to web assembly example")
 
@@ -21,14 +21,13 @@ if (JFC_BUILD_APP)
     set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE
         "${CMAKE_COMMAND} -E time")
 
-    set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
-    
-    target_compile_features(${PROJECT_NAME}
-        ${JFC_CXX_COMPILER_FEATURE_REQUIREMENTS})
+    set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
     if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-            "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s \'EXTRA_EXPORTED_RUNTIME_METHODS=[\"ccall\", \"cwrap\"]\' -s EXPORTED_FUNCTIONS=\"[\'_js_to_cpp_test\']\"") #Move USE_GLFW=3 into the library. That is where the dependency is.
+        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS #Move USE_GLFW=3 into the library. That is where the dependency is.
+            "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s --bind EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'")        
+        # -s EXPORTED_FUNCTIONS='[\"_int_sqrt\"]'
     endif()
 
     if(JFC_AUTO_RUN_APP)

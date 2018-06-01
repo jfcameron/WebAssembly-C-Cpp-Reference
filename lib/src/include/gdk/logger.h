@@ -9,8 +9,6 @@
 
 namespace gdk
 {
-    namespace Debug
-    {
         template<typename ...Args> void log(const char aTag[], Args &&...args);
         template<typename ...Args> void error(const char aTag[], Args &&...args);
         
@@ -19,13 +17,13 @@ namespace gdk
          however this can be changed by passing a function of sig void(const std::string&) to the constructor. 
          In this way, Logger can be used to output to files, pipes, over the network, etc.
          
-         This header also declares the free standing functions Debug::log and Debug::error, which are gdk wrappers for
+         This header also declares the free standing functions log and error, which are gdk wrappers for
          std::clog and std::cerr respectively.
          */
         class Logger final
         {
-            template<typename ...Args> friend void gdk::Debug::log(const char aTag[], Args &&...args);
-            template<typename ...Args> friend void gdk::Debug::error(const char aTag[], Args &&...args);
+            template<typename ...Args> friend void gdk::log(const char aTag[], Args &&...args);
+            template<typename ...Args> friend void gdk::error(const char aTag[], Args &&...args);
             
             static Logger s_gdkLogger;
             static Logger s_gdkErrorLogger;
@@ -40,7 +38,7 @@ namespace gdk
             template<typename First, typename ...Rest>
             void log(std::ostringstream &stringStream, First &&first, Rest &&...rest)
             {
-                stringStream << first;
+            stringStream << first;
                 log(stringStream, std::forward<Rest>(rest)...);
             }
             
@@ -78,7 +76,6 @@ namespace gdk
         {
             Logger::s_gdkErrorLogger.log(aTag, ": ", std::forward<Args>(args)...);
         }
-    }
 }
 
 #endif

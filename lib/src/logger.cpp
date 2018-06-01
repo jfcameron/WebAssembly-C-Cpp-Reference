@@ -7,7 +7,6 @@
 #include <string>
 
 using namespace gdk;
-using namespace Debug;
 
 Logger Logger::s_gdkLogger
 (

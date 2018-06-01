@@ -1,12 +1,12 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-03.
-#ifndef gdk_GFX_TEXTURE_H
-#define gdk_GFX_TEXTURE_H
+#ifndef GDK_GFX_TEXTURE_H
+#define GDK_GFX_TEXTURE_H
 
 #include <gdk/opengl.h>
+#include <gdk/lazy_ptr.h>
 
-//std inc
 #include <iosfwd>
 #include <string>
 
@@ -37,7 +37,9 @@ namespace gdk
         Texture() = delete;
         Texture(const Texture&) = delete;
         Texture(Texture&&);
-        ~Texture();      
+        ~Texture();
+
+        static const gdk::lazy_ptr<gdk::Texture> CheckeredTextureOfDeath;
     };
 
     std::ostream &operator<< (std::ostream &, const Texture &);

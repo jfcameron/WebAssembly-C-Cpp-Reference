@@ -24,6 +24,7 @@ if (JFC_BUILD_LIB)
 	${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4uniformcollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/model.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/opengl.cpp        
 	${CMAKE_CURRENT_SOURCE_DIR}/src/quaternion.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/shaderprogram.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
@@ -39,6 +40,7 @@ if (JFC_BUILD_LIB)
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexattribute.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexdata.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexformat.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/webapis_wrapper.cpp        
     )
     
     target_include_directories(${PROJECT_NAME} PRIVATE
@@ -48,14 +50,11 @@ if (JFC_BUILD_LIB)
         ${glm_INCLUDE_DIR}        
         ${emscripten_INCLUDE_DIR})
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+    set_target_properties(${PROJECT_NAME}
+        PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
-    #[[set_property(TARGET ${PROJECT_NAME} PROPERTY
-	C_STANDARD 11)]]
-      
-    target_compile_features(${PROJECT_NAME}
-        ${JFC_CXX_COMPILER_FEATURE_REQUIREMENTS})
+   #set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
     
     #add symbols
     set(${PROJECT_NAME}_INCLUDE_DIR
@@ -66,4 +65,19 @@ if (JFC_BUILD_LIB)
         ${PROJECT_BINARY_DIR}/lib${PROJECT_NAME}.a;
         ${stb_LIBRARIES}
         CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+    set(COMMON_CXX_FLAGS "-std=c++17 -Wall -Werror -Wno-c++11-narrowing -Wno-unused-local-typedef -pthread")
+    set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
+
+    # Set compile flags for emscripten clang
+    if(UNIX)
+        set(CMAKE_CXX_FLAGS
+            "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+    endif()
 endif()

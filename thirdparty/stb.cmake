@@ -13,12 +13,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY
-    C_STANDARD 90)
-
-target_compile_features(${PROJECT_NAME}
-    ${JFC_CXX_COMPILER_FEATURE_REQUIREMENTS})
-
+set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 90)
 # Organize headers into standard include format
 file(GLOB ${PROJECT_NAME}_HEADER_FILES 
     ${CMAKE_CURRENT_SOURCE_DIR}/${JFC_DEPENDENCY_NAME}/*.h) #This should NOT be a global variable.

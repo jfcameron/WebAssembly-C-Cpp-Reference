@@ -8,6 +8,7 @@
 #include <string>
 
 #include <gdk/opengl.h>
+#include <gdk/lazy_ptr.h>
 
 namespace gdk
 {
@@ -41,6 +42,9 @@ namespace gdk
         ShaderProgram(const ShaderProgram &) = delete;
         ShaderProgram(ShaderProgram &&);
         ~ShaderProgram();
+
+        static const gdk::lazy_ptr<gdk::ShaderProgram> PinkShaderOfDeath;        
+        static const gdk::lazy_ptr<gdk::ShaderProgram> AlphaCutOff;
     };
 
     std::ostream &operator<< (std::ostream &, const ShaderProgram &);

@@ -3,14 +3,15 @@
 #ifndef GDK_MEMORY_LAZY_PTR_H
 #define GDK_MEMORY_LAZY_PTR_H
 
-//std inc
-#include <memory>
 #include <functional>
+#include <memory>
+#include <mutex>
+#include <iostream>
 
 namespace gdk
 {
     /*! 
-      Smart pointer that delays initialization until the first time it is dereferenced
+      Pointer that delays initialization until the first time it is dereferenced
     */
     template<typename T> class lazy_ptr final
     {
@@ -21,15 +22,13 @@ namespace gdk
         //Data members
         const InitializerSignature m_Initializer;
 
-        mutable std::shared_ptr<T> m_SharedPtr = {};
+        mutable std::once_flag m_IsInitialized;
 
-        mutable bool m_Initialized = false;
+        mutable std::shared_ptr<T> m_SharedPtr = {};
 
         void initialize() const
         {
-            m_SharedPtr.reset(m_Initializer());
-                
-            m_Initialized = true;
+            std::call_once(m_IsInitialized, [&]{ m_SharedPtr.reset(m_Initializer()); });
         }
 
     public:
@@ -37,13 +36,13 @@ namespace gdk
         /// Check if the lazy_ptr has initialized its internal ptr
         bool initialized() const
         {
-            return m_Initialized;
+            return m_SharedPtr.get() != nullptr;
         }
 
         T *get() const 
         {
-            if (!m_Initialized) initialize();
-                
+            initialize();
+            
             return m_SharedPtr.get();
         }
 
@@ -61,6 +60,13 @@ namespace gdk
         bool operator==(const lazy_ptr &a) const
         {
             return m_Initializer == a.m_Initializer;
+        }
+
+        explicit operator std::shared_ptr<T>() const
+        {
+            initialize();
+            
+            return m_SharedPtr;
         }
 
         // Mutating operators
