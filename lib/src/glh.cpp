@@ -1,6 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 // Created on 17-07-02.
 
+#include <vector>
+
 #include <gdk/opengl.h>
 #include <gdk/glh.h>
 #include <gdk/color.h>
@@ -137,7 +139,34 @@ bool BindTextureUniform(const GLuint aShaderHandle, const std::string &aUniformN
     glUniform1i(uniformHandle, aTextureUnit);
     
     return true;
-}    
+}
+
+std::string GetShaderInfoLog(const GLuint aShaderStageHandle)
+{
+    GLint bufflen = 0;
+    glGetShaderiv(aShaderStageHandle, GL_INFO_LOG_LENGTH, &bufflen);
+    
+    if (bufflen > 1)
+    {
+        std::vector<GLchar> infoLog(bufflen);
+        glGetShaderInfoLog(aShaderStageHandle, bufflen, 0, &infoLog[0]);
+        
+        return std::string(infoLog.begin(),infoLog.end());
+    }
+    
+    return "clear";
+}
+
+std::string GetProgramInfoLog(const GLuint aShaderProgramHandle)
+{
+    GLint maxLength = 0;
+    glGetProgramiv(aShaderProgramHandle, GL_INFO_LOG_LENGTH, &maxLength);
+    
+    std::vector<GLchar> infoLog(maxLength);
+    glGetProgramInfoLog(aShaderProgramHandle, maxLength, &maxLength, &infoLog[0]);
+    
+    return std::string(infoLog.begin(),infoLog.end());
+}
 }
 ///////////////////////////////////////////////////////////////////////
 /*
@@ -171,33 +200,6 @@ glScissor(aPos.x, aPos.y, aSize.x, aSize.y);
 void glh::ClearColor(const gdk::Color &aColor)
 {
     glClearColor(aColor.r, aColor.g, aColor.b, aColor.a);
-}
-
-std::string glh::GetShaderInfoLog(const GLuint aShaderStageHandle)
-{
-    GLint bufflen = 0;
-    glGetShaderiv(aShaderStageHandle, GL_INFO_LOG_LENGTH, &bufflen);
-    
-    if (bufflen > 1)
-    {
-        std::vector<GLchar> infoLog(bufflen);
-        glGetShaderInfoLog(aShaderStageHandle, bufflen, 0, &infoLog[0]);
-        
-        return std::string(infoLog.begin(),infoLog.end());
-    }
-    
-    return "clear";
-}
-
-std::string glh::GetProgramInfoLog(const GLuint aShaderProgramHandle)
-{
-    GLint maxLength = 0;
-    glGetProgramiv(aShaderProgramHandle, GL_INFO_LOG_LENGTH, &maxLength);
-    
-    std::vector<GLchar> infoLog(maxLength);
-    glGetProgramInfoLog(aShaderProgramHandle, maxLength, &maxLength, &infoLog[0]);
-    
-    return std::string(infoLog.begin(),infoLog.end());
 }
 */
 bool glh::GetError(std::string *aErrorCode)

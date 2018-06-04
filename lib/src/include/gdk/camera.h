@@ -3,11 +3,10 @@
 #ifndef gdk_GFX_CAMERA_H
 #define gdk_GFX_CAMERA_H
 
-//gdk inc
 #include "gdk/color.h"
 #include "gdk/vector2.h"
 #include "gdk/mat4x4.h"
-//std inc
+
 #include <iosfwd>
 
 namespace gdk
@@ -39,10 +38,10 @@ namespace gdk
         gdk::Color m_ClearColor        = Color::CornflowerBlue;
             
         gdk::Vector2 m_ViewportPosition  = gdk::Vector2::Zero;
-        gdk::Vector2 m_ViewportSize      = gdk::Vector2(1.,1.);
+        gdk::Vector2 m_ViewportSize      = gdk::Vector2(1., 1.);
             
         ProjectionMode m_ProjectionMode    = ProjectionMode::Perspective;
-        gdk::Vector2   m_OrthoSize         = {10,10};
+        gdk::Vector2   m_OrthoSize         = {10, 10};
         float          m_FieldOfView       = 90.;
         float          m_NearClippingPlane = 0.001f;
         float          m_FarClippingPlane  = 20.;
@@ -60,12 +59,12 @@ namespace gdk
         gdk::Vector2 getViewportSize() const;
             
         void setOrthographicProjection(
-            const gdk::Vector2 &aOrthoSize, const float &aNearClippingPlane,
-            const float &aFarClippingPlane, const float &aViewportAspectRatio);
+            const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane,
+            const float aFarClippingPlane, const float aViewportAspectRatio);
             
         void setPerspectiveProjection(
-            const float &aFieldOfView, const float &aNearClippingPlane,
-            const float &aFarClippingPlane, const float &aViewportAspectRatio);
+            const float aFieldOfView, const float aNearClippingPlane,
+            const float aFarClippingPlane, const float aViewportAspectRatio);
             
         const gdk::Mat4x4 &getProjectionMatrix() const;
              

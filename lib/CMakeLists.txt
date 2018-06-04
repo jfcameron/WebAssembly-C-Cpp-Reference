@@ -4,7 +4,7 @@
 include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 
 if (JFC_BUILD_LIB)
-    project("lib"
+    project("gdk"
         VERSION "1.0" 
         DESCRIPTION "WebAssembly project shareable code")
 
@@ -50,13 +50,11 @@ if (JFC_BUILD_LIB)
         ${glm_INCLUDE_DIR}        
         ${emscripten_INCLUDE_DIR})
 
-    set_target_properties(${PROJECT_NAME}
-        PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+    set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
    #set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
     set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
     
-    #add symbols
     set(${PROJECT_NAME}_INCLUDE_DIR
         ${CMAKE_CURRENT_LIST_DIR}/include
         CACHE PATH "${PROJECT_NAME}_INCLUDE_DIR include directory" FORCE)
@@ -65,19 +63,19 @@ if (JFC_BUILD_LIB)
         ${PROJECT_BINARY_DIR}/lib${PROJECT_NAME}.a;
         ${stb_LIBRARIES}
         CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
-endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    set(COMMON_CXX_FLAGS "-std=c++17 -Wall -Werror -Wno-c++11-narrowing -Wno-unused-local-typedef -pthread")
-    set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+        set(COMMON_CXX_FLAGS "-std=c++17 -Wall -Werror -Wno-c++11-narrowing -Wno-unused-local-typedef -pthread")
+        set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
 
-    # Set compile flags for emscripten clang
-    if(UNIX)
-        set(CMAKE_CXX_FLAGS
-            "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-        set(CMAKE_CXX_FLAGS_DEBUG
-            "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+        if(UNIX)
+            set(CMAKE_CXX_FLAGS         "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+            set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+            set(CMAKE_CXX_FLAGS_DEBUG   "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
+        endif()
+
+        set(${PROJECT_NAME}_COMPILER_PARAMETERS
+            "-s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1"
+            CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)
     endif()
 endif()

@@ -34,7 +34,7 @@ std::ostream &gdk::operator<<(std::ostream &s, const Camera &a)
 }
 
 Camera::Camera()
-{
+{    
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_SCISSOR_TEST);   
 }
@@ -66,11 +66,12 @@ void Camera::draw(const gdk::IntVector2 &aFrameBufferSize)
     switch(m_ProjectionMode)
     {
         case ProjectionMode::Perspective:
-            calculatePerspectiveProjection(m_ProjectionMatrix,m_FieldOfView,m_NearClippingPlane,m_FarClippingPlane,m_ViewportSize.getAspectRatio());
+            calculatePerspectiveProjection(m_ProjectionMatrix, m_FieldOfView, m_NearClippingPlane, m_FarClippingPlane, m_ViewportSize.getAspectRatio());
             break;
-            
-        case ProjectionMode::Orthographic:
-            calculateOrthographicProjection(m_ProjectionMatrix,m_OrthoSize,m_NearClippingPlane,m_FarClippingPlane,m_ViewportSize.getAspectRatio());
+
+        default:
+            case ProjectionMode::Orthographic:
+            calculateOrthographicProjection(m_ProjectionMatrix, m_OrthoSize, m_NearClippingPlane, m_FarClippingPlane, m_ViewportSize.getAspectRatio());
             break;
     }
     

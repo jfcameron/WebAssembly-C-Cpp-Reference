@@ -12,22 +12,20 @@ if (JFC_BUILD_APP)
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
     target_include_directories(${PROJECT_NAME} PRIVATE
-        ${lib_INCLUDE_DIR}
+        ${gdk_INCLUDE_DIR}
         ${emscripten_INCLUDE_DIR})
     
     target_link_libraries(${PROJECT_NAME}
-        ${lib_LIBRARIES})
+        ${gdk_LIBRARIES})
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE
-        "${CMAKE_COMMAND} -E time")
+    set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
     set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
     set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
     if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS #Move USE_GLFW=3 into the library. That is where the dependency is.
-            "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s --bind EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'")        
-        # -s EXPORTED_FUNCTIONS='[\"_int_sqrt\"]'
+        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS
+            "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js ${gdk_COMPILER_PARAMETERS}")
     endif()
 
     if(JFC_AUTO_RUN_APP)

@@ -30,8 +30,8 @@ namespace glh
     void Scissor(const gdk::IntVector2 &aPos, const gdk::IntVector2 &aSize);
     
     // Error detection & logging
-    /*  std::string GetShaderInfoLog(const GLuint aShaderStageHandle);
-    std::string GetProgramInfoLog(const GLuint aShaderProgramHandle);*/
+    std::string GetShaderInfoLog(const GLuint aShaderStageHandle);
+    std::string GetProgramInfoLog(const GLuint aShaderProgramHandle);
     bool GetError(std::string *aErrorCode = nullptr);
 /*    //std::vector<std::string> GetErrors();
     //void LogErrors(const bool &aDoNotLogIfNoErrors = false);

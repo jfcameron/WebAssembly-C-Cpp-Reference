@@ -2,12 +2,12 @@
 // Project: gdk
 // Created on 17-07-02.
 #include "gdk/shaderprogram.h"
-//std inc
+
 #include <iostream>
 #include <sstream>
-//gdk inc
-//#include "Debug/Logger.h"
-#include "gdk/exception.h"
+
+#include <gdk/exception.h>
+#include <gdk/glh.h>
 
 using namespace gdk;
 
@@ -63,7 +63,8 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
 
     void main ()
     {
-        gl_Position = _MVP * vec4(a_Position,1.0);
+        //gl_Position = _MVP * vec4(a_Position,1.0);
+        gl_Position = _Projection * _View * _Model * vec4(a_Position,1.0);
                
         v_UV = a_UV;
     }
@@ -85,9 +86,7 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
                 
         if (frag[3] < 1.0) discard;
                 
-        gl_FragColor = frag;
-                
-        //gl_FragColor = vec4(1,0.2,0.8,1);//DeathlyPink;
+        gl_FragColor = frag;                        
     }
     )V0G0N";
             
@@ -138,15 +137,14 @@ ShaderProgram::ShaderProgram(const std::string &aName, const std::string &aVerte
     
     if (status == GL_FALSE)
     {
-        /*std::ostringstream message;
+        std::ostringstream message;
         
         message << "The shader: \"" << aName << "\" has failed to compile!" << std::endl
         << std::endl << "program compilation log: " <<         glh::GetProgramInfoLog(programHandle) << std::endl
         << std::endl << "vertex shader compilation log: " <<   glh::GetShaderInfoLog(vs) << std::endl
-        << std::endl << "fragment shader compilation log: " << glh::GetShaderInfoLog(fs);*/
+        << std::endl << "fragment shader compilation log: " << glh::GetShaderInfoLog(fs);
         
-        //throw gdk::Exception(TAG, message.str());//throw gdk::Exception(TAG, message.str());
-        throw gdk::Exception(TAG, "Shader failed to compile");
+        throw gdk::Exception(TAG, message.str());
     }
 
     return programHandle;

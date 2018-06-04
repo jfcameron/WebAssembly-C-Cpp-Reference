@@ -49,42 +49,45 @@ void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
 {
     if (auto shader = m_ShaderProgram.lock())
     {
-        GLuint programHandle = shader->useProgram();
+        if (auto pVertexData = m_VertexData.lock())
+        {
+            GLuint programHandle = shader->useProgram();
     
-        //bind this model's uniforms
-        m_Textures.bind(programHandle);
-        m_Floats  .bind(programHandle);
-        m_Vector2s.bind(programHandle);
-        m_Vector3s.bind(programHandle);
-        m_Vector4s.bind(programHandle);
-        m_Mat4x4s .bind(programHandle);
+            //bind this model's uniforms
+            m_Textures.bind(programHandle);
+            m_Floats  .bind(programHandle);
+            m_Vector2s.bind(programHandle);
+            m_Vector3s.bind(programHandle);
+            m_Vector4s.bind(programHandle);
+            m_Mat4x4s .bind(programHandle);
     
-        //bind standard uniforms
-        float time      = Time::getTime();
-        float deltaTime = Time::getDeltaTime();
+            //bind standard uniforms
+            float time      = Time::getTime();
+            float deltaTime = Time::getDeltaTime();
         
-        Mat4x4 p = aProjectionMatrix;
-        Mat4x4 v = aViewMatrix;
-        Mat4x4 m = getModelMatrix();
+            Mat4x4 p = aProjectionMatrix;
+            Mat4x4 v = aViewMatrix;
+            Mat4x4 m = getModelMatrix();
         
-        Mat4x4 mvp = p * v * m;
+            Mat4x4 mvp = p * v * m;
         
-        glh::Bind1FloatUniform(programHandle, "_DeltaTime",  deltaTime);
-        glh::Bind1FloatUniform(programHandle, "_Time",       time     );
-        glh::BindMatrix4x4(programHandle,     "_Model",      m        );
-        glh::BindMatrix4x4(programHandle,     "_View",       v        );
-        glh::BindMatrix4x4(programHandle,     "_Projection", p        );
-        glh::BindMatrix4x4(programHandle,     "_MVP",        mvp      );
-    
-        if (auto ptr = m_VertexData.lock()) ptr->draw(programHandle);
-        
-        //unbind this model's uniforms
-        m_Textures.unbind(programHandle);
-        m_Floats  .unbind(programHandle);
-        m_Vector2s.unbind(programHandle);
-        m_Vector3s.unbind(programHandle);
-        m_Vector4s.unbind(programHandle);
-        m_Mat4x4s .unbind(programHandle);
+            glh::Bind1FloatUniform(programHandle, "_DeltaTime",  deltaTime);
+            glh::Bind1FloatUniform(programHandle, "_Time",       time     );
+            glh::BindMatrix4x4(programHandle,     "_Model",      m        );
+            glh::BindMatrix4x4(programHandle,     "_View",       v        );
+            glh::BindMatrix4x4(programHandle,     "_Projection", p        );
+            glh::BindMatrix4x4(programHandle,     "_MVP",        mvp      );
+
+            pVertexData->draw(programHandle);
+                
+            //unbind this model's uniforms
+            m_Textures.unbind(programHandle);
+            m_Floats  .unbind(programHandle);
+            m_Vector2s.unbind(programHandle);
+            m_Vector3s.unbind(programHandle);
+            m_Vector4s.unbind(programHandle);
+            m_Mat4x4s .unbind(programHandle);
+        }
     }
 }
 

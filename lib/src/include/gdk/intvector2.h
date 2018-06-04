@@ -22,7 +22,7 @@ namespace gdk
         int x = 0, y = 0;
             
         Vector2 toVector2() const;
-            
+    
         // Non mutating operators
         bool operator==(const IntVector2 &) const;
         bool operator!=(const IntVector2 &) const;
