@@ -18,8 +18,7 @@ static constexpr char TAG[] = "GLFW Wrapper";
 namespace
 {
     gdk::IntVector2 windowSize;
-
-    GLFW::windowsizecallback_type WindowSizeCallback;
+    glfw::windowsizecallback_type WindowSizeCallback;
     
     static GLFWwindow *const pWindow = []()
     {        
@@ -64,7 +63,7 @@ namespace
     }();
 }
 
-namespace GLFW
+namespace glfw
 {
     void InitEarly()
     {
@@ -86,7 +85,7 @@ namespace GLFW
         return ::windowSize;
     }
 
-    void SetWindowSizeCallback(GLFW::windowsizecallback_type aWindowSizeCallback)
+    void SetWindowSizeCallback(glfw::windowsizecallback_type aWindowSizeCallback)
     {
         ::WindowSizeCallback = aWindowSizeCallback;
     }

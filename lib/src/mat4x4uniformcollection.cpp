@@ -1,6 +1,4 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-22.
 #include <gdk/mat4x4uniformcollection.h>
 #include <gdk/opengl.h>
 #include <gdk/glh.h>
@@ -30,13 +28,11 @@ std::ostream &operator<<(std::ostream &s, const Mat4x4UniformCollection &a)
 
 void Mat4x4UniformCollection::bind(const GLuint aProgramHandle)
 {
-    for (auto &pair : m_Map)
-        glh::BindMatrix4x4(aProgramHandle, pair.first, pair.second);
+    for (auto &pair : m_Map) glh::BindMatrix4x4(aProgramHandle, pair.first, pair.second);
 }
 
 void Mat4x4UniformCollection::unbind(const GLuint aProgramHandle)
 {
-    for (auto &pair : m_Map)
-        glh::BindMatrix4x4(aProgramHandle, pair.first, Mat4x4::Identity);    
+    for (auto &pair : m_Map) glh::BindMatrix4x4(aProgramHandle, pair.first, Mat4x4::Identity);    
 }
 }

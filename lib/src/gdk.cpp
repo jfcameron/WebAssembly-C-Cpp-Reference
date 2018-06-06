@@ -7,6 +7,8 @@
 #include <sstream>
 #include <vector>
 
+#include<cmath>
+
 #include <emscripten.h>
 
 #include <gdk.h>
@@ -18,12 +20,13 @@
 #include <gdk/intvector2.h>
 #include <gdk/logger.h>
 #include <gdk/model.h>
+#include <gdk/quaternion.h>
 #include <gdk/shaderprogram.h>
 #include <gdk/texture.h>
+#include <gdk/time.h>
+#include <gdk/vector3.h>
 #include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
-#include <gdk/quaternion.h>
-#include <gdk/vector3.h>
 
 namespace
 {
@@ -35,7 +38,14 @@ namespace gdk
 {
     void init()
     {
-        pCamera = std::make_shared<gdk::Camera>(gdk::Camera());
+        pCamera = std::make_shared<gdk::Camera>([]()
+                                                {
+                                                    gdk::Camera camera;
+
+                                                                                                        
+                                                    
+                                                    return camera;
+                                                }());
 
         pModel = std::make_shared<gdk::Model>([]()
                                               {
@@ -50,21 +60,29 @@ namespace gdk
                                                   return model;
                                               }());
 
-
         emscripten_set_main_loop(gdk::draw, -1, 0); // Negative fps will force requestAnimationFrame usage
-//        emscripten_set_main_loop(gdk::update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
+        //emscripten_set_main_loop(gdk::update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
     }
 
     void draw()
     {
-        update();//fix tghis obviously
+        static gdk::Vector3 pos;
+        static gdk::Quaternion rot;
+
+//        pos.x = sin(Time::getTime());
+//        pos.y = cos(Time::getTime());
+        pos.z = sin(Time::getTime());
+
+        //rot.setFromEuler({Time::getTime(), 0, 0});
         
-        pCamera->draw(GLFW::GetWindowSize());
+        pModel->setModelMatrix(pos, rot);
+        
+        pCamera->draw(glfw::GetWindowSize());
         pModel->draw(gdk::Mat4x4::Identity, gdk::Mat4x4::Identity);
     }
-    
+
     void update()
-    {
+    {        
     }
     
     void free()

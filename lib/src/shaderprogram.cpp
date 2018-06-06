@@ -1,21 +1,27 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 17-07-02.
-#include "gdk/shaderprogram.h"
-
-#include <iostream>
-#include <sstream>
 
 #include <gdk/exception.h>
 #include <gdk/glh.h>
+#include <gdk/shaderprogram.h>
+
+#include <iostream>
+#include <sstream>
 
 using namespace gdk;
 
 static constexpr char TAG[] = "ShaderProgram";
 
+//gl_Position = _Projection * _View * _Model * vec4(a_Position,1.0);
+//uniform mat4  _Model;
+//uniform mat4  _View;
+//uniform mat4  _Projection;
+//uniform float _Time;
+
 const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
 {
     const std::string vertexShaderSource = R"V0G0N(
+    #version 100
+    
     //Uniforms
     uniform mat4 _MVP;
 
@@ -48,23 +54,18 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
     #version 100
 
     //Uniforms
-    uniform mat4  _MVP;
-    uniform mat4  _Model;
-    uniform mat4  _View;
-    uniform mat4  _Projection;
-    uniform float _Time;
+    uniform mat4 _MVP;
           
     //VertIn
-    attribute highp vec3 a_Position;
-    attribute highp vec2 a_UV;
+    attribute highp   vec3 a_Position;
+    attribute mediump vec2 a_UV;
 
     //FragIn
-    varying lowp vec2 v_UV;
+    varying mediump vec2 v_UV;
 
     void main ()
     {
-        //gl_Position = _MVP * vec4(a_Position,1.0);
-        gl_Position = _Projection * _View * _Model * vec4(a_Position,1.0);
+        gl_Position = _MVP * vec4(a_Position,1.0);
                
         v_UV = a_UV;
     }

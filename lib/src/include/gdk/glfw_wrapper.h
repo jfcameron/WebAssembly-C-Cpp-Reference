@@ -4,7 +4,7 @@
 
 #include <gdk/intvector2.h>
 
-namespace GLFW
+namespace glfw
 {
     using windowsizecallback_type = std::function<void(int aX, int aY)>;
     

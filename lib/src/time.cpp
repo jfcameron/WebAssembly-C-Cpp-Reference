@@ -13,7 +13,7 @@ namespace Time
 {
     double getTime(void) noexcept
     {
-        return GLFW::GetTime();
+        return glfw::GetTime();
     }
 
     double getDeltaTime(void) noexcept
@@ -25,8 +25,8 @@ namespace Time
     {
         double time = currentTime;
     
-        currentTime = GLFW::GetTime() - lastTime;
-        lastTime = GLFW::GetTime();
+        currentTime = glfw::GetTime() - lastTime;
+        lastTime = glfw::GetTime();
 
         return time;
     }

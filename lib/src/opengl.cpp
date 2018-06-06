@@ -5,7 +5,7 @@ namespace gdk
 {
     void InitEarlyOpenGL()
     {
-        GLFW::InitEarly(); //implementation for glfw platforms (wasm, macos, linux, win)
+        glfw::InitEarly(); //implementation for glfw platforms (wasm, macos, linux, win)
     }
 }
 //#endif

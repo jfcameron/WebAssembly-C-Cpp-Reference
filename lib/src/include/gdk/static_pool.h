@@ -34,9 +34,7 @@ namespace gdk
             /// Try to get an object from the pool, will be null if all objects are in use
             value_type get() const 
             {
-                for (const auto &item : m_Pool)
-                    if (item.use_count() == 1)
-                        return item;
+                for (const auto &item : m_Pool) if (item.use_count() == 1) return item;
                 
                 return {};
             }
@@ -51,8 +49,7 @@ namespace gdk
             {
                 collection_type pool;
 
-                for(decltype(length) i = 0; i < length; ++i)
-                    pool[i] = std::make_shared<T>(aItemInitializer());
+                for(decltype(length) i = 0; i < length; ++i) pool[i] = std::make_shared<T>(aItemInitializer());
 
                 return pool;
             }())
@@ -65,4 +62,4 @@ namespace gdk
     }
 }
 
-#endif /* GDK_MEMORY_STATIC_POOL_H  */
+#endif

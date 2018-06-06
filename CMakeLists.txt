@@ -15,10 +15,6 @@ set(JFC_TARGET_PLATFORM "${CMAKE_HOST_SYSTEM_NAME}" CACHE STRING "Platform to co
 
 # Global defines
 set(JFC_REPOSITORY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}") #Currently not used
-
-####### EMSCRIPTEN HACK STARTS   
-
-####### EMSCRIPTEN HACK ENDS
   
 #add_subdirectory(docs)
 #add_subdirectory(tests)
