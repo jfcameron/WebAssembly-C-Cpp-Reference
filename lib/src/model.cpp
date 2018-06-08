@@ -69,9 +69,7 @@ void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
             Mat4x4 v = aViewMatrix;
             Mat4x4 m = getModelMatrix();
         
-            /*const*/ auto mvp = p;// * v * m;
-            mvp = mvp.multiply(v);
-            mvp = mvp.multiply(m);
+            const auto mvp = p * v * m;
         
             glh::Bind1FloatUniform(programHandle, "_DeltaTime",  deltaTime);
             glh::Bind1FloatUniform(programHandle, "_Time",       time     );
