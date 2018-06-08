@@ -65,7 +65,8 @@ if (JFC_BUILD_LIB)
         CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
 
     if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-        set(COMMON_CXX_FLAGS "-std=c++17 -Wall -Werror -Wno-c++11-narrowing -Wno-unused-local-typedef -pthread")
+	    set(COMMON_CXX_FLAGS "-std=c++17 -pthread -Wall -Werror \
+	    -Wno-c++11-narrowing -Wno-unused-local-typedef -Wno-unused-const-variable -Wno-unused-function")#These should be removed for more strict error checking
         set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
 
         if(UNIX)

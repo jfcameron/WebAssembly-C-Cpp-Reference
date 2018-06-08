@@ -41,9 +41,7 @@ namespace gdk
         pCamera = std::make_shared<gdk::Camera>([]()
                                                 {
                                                     gdk::Camera camera;
-
-                                                                                                        
-                                                    
+              
                                                     return camera;
                                                 }());
 
@@ -69,16 +67,18 @@ namespace gdk
         static gdk::Vector3 pos;
         static gdk::Quaternion rot;
 
-//        pos.x = sin(Time::getTime());
-//        pos.y = cos(Time::getTime());
-        pos.z = sin(Time::getTime());
+        //pos.x = sin(Time::getTime());
+        //pos.y = cos(Time::getTime());
+        //pos.z = sin(Time::getTime())*10;
 
-        //rot.setFromEuler({Time::getTime(), 0, 0});
+        pos.z = -2.f;
+
+        rot.setFromEuler({Time::getTime()/2.f, Time::getTime(), 0});
         
         pModel->setModelMatrix(pos, rot);
         
         pCamera->draw(glfw::GetWindowSize());
-        pModel->draw(gdk::Mat4x4::Identity, gdk::Mat4x4::Identity);
+        pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
     }
 
     void update()

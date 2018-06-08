@@ -12,6 +12,7 @@
 #include <gdk/quaternion.h>
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
+#include <gdk/logger.h>
 
 using namespace gdk;
 
@@ -39,6 +40,7 @@ Camera::Camera()
     glEnable(GL_SCISSOR_TEST);   
 }
 
+//??????
 static inline void calculateOrthographicProjection(gdk::Mat4x4 &aProjectionMatrix, const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
 {
     (void)aProjectionMatrix;
@@ -50,8 +52,9 @@ static inline void calculateOrthographicProjection(gdk::Mat4x4 &aProjectionMatri
     throw gdk::Exception(TAG, "Camera::setOrthographicProjection not implemented!");
 }
 
+//Why does this exist?
 static inline void calculatePerspectiveProjection(gdk::Mat4x4& aProjectionMatrix, const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
-{
+{    
     aProjectionMatrix.setPerspective(aFieldOfView, aNearClippingPlane, aFarClippingPlane, aViewportAspectRatio);
 }
 

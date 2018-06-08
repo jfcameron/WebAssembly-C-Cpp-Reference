@@ -1,14 +1,15 @@
+#include <cstdlib>
 #include <iostream>
 
 #include <gdk.h>
 
 int main()
 {
-    std::cout << "Greetings from C++11!\n";
+    std::cout << "Greetings from C++\n";
 
     gdk::init();
 
     gdk::free();
        
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -153,7 +153,7 @@ void Mat4x4::set
 }
 
 // Operators
-Mat4x4& Mat4x4::operator*=(const Mat4x4& a)
+Mat4x4 &Mat4x4::operator*=(const Mat4x4& a)
 {
     set(
         m[0][0] * a.m[0][0] + m[1][0] * a.m[0][1] + m[2][0] * a.m[0][2] + m[3][0] * a.m[0][3],
@@ -212,3 +212,50 @@ Mat4x4::Mat4x4
     {a30,a31,a32,a33},
 }
 {}
+
+Mat4x4 Mat4x4::_set(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13,
+                    float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
+{
+    this->m[0][0] = m00;
+    this->m[0][1] = m01;
+    this->m[0][2] = m02;
+    this->m[0][3] = m03;
+    this->m[1][0] = m10;
+    this->m[1][1] = m11;
+    this->m[1][2] = m12;
+    this->m[1][3] = m13;
+    this->m[2][0] = m20;
+    this->m[2][1] = m21;
+    this->m[2][2] = m22;
+    this->m[2][3] = m23;
+    this->m[3][0] = m30;
+    this->m[3][1] = m31;
+    this->m[3][2] = m32;
+    this->m[3][3] = m33;
+    
+    return *this;
+}
+
+Mat4x4 Mat4x4::multiply(const Mat4x4 &right)
+{
+    _set(
+        m[0][0] * right.m[0][0] + m[1][0] * right.m[0][1] + m[2][0] * right.m[0][2] + m[3][0] * right.m[0][3],
+        m[0][1] * right.m[0][0] + m[1][1] * right.m[0][1] + m[2][1] * right.m[0][2] + m[3][1] * right.m[0][3],
+        m[0][2] * right.m[0][0] + m[1][2] * right.m[0][1] + m[2][2] * right.m[0][2] + m[3][2] * right.m[0][3],
+        m[0][3] * right.m[0][0] + m[1][3] * right.m[0][1] + m[2][3] * right.m[0][2] + m[3][3] * right.m[0][3],
+        m[0][0] * right.m[1][0] + m[1][0] * right.m[1][1] + m[2][0] * right.m[1][2] + m[3][0] * right.m[1][3],
+        m[0][1] * right.m[1][0] + m[1][1] * right.m[1][1] + m[2][1] * right.m[1][2] + m[3][1] * right.m[1][3],
+        m[0][2] * right.m[1][0] + m[1][2] * right.m[1][1] + m[2][2] * right.m[1][2] + m[3][2] * right.m[1][3],
+        m[0][3] * right.m[1][0] + m[1][3] * right.m[1][1] + m[2][3] * right.m[1][2] + m[3][3] * right.m[1][3],
+        m[0][0] * right.m[2][0] + m[1][0] * right.m[2][1] + m[2][0] * right.m[2][2] + m[3][0] * right.m[2][3],
+        m[0][1] * right.m[2][0] + m[1][1] * right.m[2][1] + m[2][1] * right.m[2][2] + m[3][1] * right.m[2][3],
+        m[0][2] * right.m[2][0] + m[1][2] * right.m[2][1] + m[2][2] * right.m[2][2] + m[3][2] * right.m[2][3],
+        m[0][3] * right.m[2][0] + m[1][3] * right.m[2][1] + m[2][3] * right.m[2][2] + m[3][3] * right.m[2][3],
+        m[0][0] * right.m[3][0] + m[1][0] * right.m[3][1] + m[2][0] * right.m[3][2] + m[3][0] * right.m[3][3],
+        m[0][1] * right.m[3][0] + m[1][1] * right.m[3][1] + m[2][1] * right.m[3][2] + m[3][1] * right.m[3][3],
+        m[0][2] * right.m[3][0] + m[1][2] * right.m[3][1] + m[2][2] * right.m[3][2] + m[3][2] * right.m[3][3],
+        m[0][3] * right.m[3][0] + m[1][3] * right.m[3][1] + m[2][3] * right.m[3][2] + m[3][3] * right.m[3][3]
+        );
+    
+    return *this;
+}

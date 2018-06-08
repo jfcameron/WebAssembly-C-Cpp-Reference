@@ -58,20 +58,16 @@ namespace gdk
         void setViewportSize(const float x, const float y);
         gdk::Vector2 getViewportSize() const;
             
-        void setOrthographicProjection(
-            const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane,
-            const float aFarClippingPlane, const float aViewportAspectRatio);
+        void setOrthographicProjection(const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio);
             
-        void setPerspectiveProjection(
-            const float aFieldOfView, const float aNearClippingPlane,
-            const float aFarClippingPlane, const float aViewportAspectRatio);
+        void setPerspectiveProjection(const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio);
             
         const gdk::Mat4x4 &getProjectionMatrix() const;
              
         void setViewMatrix(const gdk::Vector3 &aWorldPos, const gdk::Quaternion &aRotation);
         const gdk::Mat4x4 &getViewMatrix() const;
             
-        // Public methods
+        //! \Warn "draw" is misleading. It sets up the viewport and calculates view & projection mats. It preps for draw.
         void draw(const gdk::IntVector2 &aFrameBufferSize);
             
         // Mutating operators
