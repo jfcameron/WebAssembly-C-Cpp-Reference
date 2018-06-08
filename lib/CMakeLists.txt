@@ -65,18 +65,11 @@ if (JFC_BUILD_LIB)
         CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
 
     if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-	    set(COMMON_CXX_FLAGS "-std=c++17 -pthread -Wall -Werror \
-	    -Wno-c++11-narrowing -Wno-unused-local-typedef -Wno-unused-const-variable -Wno-unused-function")#These should be removed for more strict error checking
-        set(WASM_CXX_FLAGS "-s BINARYEN=1 -s \"BINARYEN_METHOD='native-wasm'\" -s DEMANGLE_SUPPORT=1")
-
-        if(UNIX)
-            set(CMAKE_CXX_FLAGS         "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-            set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-            set(CMAKE_CXX_FLAGS_DEBUG   "$ENV{CXXFLAGS} ${COMMON_CXX_FLAGS} ${WASM_CXX_FLAGS}")
-        endif()
-
+	set(COMMON_CXX_FLAGS "-pthread -std=c++17 -Wall -Werror -Wno-c++11-narrowing\
+            -Wno-unused-local-typedef -Wno-unused-const-variable -Wno-unused-function")
+        
         set(${PROJECT_NAME}_COMPILER_PARAMETERS
-            "-s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1"
+            "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1"
             CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)
     endif()
 endif()
