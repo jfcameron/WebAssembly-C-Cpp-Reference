@@ -14,12 +14,10 @@
 
 using namespace gdk;
 
-static constexpr auto TAG = "Mat4x4";
+static constexpr char TAG[] = "Mat4x4";
 
-//static const
 const Mat4x4 Mat4x4::Identity = Mat4x4();
 
-//Stringify
 std::ostream& gdk::operator<< (std::ostream &s, const gdk::Mat4x4& aMat)
 {
     s.clear();s
@@ -31,6 +29,32 @@ std::ostream& gdk::operator<< (std::ostream &s, const gdk::Mat4x4& aMat)
     
     return s;
 }
+
+Mat4x4::Mat4x4()
+    : m
+{
+    {1.,0.,0.,0.},
+    {0.,1.,0.,0.},
+    {0.,0.,1.,0.},
+    {0.,0.,0.,1.}
+}
+{}
+
+Mat4x4::Mat4x4
+(
+    const float a00, const float a10, const float a20, const float a30,
+    const float a01, const float a11, const float a21, const float a31,
+    const float a02, const float a12, const float a22, const float a32,
+    const float a03, const float a13, const float a23, const float a33
+    )
+    : m
+{
+    {a00,a01,a02,a03},
+    {a10,a11,a12,a13},
+    {a20,a21,a22,a23},
+    {a30,a31,a32,a33}
+}
+{}
 
 void Mat4x4::setIdentity()
 {
@@ -48,6 +72,31 @@ void Mat4x4::setOrthographic(const gdk::Vector2 &aOrthoSize, const float aNearCl
     (void)aViewportAspectRatio;
     
     throw gdk::Exception(TAG, "Mat4x4::setOrthographic not implemented!");
+}
+
+void Mat4x4::setPerspective(const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
+{
+    float tanHalfFovy = static_cast<float>(tan(aFieldOfView * 0.5f));
+    
+    m[0][0] = 1.0f / (aViewportAspectRatio * tanHalfFovy);
+    m[0][1] = 0.0f;
+    m[0][2] = 0.0f;
+    m[0][3] = 0.0f;
+    
+    m[1][0] = 0.0f;
+    m[1][1] = 1.0f / tanHalfFovy;
+    m[1][2] = 0.0f;
+    m[1][3] = 0.0f;
+    
+    m[2][0] = 0.0f;
+    m[2][1] = 0.0f;
+    m[2][2] =-(aFarClippingPlane + aNearClippingPlane) / (aFarClippingPlane - aNearClippingPlane);
+    m[2][3] =-1.0f;
+    
+    m[3][0] = 0.0f;
+    m[3][1] = 0.0f;
+    m[3][2] =-2.0f * aFarClippingPlane * aNearClippingPlane / (aFarClippingPlane - aNearClippingPlane);
+    m[3][3] = 0.0f;
 }
 
 void Mat4x4::translate(const Vector3 &a)
@@ -98,31 +147,6 @@ void Mat4x4::scale(const Vector3 &aPosition)
     throw gdk::Exception(TAG, "Mat4x4::scale not implemented!");
 }
 
-void Mat4x4::setPerspective(const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
-{
-    float tanHalfFovy = static_cast<float>(tan(aFieldOfView * 0.5f));
-    
-    m[0][0] = 1.0f / (aViewportAspectRatio * tanHalfFovy);
-    m[0][1] = 0.0f;
-    m[0][2] = 0.0f;
-    m[0][3] = 0.0f;
-    
-    m[1][0] = 0.0f;
-    m[1][1] = 1.0f / tanHalfFovy;
-    m[1][2] = 0.0f;
-    m[1][3] = 0.0f;
-    
-    m[2][0] = 0.0f;
-    m[2][1] = 0.0f;
-    m[2][2] =-(aFarClippingPlane + aNearClippingPlane) / (aFarClippingPlane - aNearClippingPlane);
-    m[2][3] =-1.0f;
-    
-    m[3][0] = 0.0f;
-    m[3][1] = 0.0f;
-    m[3][2] =-2.0f * aFarClippingPlane * aNearClippingPlane / (aFarClippingPlane - aNearClippingPlane);
-    m[3][3] = 0.0f;
-}
-
 void Mat4x4::transpose()
 {
     float t00 = m[0][0]; float t10 = m[0][1]; float t20 = m[0][2]; float t30 = m[0][3];
@@ -138,83 +162,10 @@ void Mat4x4::transpose()
     );
 }
 
-void Mat4x4::set
-(
- const float a00, const float a10, const float a20, const float a30,
- const float a01, const float a11, const float a21, const float a31,
- const float a02, const float a12, const float a22, const float a32,
- const float a03, const float a13, const float a23, const float a33
-)
-{
-    m[0][0] = a00; m[1][0] = a10; m[2][0] = a20; m[3][0] = a30;
-    m[0][1] = a01; m[1][1] = a11; m[2][1] = a21; m[3][1] = a31;
-    m[0][2] = a02; m[1][2] = a12; m[2][2] = a22; m[3][2] = a32;
-    m[0][3] = a03; m[1][3] = a13; m[2][3] = a23; m[3][3] = a33;
-}
-
-// Operators
-Mat4x4 &Mat4x4::operator*=(const Mat4x4& a)
-{
-    set(
-        m[0][0] * a.m[0][0] + m[1][0] * a.m[0][1] + m[2][0] * a.m[0][2] + m[3][0] * a.m[0][3],
-        m[0][1] * a.m[0][0] + m[1][1] * a.m[0][1] + m[2][1] * a.m[0][2] + m[3][1] * a.m[0][3],
-        m[0][2] * a.m[0][0] + m[1][2] * a.m[0][1] + m[2][2] * a.m[0][2] + m[3][2] * a.m[0][3],
-        m[0][3] * a.m[0][0] + m[1][3] * a.m[0][1] + m[2][3] * a.m[0][2] + m[3][3] * a.m[0][3],
-        m[0][0] * a.m[1][0] + m[1][0] * a.m[1][1] + m[2][0] * a.m[1][2] + m[3][0] * a.m[1][3],
-        m[0][1] * a.m[1][0] + m[1][1] * a.m[1][1] + m[2][1] * a.m[1][2] + m[3][1] * a.m[1][3],
-        m[0][2] * a.m[1][0] + m[1][2] * a.m[1][1] + m[2][2] * a.m[1][2] + m[3][2] * a.m[1][3],
-        m[0][3] * a.m[1][0] + m[1][3] * a.m[1][1] + m[2][3] * a.m[1][2] + m[3][3] * a.m[1][3],
-        m[0][0] * a.m[2][0] + m[1][0] * a.m[2][1] + m[2][0] * a.m[2][2] + m[3][0] * a.m[2][3],
-        m[0][1] * a.m[2][0] + m[1][1] * a.m[2][1] + m[2][1] * a.m[2][2] + m[3][1] * a.m[2][3],
-        m[0][2] * a.m[2][0] + m[1][2] * a.m[2][1] + m[2][2] * a.m[2][2] + m[3][2] * a.m[2][3],
-        m[0][3] * a.m[2][0] + m[1][3] * a.m[2][1] + m[2][3] * a.m[2][2] + m[3][3] * a.m[2][3],
-        m[0][0] * a.m[3][0] + m[1][0] * a.m[3][1] + m[2][0] * a.m[3][2] + m[3][0] * a.m[3][3],
-        m[0][1] * a.m[3][0] + m[1][1] * a.m[3][1] + m[2][1] * a.m[3][2] + m[3][1] * a.m[3][3],
-        m[0][2] * a.m[3][0] + m[1][2] * a.m[3][1] + m[2][2] * a.m[3][2] + m[3][2] * a.m[3][3],
-        m[0][3] * a.m[3][0] + m[1][3] * a.m[3][1] + m[2][3] * a.m[3][2] + m[3][3] * a.m[3][3]
-        );
-
-    return *this;
-}
-
-Mat4x4 Mat4x4::operator*(const Mat4x4 &a) const
-{
-    Mat4x4 r(*this);
-    
-    r *= a;
-    
-    return r;
-}
-
-// Constructors
-Mat4x4::Mat4x4()
-: m
-{
-    {1.,0.,0.,0.},
-    {0.,1.,0.,0.},
-    {0.,0.,1.,0.},
-    {0.,0.,0.,1.},
-}
-{}
-
-Mat4x4::Mat4x4
-(
- const float a00, const float a10, const float a20, const float a30,
- const float a01, const float a11, const float a21, const float a31,
- const float a02, const float a12, const float a22, const float a32,
- const float a03, const float a13, const float a23, const float a33
-)
-: m
-{
-    {a00,a01,a02,a03},
-    {a10,a11,a12,a13},
-    {a20,a21,a22,a23},
-    {a30,a31,a32,a33},
-}
-{}
-
-Mat4x4 Mat4x4::_set(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13,
-                    float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
+Mat4x4 Mat4x4::set( //GOOD
+    const float m00, const float m01, const float m02, const float m03, const float m10, const float m11, const float m12, const float m13,
+    const float m20, const float m21, const float m22, const float m23, const float m30, const float m31, const float m32, const float m33
+    )
 {
     this->m[0][0] = m00;
     this->m[0][1] = m01;
@@ -236,9 +187,9 @@ Mat4x4 Mat4x4::_set(float m00, float m01, float m02, float m03, float m10, float
     return *this;
 }
 
-Mat4x4 Mat4x4::multiply(const Mat4x4 &right)
+Mat4x4 Mat4x4::multiply(const Mat4x4 &right) //GOOD
 {
-    _set(
+     set(
         m[0][0] * right.m[0][0] + m[1][0] * right.m[0][1] + m[2][0] * right.m[0][2] + m[3][0] * right.m[0][3],
         m[0][1] * right.m[0][0] + m[1][1] * right.m[0][1] + m[2][1] * right.m[0][2] + m[3][1] * right.m[0][3],
         m[0][2] * right.m[0][0] + m[1][2] * right.m[0][1] + m[2][2] * right.m[0][2] + m[3][2] * right.m[0][3],
@@ -258,4 +209,20 @@ Mat4x4 Mat4x4::multiply(const Mat4x4 &right)
         );
     
     return *this;
+}
+
+Mat4x4 &Mat4x4::operator*=(const Mat4x4& a)
+{
+    multiply(a);
+    
+    return *this;
+}
+
+Mat4x4 Mat4x4::operator*(const Mat4x4 &a) const
+{
+    Mat4x4 r(*this);
+    
+    r *= a;
+    
+    return r;
 }

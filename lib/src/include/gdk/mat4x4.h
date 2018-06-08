@@ -25,12 +25,12 @@ namespace gdk
         void rotate(const Quaternion &aRotation);
         void scale(const Vector3 &aScale);
         void transpose();
-        void set(
+        /*void set(
             const float a00, const float a01, const float a02, const float a03,
             const float a10, const float a11, const float a12, const float a13,
             const float a20, const float a21, const float a22, const float a23,
             const float a30, const float a31, const float a32, const float a33
-            );
+            );*/
             
         // Operators
         Mat4x4 operator*(const Mat4x4&) const;
@@ -53,8 +53,10 @@ namespace gdk
         static const Mat4x4 Identity;
 
         //Hacks
-        Mat4x4 _set(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13,
-                            float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33);
+        Mat4x4 set(
+            const float m00, const float m01, const float m02, const float m03, const float m10, const float m11, const float m12, const float m13,
+            const float m20, const float m21, const float m22, const float m23, const float m30, const float m31, const float m32, const float m33
+            );
         
         Mat4x4 multiply(const Mat4x4 &right);
     };
