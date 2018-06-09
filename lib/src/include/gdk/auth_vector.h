@@ -90,4 +90,4 @@ namespace gdk
     }
 }
 
-#endif /* GDK_MEMORY_AUTH_VECTOR_H  */
+#endif

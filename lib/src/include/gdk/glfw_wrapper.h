@@ -37,4 +37,3 @@ namespace glfw
      */
     void SetWindowSizeCallback(windowsizecallback_type aWindowSizeCallback);
 }
-

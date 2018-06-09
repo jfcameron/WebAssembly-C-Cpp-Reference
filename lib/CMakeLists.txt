@@ -11,7 +11,6 @@ if (JFC_BUILD_LIB)
     add_library(${PROJECT_NAME} STATIC
 	${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/color.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/defaultresources.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/floatuniformcollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
@@ -47,8 +46,7 @@ if (JFC_BUILD_LIB)
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${stb_INCLUDE_DIR}
-        ${glm_INCLUDE_DIR}        
-        ${emscripten_INCLUDE_DIR})
+        ${glm_INCLUDE_DIR}) 
 
     set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
@@ -65,10 +63,10 @@ if (JFC_BUILD_LIB)
         CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
 
     if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-	set(COMMON_CXX_FLAGS "-pthread -std=c++17 -Wall -Werror -Wno-c++11-narrowing\
-            -Wno-unused-local-typedef -Wno-unused-const-variable -Wno-unused-function")
+	target_include_directories(${PROJECT_NAME} PRIVATE
+		${emscripten_INCLUDE_DIR})
         
-        set(${PROJECT_NAME}_COMPILER_PARAMETERS
+	set(${PROJECT_NAME}_COMPILER_PARAMETERS
             "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1"
             CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)
     endif()

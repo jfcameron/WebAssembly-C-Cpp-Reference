@@ -38,7 +38,7 @@ namespace gdk
             template<typename First, typename ...Rest>
             void log(std::ostringstream &stringStream, First &&first, Rest &&...rest)
             {
-            stringStream << first;
+                stringStream << first;
                 log(stringStream, std::forward<Rest>(rest)...);
             }
             
@@ -52,13 +52,11 @@ namespace gdk
                 log(stringStream, std::forward<Rest>(rest)...);
             }
             
-            // Mutating operators
             Logger &operator=(const Logger &) = default;
             Logger &operator=(Logger &&) = default;
             
-            // Constructors & destructors
-            /// Change log behavior by passing a function pointer to your own logging function.
-            /// Default behaviour is for the logger to display the debug message via std::clog
+            //! Change log behavior by passing a function pointer to your own logging function.
+            // Default behaviour is for the logger to display the debug message via std::clog
             Logger(const std::function<void(const std::string &)> &aLoggingBehaviourCallback = nullptr);
             Logger(const Logger &) = default;
             Logger(Logger &&) = default;

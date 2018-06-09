@@ -1,13 +1,12 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 2018-05-14.
+
 #include <exception>
 #include <functional>
 #include <iostream>
 #include <memory>
 #include <sstream>
 #include <vector>
-
-#include<cmath>
+#include <cmath>
 
 #include <emscripten.h>
 
@@ -30,7 +29,8 @@
 
 namespace
 {
-    std::shared_ptr<gdk::Camera> pCamera;
+    std::shared_ptr<gdk::Camera> pCamera, pCamera2;
+    
     std::shared_ptr<gdk::Model> pModel;
 }
 
@@ -38,25 +38,41 @@ namespace gdk
 {
     void init()
     {
-        pCamera = std::make_shared<gdk::Camera>([]()
-                                                {
-                                                    gdk::Camera camera;
+        pCamera = std::make_shared<gdk::Camera>
+            ([]()
+             {
+                 gdk::Camera camera;
+
+                 camera.setViewportSize(0.5, 1.0);
               
-                                                    return camera;
-                                                }());
+                 return camera;
+             }());
 
-        pModel = std::make_shared<gdk::Model>([]()
-                                              {
-                                                  gdk::Model model("MySuperCoolModel",
-                                                                   gdk::default_ptr<gdk::VertexData>(static_cast<std::shared_ptr<gdk::VertexData>>(gdk::VertexData::Quad)),
-                                                                   gdk::default_ptr<gdk::ShaderProgram>(static_cast<std::shared_ptr<gdk::ShaderProgram>>(gdk::ShaderProgram::AlphaCutOff)));
+        pCamera2 = std::make_shared<gdk::Camera>
+            ([]()
+             {
+                 gdk::Camera camera;
 
-                                                  model.setTexture("_Texture", gdk::default_ptr<gdk::Texture>(static_cast<std::shared_ptr<gdk::Texture>>(gdk::Texture::CheckeredTextureOfDeath)));
+                 camera.setViewportSize(0.5, 1.0);
+                 camera.setViewportPosition(0.5, 0.0);
+                 camera.setClearColor(Color::Blue);
+              
+                 return camera;
+             }());
 
-                                                  model.setModelMatrix((gdk::Vector3){0.,0.,0.}, (gdk::Quaternion){});
+        pModel = std::make_shared<gdk::Model>
+            ([]()
+             {
+                 gdk::Model model("MySuperCoolModel",
+                                  gdk::default_ptr<gdk::VertexData>(static_cast<std::shared_ptr<gdk::VertexData>>(gdk::VertexData::Cube)),
+                                  gdk::default_ptr<gdk::ShaderProgram>(static_cast<std::shared_ptr<gdk::ShaderProgram>>(gdk::ShaderProgram::AlphaCutOff)));
+
+                 model.setTexture("_Texture", gdk::default_ptr<gdk::Texture>(static_cast<std::shared_ptr<gdk::Texture>>(gdk::Texture::CheckeredTextureOfDeath)));
+
+                 model.setModelMatrix((gdk::Vector3){0., 0., 0.}, (gdk::Quaternion){});
      
-                                                  return model;
-                                              }());
+                 return model;
+             }());
 
         emscripten_set_main_loop(gdk::draw, -1, 0); // Negative fps will force requestAnimationFrame usage
         //emscripten_set_main_loop(gdk::update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
@@ -66,19 +82,20 @@ namespace gdk
     {
         static gdk::Vector3 pos;
         static gdk::Quaternion rot;
+        static gdk::Vector3 sca({1.,0.5,1.});
 
-        //pos.x = sin(Time::getTime());
-        //pos.y = cos(Time::getTime());
-        //pos.z = sin(Time::getTime())*10;
-
-        pos.z = -2.f;
-
-        rot.setFromEuler({Time::getTime()/2.f, Time::getTime(), 0});
+        pos.z = -10.f + (sin(gdk::time::sinceStart())*5.f);
+        sca.z = sin(gdk::time::sinceStart()/2.f)*10.f;
+        //rot.setFromEuler({45, 35, 0});
+        rot.setFromEuler({time::sinceStart()/2.f, time::sinceStart(), 0});
         
-        pModel->setModelMatrix(pos, rot);
+        pModel->setModelMatrix(pos, rot, sca);
         
         pCamera->draw(glfw::GetWindowSize());
         pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
+
+        pCamera2->draw(glfw::GetWindowSize());
+        pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());        
     }
 
     void update()

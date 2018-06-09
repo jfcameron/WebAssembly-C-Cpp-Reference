@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 17-07-02.
+
 #ifndef gdk_GFX_SHADERPROGRAM_H
 #define gdk_GFX_SHADERPROGRAM_H
 
@@ -19,32 +18,29 @@ namespace gdk
     class ShaderProgram final
     {
         friend std::ostream &operator<< (std::ostream &, const ShaderProgram &);
-            
-        // Data members
-        std::string m_Name = {};
-        GLuint m_ProgramHandle = {0};
-            
-    public: // Public interface
-            /// Installs a program object as part of current rendering state
+        
+        std::string m_Name = {};      //!< Human friendly identifier        
+        GLuint m_ProgramHandle = {0}; //!< handle to the program in the context.
+        
+    public:
+        //! Installs the program to the pipeline. This program's programmable stages
+        //  will be used for draw calls until a different program is installed.
         GLuint useProgram() const;
-            
-        // Accessors
+        
         std::string getName() const;
         GLuint getHandle() const;
-            
-        // Mutating operators
+                
         ShaderProgram &operator=(const ShaderProgram &) = delete;
         ShaderProgram &operator=(ShaderProgram &&) = delete;
-      
-        // Constructors, destructors
+                
         ShaderProgram() = delete;
         ShaderProgram(const std::string &aName, const std::string &aVertexSource, const std::string &aFragmentSource);
         ShaderProgram(const ShaderProgram &) = delete;
         ShaderProgram(ShaderProgram &&);
         ~ShaderProgram();
-
-        static const gdk::lazy_ptr<gdk::ShaderProgram> PinkShaderOfDeath;        
-        static const gdk::lazy_ptr<gdk::ShaderProgram> AlphaCutOff;
+        
+        static const gdk::lazy_ptr<gdk::ShaderProgram> PinkShaderOfDeath; //!< shader for indicating some kind of failure
+        static const gdk::lazy_ptr<gdk::ShaderProgram> AlphaCutOff;       //!< shader for drawing sprites
     };
 
     std::ostream &operator<< (std::ostream &, const ShaderProgram &);

@@ -50,6 +50,7 @@ namespace gdk
         static const Vector3 Forward;
         static const Vector3 Backward;
         static const Vector3 Zero;
+        static const Vector3 One;
     };
         
     std::ostream& operator<< (std::ostream&, const gdk::Vector3&);    

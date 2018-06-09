@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-09.
+
 #ifndef GDK_GFX_UNIFORMCOLLECTION_H
 #define GDK_GFX_UNIFORMCOLLECTION_H
 
@@ -35,7 +34,7 @@ namespace gdk
             return m_Map.find(aName);
         }
             
-        virtual void bind(const GLuint aProgramHandle) = 0;
+        virtual void bind(const GLuint aProgramHandle) =   0;
         virtual void unbind(const GLuint aProgramHandle) = 0;
             
         // Mutating operators

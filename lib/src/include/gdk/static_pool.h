@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-23.
+
 #ifndef GDK_MEMORY_STATIC_POOL_H
 #define GDK_MEMORY_STATIC_POOL_H
 
@@ -18,20 +17,17 @@ namespace gdk
          a reference count of 1 (unused outside the pool) is returned. If
          no unused objects exist, a nullptr is returned.
          */
-        template<typename T, const size_t length>
-        class static_pool final
+        template<typename T, const size_t length> class static_pool final
         {
         public:
             using value_type =      std::shared_ptr<T>;
             using collection_type = std::array<value_type, length>;
 
         private:
-            // Data members
             const collection_type m_Pool;
             
         public:
-            // Public methods
-            /// Try to get an object from the pool, will be null if all objects are in use
+            //! Try to get an object from the pool, will be null if all objects are in use
             value_type get() const 
             {
                 for (const auto &item : m_Pool) if (item.use_count() == 1) return item;
@@ -39,11 +35,9 @@ namespace gdk
                 return {};
             }
             
-            // Mutating operators
             static_pool &operator=(const static_pool &) = delete;
             static_pool &operator=(static_pool &&) = default;
       
-            // Constructors, destructors
             static_pool(const std::function<T()> &aItemInitializer /*= [](){return T();}*/)
             : m_Pool([this, &aItemInitializer]()
             {

@@ -1,17 +1,14 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-16.
+
 #include <gdk/time.h>
 #include <gdk/glfw_wrapper.h>
 
 static double currentTime(0.);
 static double lastTime(0.);
 
-namespace gdk
+namespace gdk::time
 {
-namespace Time
-{
-    double getTime(void) noexcept
+    double sinceStart(void) noexcept
     {
         return glfw::GetTime();
     }
@@ -30,5 +27,4 @@ namespace Time
 
         return time;
     }
-}
 }

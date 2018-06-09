@@ -11,12 +11,6 @@ using namespace gdk;
 
 static constexpr char TAG[] = "ShaderProgram";
 
-//uniform float _Time;
-//uniform mat4  _Model;
-//uniform mat4  _View;
-//uniform mat4  _Projection;
-//gl_Position = _Projection * _View * _Model * vec4(a_Position,1.0);
-
 const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
 {
     const std::string vertexShaderSource = R"V0G0N(

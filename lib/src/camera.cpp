@@ -1,5 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 2017-06-25.
+
 #include <iostream>
 
 #include <gdk/opengl.h>
@@ -49,13 +49,13 @@ static inline void calculateOrthographicProjection(gdk::Mat4x4 &aProjectionMatri
     (void)aFarClippingPlane;
     (void)aViewportAspectRatio;
     
-    throw gdk::Exception(TAG, "Camera::setOrthographicProjection not implemented!");
+    throw gdk::Exception(TAG, "Camera::setToOrthographicProjection not implemented!");
 }
 
 //Why does this exist?
 static inline void calculatePerspectiveProjection(gdk::Mat4x4& aProjectionMatrix, const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
 {    
-    aProjectionMatrix.setPerspective(aFieldOfView, aNearClippingPlane, aFarClippingPlane, aViewportAspectRatio);
+    aProjectionMatrix.setToPerspective(aFieldOfView, aNearClippingPlane, aFarClippingPlane, aViewportAspectRatio);
 }
 
 void Camera::draw(const gdk::IntVector2 &aFrameBufferSize)
@@ -97,7 +97,7 @@ void Camera::draw(const gdk::IntVector2 &aFrameBufferSize)
 
 void Camera::setViewMatrix(const gdk::Vector3 &aWorldPos, const gdk::Quaternion &aRotation)
 {
-    m_ViewMatrix.setIdentity();
+    m_ViewMatrix.setToIdentity();
     m_ViewMatrix.rotate({aRotation.toEuler() * -1.f});
     m_ViewMatrix.translate(aWorldPos * -1.f);
 }
@@ -142,4 +142,9 @@ const gdk::Mat4x4 &Camera::getProjectionMatrix() const
 const gdk::Mat4x4 &Camera::getViewMatrix() const
 {
     return m_ViewMatrix;
+}
+
+void Camera::setClearColor(const gdk::Color &aColor)
+{
+    m_ClearColor = aColor;
 }

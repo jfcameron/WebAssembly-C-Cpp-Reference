@@ -4,7 +4,7 @@
 #include <gdk/trigonometry.h>
 
 #include <iostream>
-#include <math.h> //hmm
+#include <cmath>
 
 using namespace gdk;
 

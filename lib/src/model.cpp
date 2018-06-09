@@ -1,6 +1,4 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-03.
 
 #include <gdk/camera.h>
 #include <gdk/logger.h>
@@ -10,12 +8,10 @@
 #include <gdk/model.h>
 #include <gdk/time.h>
 #include <gdk/default_ptr.h>
-#include <gdk/defaultresources.h>
 
 #include <iostream>
 
 using namespace gdk;
-
 
 std::ostream& gdk::operator<<(std::ostream& s, const Model& a)
 {
@@ -42,16 +38,18 @@ Model::Model(const std::string &aName, const default_ptr<VertexData> &aVertexDat
 {}
 
 Model::Model()
-: Model("", DefaultResources::getQuad(), DefaultResources::getAlphaCutOff())
+    : Model("",
+            gdk::default_ptr<gdk::VertexData>(static_cast<std::shared_ptr<gdk::VertexData>>(VertexData::Quad)),
+            gdk::default_ptr<gdk::ShaderProgram>(static_cast<std::shared_ptr<gdk::ShaderProgram>>(ShaderProgram::AlphaCutOff)))
 {}
 
 void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
 {
-    if (auto shader = m_ShaderProgram.lock())
+    if (const auto pShader = m_ShaderProgram.lock())
     {
-        if (auto pVertexData = m_VertexData.lock())
+        if (const auto pVertexData = m_VertexData.lock())
         {
-            GLuint programHandle = shader->useProgram();
+            const GLuint programHandle = pShader->useProgram();
     
             //bind this model's uniforms
             m_Textures.bind(programHandle);
@@ -62,12 +60,12 @@ void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
             m_Mat4x4s .bind(programHandle);
     
             //bind standard uniforms
-            float time      = Time::getTime();
-            float deltaTime = Time::getDeltaTime();
+            const float time      = time::sinceStart();
+            const float deltaTime = time::getDeltaTime();
         
-            Mat4x4 p = aProjectionMatrix;
-            Mat4x4 v = aViewMatrix;
-            Mat4x4 m = getModelMatrix();
+            const Mat4x4 p = aProjectionMatrix;
+            const Mat4x4 v = aViewMatrix;
+            const Mat4x4 m = getModelMatrix();
         
             const auto mvp = p * v * m;
         
@@ -94,32 +92,32 @@ void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
 // Accessors
 void Model::setTexture(const std::string &aUniformName, const default_ptr<Texture> &aTexture)
 {
-    m_Textures.put(aUniformName,aTexture);
+    m_Textures.put(aUniformName, aTexture);
 }
 
 void Model::setFloat(const std::string &aUniformName, const std::shared_ptr<float> &aFloat)
 {
-    m_Floats.put(aUniformName,aFloat);
+    m_Floats.put(aUniformName, aFloat);
 }
 
 void Model::setVector2(const std::string &aUniformName, const std::shared_ptr<Vector2> &aVector2)
 {
-    m_Vector2s.put(aUniformName,aVector2);
+    m_Vector2s.put(aUniformName, aVector2);
 }
 
 void Model::setVector3(const std::string &aUniformName, const std::shared_ptr<Vector3> &aVector3)
 {
-    m_Vector3s.put(aUniformName,aVector3);
+    m_Vector3s.put(aUniformName, aVector3);
 }
 
 void Model::setVector4(const std::string &aUniformName, const std::shared_ptr<Vector4> &aVector4)
 {
-    m_Vector4s.put(aUniformName,aVector4);
+    m_Vector4s.put(aUniformName, aVector4);
 }
 
 void Model::setMat4x4 (const std::string &aUniformName, const Mat4x4 &aMat4x4 )
 {
-    m_Mat4x4s.put(aUniformName,aMat4x4);
+    m_Mat4x4s.put(aUniformName, aMat4x4);
 }
 
 const Mat4x4& Model::getModelMatrix() const
@@ -127,11 +125,12 @@ const Mat4x4& Model::getModelMatrix() const
     return m_ModelMatrix;
 }
 
-void Model::setModelMatrix(const Vector3 &aWorldPos, const Quaternion &aRotation)
+void Model::setModelMatrix(const Vector3 &aWorldPos, const Quaternion &aRotation, const Vector3 &aScale)
 {
-    m_ModelMatrix.setIdentity();
+    m_ModelMatrix.setToIdentity();
     m_ModelMatrix.translate(aWorldPos);
     m_ModelMatrix.rotate(aRotation);
+    m_ModelMatrix.scale(aScale);
 }
 
 void Model::setVertexData(const default_ptr<VertexData> &a)

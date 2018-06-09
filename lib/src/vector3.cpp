@@ -16,6 +16,7 @@ const Vector3 Vector3::Right    = Vector3( 1.f, 0.f, 0.f);
 const Vector3 Vector3::Forward  = Vector3( 0.f, 0.f, 1.f);
 const Vector3 Vector3::Backward = Vector3( 0.f, 0.f,-1.f);
 const Vector3 Vector3::Zero     = Vector3( 0.f, 0.f, 0.f);
+const Vector3 Vector3::One      = Vector3( 1.f, 1.f, 1.f);
 
 //stringify
 std::ostream& gdk::operator<<(std::ostream& s,const gdk::Vector3& a)
