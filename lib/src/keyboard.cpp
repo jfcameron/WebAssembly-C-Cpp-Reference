@@ -1,18 +1,15 @@
 // © 2017 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-22.
-#include "Keyboard.h"
-//gdkinc
-#include "Debug/Exception.h"
-#include "Debug/Logger.h"
-#include "Graphics/Window.h"
-//thirdparty inc
-#include <glfw/include/GLFW/glfw3.h>
-//std inc
+
+#include <gdk/keyboard.h>
+#include <gdk/exception.h>
+#include <gdk/logger.h>
+#include <gdk/glfw_wrapper.h>
+
+#include <GLFW/glfw3.h>
+
 #include <iostream>
 
-using namespace GDK;
-using namespace Input;
+using namespace gdk;
 
 static constexpr char TAG[] = "Keyboard";
 
@@ -141,34 +138,13 @@ static inline int glfwKeyCodeFromKey(const Keyboard::Key &a)
     }
 }
 
-std::ostream& GDK::Input::operator<<(std::ostream &s, const Input::Keyboard &a)
+bool Keyboard::getKeyDown(const Key &aKeyCode)
 {
-    s.clear(); s
-    << "{"
-    << "m_HandleToGLFWWindow: ";
-    
-    if (auto ptr = a.m_HandleToGLFWWindow.lock())
-        s << ptr;
-    else
-        s << "nullptr";
-    
-    s << "}"; return s;
+    return glfw::GetKey(glfwKeyCodeFromKey(aKeyCode));
 }
 
-Keyboard::Keyboard(const GFX::Window &aWindow)
-: m_HandleToGLFWWindow(aWindow.getHandleToGLFWWindow())
-{}
-
-bool Keyboard::getKeyDown(const Key &aKeyCode) const
-{
-    if (auto ptr = m_HandleToGLFWWindow.lock())
-        return glfwGetKey(ptr.get(), glfwKeyCodeFromKey(aKeyCode));
-
-    throw GDK::Exception(TAG, "The keyboard's window has died!");
-}
-
-bool Keyboard::getKey(const Key &aKeyCode) const
+bool Keyboard::getKey(const Key &aKeyCode)
 {
     (void)aKeyCode;
-    throw GDK::Exception(TAG, "Keyboard::getKey(const Key &aKeyCode) not implemented");
+    throw gdk::Exception(TAG, "Keyboard::getKey(const Key &aKeyCode) not implemented");
 }

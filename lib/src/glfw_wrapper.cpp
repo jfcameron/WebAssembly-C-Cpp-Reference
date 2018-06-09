@@ -103,4 +103,9 @@ namespace glfw
 
         return gdk::Vector2(static_cast<float>(x), static_cast<float>(y));
     }
+
+    bool GetKey(const int aKeyCode)
+    {
+        return static_cast<bool>(glfwGetKey(pWindow, aKeyCode));
+    }
 }

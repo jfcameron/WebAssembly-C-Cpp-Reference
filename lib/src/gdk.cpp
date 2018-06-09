@@ -27,6 +27,7 @@
 #include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
 #include <gdk/mouse.h>
+#include <gdk/keyboard.h>
 
 namespace
 {
@@ -97,8 +98,10 @@ namespace gdk
         pCamera2->draw(glfw::GetWindowSize());
         pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
 
-        gdk::log("BLAR", gdk::Mouse::getCursorPosition());
-        gdk::log("BLAR", gdk::Mouse::getButtonDown(gdk::Mouse::Button::Left));
+        //gdk::log("BLAR", gdk::Mouse::getCursorPosition());
+        //gdk::log("BLAR", gdk::Mouse::getButtonDown(gdk::Mouse::Button::Left));
+
+        gdk::log("BLAR", gdk::Keyboard::getKeyDown(gdk::Keyboard::Key::A));
     }
 
     void update()

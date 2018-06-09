@@ -31,6 +31,9 @@ namespace glfw
     //glfwGetMouseButton(ptr.get(), glfwMouseButtonFromButton(aButton))
     bool GetMouseButton(const int aButton);
 
-    //
+    //! Get position of the mouse cursor
     gdk::Vector2 GetCursorPos();
+
+    //! Get a key value
+    bool GetKey(const int aKeyCode);
 }

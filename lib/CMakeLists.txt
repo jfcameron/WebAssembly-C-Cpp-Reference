@@ -36,7 +36,7 @@ if (JFC_BUILD_LIB)
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vertexformat.cpp
 
         # Input
-#	${CMAKE_CURRENT_SOURCE_DIR}/src/keyboard.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/keyboard.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/mouse.cpp
 	
         # Math
