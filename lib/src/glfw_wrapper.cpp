@@ -1,5 +1,6 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 // Created on 2018-05-15.
+
 #include <exception>
 #include <functional>
 #include <iostream>
@@ -88,5 +89,18 @@ namespace glfw
     void SetWindowSizeCallback(glfw::windowsizecallback_type aWindowSizeCallback)
     {
         ::WindowSizeCallback = aWindowSizeCallback;
+    }
+
+    bool GetMouseButton(const int aButton)
+    {
+        return glfwGetMouseButton(pWindow, aButton);
+    }
+
+    gdk::Vector2 GetCursorPos()
+    {
+        double x,y;
+        glfwGetCursorPos(pWindow, &x, &y);
+
+        return gdk::Vector2(static_cast<float>(x), static_cast<float>(y));
     }
 }

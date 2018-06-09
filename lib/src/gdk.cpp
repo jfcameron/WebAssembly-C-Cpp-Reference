@@ -26,6 +26,7 @@
 #include <gdk/vector3.h>
 #include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
+#include <gdk/mouse.h>
 
 namespace
 {
@@ -86,7 +87,6 @@ namespace gdk
 
         pos.z = -10.f + (sin(gdk::time::sinceStart())*5.f);
         sca.z = sin(gdk::time::sinceStart()/2.f)*10.f;
-        //rot.setFromEuler({45, 35, 0});
         rot.setFromEuler({time::sinceStart()/2.f, time::sinceStart(), 0});
         
         pModel->setModelMatrix(pos, rot, sca);
@@ -95,11 +95,14 @@ namespace gdk
         pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
 
         pCamera2->draw(glfw::GetWindowSize());
-        pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());        
+        pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
+
+        gdk::log("BLAR", gdk::Mouse::getCursorPosition());
+        gdk::log("BLAR", gdk::Mouse::getButtonDown(gdk::Mouse::Button::Left));
     }
 
     void update()
-    {        
+    {
     }
     
     void free()
