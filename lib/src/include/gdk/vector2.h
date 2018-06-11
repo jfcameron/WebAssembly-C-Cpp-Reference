@@ -1,9 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#ifndef gdk_MATH_VECTOR2_H
-#define gdk_MATH_VECTOR2_H
+#ifndef GDK_MATH_VECTOR2_H
+#define GDK_MATH_VECTOR2_H
 
-//std inc
 #include <iosfwd>
 
 namespace gdk
@@ -16,7 +15,7 @@ namespace gdk
     */
     struct Vector2 final
     {
-        float x = 0.f, y = 0.f;
+        float x = {0.}, y = {0.};
             
         //! squareroot of the sum of the 2nd power of the components
         float length() const;

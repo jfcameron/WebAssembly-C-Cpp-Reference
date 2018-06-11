@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created 2017-06-27.
+
 #include <gdk/vector4.h>
 #include <gdk/vector3.h>
 
@@ -8,11 +7,8 @@
 
 using namespace gdk;
 
-
-//static const
 const Vector4 Vector4::Zero = Vector4( 0.,0.,0.,0.);
 
-//Stringify
 std::ostream& gdk::operator<<(std::ostream& s, const Vector4& a)
 {
     s.clear(); s << "{"
@@ -23,7 +19,6 @@ std::ostream& gdk::operator<<(std::ostream& s, const Vector4& a)
     << "}"; return s;
 }
 
-//Constructors
 Vector4::Vector4()
 : x(0.)
 , y(0.)
@@ -45,7 +40,6 @@ Vector4::Vector4(const float &aX, const float &aY, const float &aZ, const float 
 , w(aW)
 {}
 
-//Operators
 Vector4& Vector4::operator+=(const Vector4 &aVector4)
 {
     x += aVector4.x;

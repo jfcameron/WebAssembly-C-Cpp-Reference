@@ -1,10 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 17-07-03.
+
 #include <gdk/vertexformat.h>
 #include <gdk/glh.h>
-//#include "Debug/Logger.h"
-
 #include <gdk/opengl.h>
 
 #include <iostream>

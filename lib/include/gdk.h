@@ -1,24 +1,22 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 2018-05-14.
 
-#ifndef gdk_gdk_H
-#define gdk_gdk_H
+#ifndef GDK_gdk_H
+#define GDK_gdk_H
 
-//hack
 extern "C" float js_to_cpp_test(float a);
 
 namespace gdk
 {
-    /// Allocates heap memory and initializes gdk context
+    //! Allocates heap memory and initializes gdk context
     void init();
 
-    /// Renders a frame
+    //! Renders a frame
     void draw();
 
-    /// Updates all entities.
+    //! Updates all entities.
     void update();
 
-    /// Frees heap memory, cleans up gdk context
+    //! Frees heap memory, cleans up gdk context
     void free();
 }
 

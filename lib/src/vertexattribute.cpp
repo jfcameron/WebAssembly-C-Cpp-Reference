@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 17-07-03.
+
 #include <gdk/vertexattribute.h>
 
 #include <iostream>

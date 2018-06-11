@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 2017-06-29.
-#ifndef gdk_DEBUG_LOGGER_H
-#define gdk_DEBUG_LOGGER_H
+
+#ifndef GDK_DEBUG_LOGGER_H
+#define GDK_DEBUG_LOGGER_H
 
 #include <functional>
 #include <sstream>

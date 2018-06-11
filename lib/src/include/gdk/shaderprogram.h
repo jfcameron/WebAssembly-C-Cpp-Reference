@@ -1,13 +1,13 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#ifndef gdk_GFX_SHADERPROGRAM_H
-#define gdk_GFX_SHADERPROGRAM_H
-
-#include <iosfwd>
-#include <string>
+#ifndef GDK_GFX_SHADERPROGRAM_H
+#define GDK_GFX_SHADERPROGRAM_H
 
 #include <gdk/opengl.h>
 #include <gdk/lazy_ptr.h>
+
+#include <iosfwd>
+#include <string>
 
 namespace gdk
 {

@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-22.
+
 #ifndef GDK_GFX_MAT4X4UNIFORMCOLLECTION_H
 #define GDK_GFX_MAT4X4UNIFORMCOLLECTION_H
 
@@ -19,14 +18,13 @@ namespace gdk
         friend std::ostream& operator<< (std::ostream&, const Mat4x4UniformCollection&);
       
     public:
-        // Public methods
+        //! Uploads uniform data to currently used program
         void bind(const GLuint aProgramHandle) override;
+        //! zeroes uniform data in currently used program
         void unbind(const GLuint aProgramHandle) override;
       
-        // Mutating operators
         Mat4x4UniformCollection& operator=(const Mat4x4UniformCollection&) = delete;
       
-        // Constructors, destructors
         Mat4x4UniformCollection() = default;
         Mat4x4UniformCollection(const Mat4x4UniformCollection&) = default;
         Mat4x4UniformCollection(Mat4x4UniformCollection&&) = default;

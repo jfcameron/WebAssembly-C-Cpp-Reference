@@ -1,9 +1,9 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 2018-05-15.
-#include <functional>
 
 #include <gdk/intvector2.h>
 #include <gdk/vector2.h>
+
+#include <functional>
 
 namespace glfw
 {
@@ -28,7 +28,7 @@ namespace glfw
     //  \WARN Should this support an arbitray number of callbacks?
     void SetWindowSizeCallback(windowsizecallback_type aWindowSizeCallback);
     
-    //glfwGetMouseButton(ptr.get(), glfwMouseButtonFromButton(aButton))
+    //! Get state of button by index
     bool GetMouseButton(const int aButton);
 
     //! Get position of the mouse cursor
@@ -36,4 +36,7 @@ namespace glfw
 
     //! Get a key value
     bool GetKey(const int aKeyCode);
+
+    //! Causes GLFW to update event states
+    void PollEvents();
 }

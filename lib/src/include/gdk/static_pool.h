@@ -3,7 +3,6 @@
 #ifndef GDK_MEMORY_STATIC_POOL_H
 #define GDK_MEMORY_STATIC_POOL_H
 
-//std inc
 #include <array>
 #include <functional>
 #include <memory>

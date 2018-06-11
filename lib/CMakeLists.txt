@@ -1,5 +1,4 @@
 # © 2018 Joseph Cameron - All Rights Reserved
-# Created on 2018-05-14.
 
 include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 
@@ -38,6 +37,7 @@ if (JFC_BUILD_LIB)
         # Input
 	${CMAKE_CURRENT_SOURCE_DIR}/src/keyboard.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/mouse.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/gamepads.cpp
 	
         # Math
 	${CMAKE_CURRENT_SOURCE_DIR}/src/intvector2.cpp
@@ -53,6 +53,8 @@ if (JFC_BUILD_LIB)
 
         # Time
 	${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
+
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
     )
     
     target_include_directories(${PROJECT_NAME} PRIVATE
@@ -63,7 +65,7 @@ if (JFC_BUILD_LIB)
 
     set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
-   #set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
+    #set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
     set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
     
     set(${PROJECT_NAME}_INCLUDE_DIR
@@ -80,6 +82,7 @@ if (JFC_BUILD_LIB)
 		${emscripten_INCLUDE_DIR})
         
 	set(${PROJECT_NAME}_COMPILER_PARAMETERS
+            #"-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s ASYNCIFY=1 -s DEMANGLE_SUPPORT=1"
             "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1"
             CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)
     endif()

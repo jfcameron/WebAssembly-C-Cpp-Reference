@@ -1,7 +1,4 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 17-07-02.
-
-#include <vector>
 
 #include <gdk/opengl.h>
 #include <gdk/glh.h>
@@ -11,6 +8,8 @@
 #include <gdk/vector3.h>
 #include <gdk/vector4.h>
 #include <gdk/mat4x4.h>
+
+#include <vector>
 
 namespace glh
 {

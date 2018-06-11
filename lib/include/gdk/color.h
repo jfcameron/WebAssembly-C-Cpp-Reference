@@ -1,9 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 2017-06-25.
-#ifndef gdk_GFX_COLOR_H
-#define gdk_GFX_COLOR_H
 
-//std inc
+#ifndef GDK_GFX_COLOR_H
+#define GDK_GFX_COLOR_H
+
 #include <iosfwd>
 
 namespace gdk
@@ -13,24 +12,19 @@ namespace gdk
     */
     struct Color final
     {
-        // Data
         float r = {0.f}, g = {0.f}, b = {0.f}, a = {1.f};
-            
-        // instancing rules
+                        
+        bool operator==(const Color &aOther) const;
+
+        Color& operator=(const Color &aColor) = default;
+        Color& operator=(Color &&aColor) = default;
+
         Color();
         Color(const float aR, const float aG, const float aB, const float aA = 1.);
         Color(const Color &) = default;
         Color(Color &&) = default;
         ~Color() = default;
-            
-        // Non-mutating operators
-        bool operator==(const Color &aOther) const;
 
-        // Mutating operators
-        Color& operator=(const Color &aColor) = default;
-        Color& operator=(Color &&aColor) = default;
-            
-        // Special colors
         static const Color Black;
         static const Color White;
         static const Color Red;

@@ -1,7 +1,7 @@
-#ifndef gdk_GFX_GL
-#define gdk_GFX_GL
+#ifndef GDK_OPENGL
+#define GDK_OPENGL
 
-#include <GLES2/gl2.h>//This is not portable
+#include <GLES2/gl2.h> //This is not portable
 
 namespace gdk
 {

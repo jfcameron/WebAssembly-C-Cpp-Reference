@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-22.
+
 #include <gdk/trigonometry.h>
 
 #include <iostream>

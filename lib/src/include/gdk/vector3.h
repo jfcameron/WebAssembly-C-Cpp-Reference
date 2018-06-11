@@ -1,13 +1,9 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 2017-06-26.
-#ifndef gdk_MATH_VECTOR3_H
-#define gdk_MATH_VECTOR3_H
 
-//std inc
+#ifndef GDK_MATH_VECTOR3_H
+#define GDK_MATH_VECTOR3_H
+
 #include <iosfwd>
-
-class btVector3;
 
 namespace gdk
 {
@@ -16,33 +12,30 @@ namespace gdk
     */
     struct Vector3 final
     {
-        // Data members
-        float x = 0.0f, y = 0.0f, z = 0.0f;
-            
+        float x = {0.}, y = {0.}, z = {0.};
+
+        //! Calculates the length of the vector
         float length(void) const;
+        //! Sets length of vector to 1
         void normalize(void);
             
-        // Non mutating operators
         bool operator==(const Vector3&) const;
         bool operator!=(const Vector3&) const;
         Vector3 operator+(const Vector3&) const;
         Vector3 operator-(const Vector3&) const;
         Vector3 operator*(const float&) const;
             
-        // Mutating operators
         Vector3& operator+=(const Vector3&);
         Vector3& operator-=(const Vector3&);
         Vector3& operator*=(const float&);
         Vector3& operator=(const Vector3&) = default;
             
-        // Constructors & Destructors
         Vector3(const float &aX, const float &aY, const float &aZ);
         Vector3() = default;
         Vector3(const Vector3& aVector3) = default;
         Vector3(Vector3&&) = default;
         ~Vector3() = default;
             
-        // Special values
         static const Vector3 Up;
         static const Vector3 Down;
         static const Vector3 Left;

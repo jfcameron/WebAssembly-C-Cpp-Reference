@@ -1,10 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 17-07-01.
-#ifndef gdk_EXCEPTION_H
-#define gdk_EXCEPTION_H
 
-//std inc
+#ifndef GDK_EXCEPTION_H
+#define GDK_EXCEPTION_H
+
 #include <stdexcept>
 #include <string>
 #include <sstream>
@@ -13,7 +11,7 @@ namespace gdk
 {
     /*!
      gdk runtime exception type. This allows users to differentiate between nongdk and gdk exceptions.
-     */
+    */
     class Exception : public std::runtime_error
     {
         std::string toString(std::ostringstream &sstream)
@@ -43,11 +41,9 @@ namespace gdk
         }
         
     public:
-        // Mutating operators
         Exception &operator=(const Exception &) = default;
         Exception &operator=(Exception &&) = default;
         
-        // Constructors, destructors
         template<typename First, typename ...Rest>
         Exception(const char aTag[], First &&first, Rest &&...rest)
         : std::runtime_error(std::string(aTag).append(": ").append([&first]()

@@ -1,10 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 2017-06-26.
-#ifndef gdk_MATH_INTVECTOR2_H
-#define gdk_MATH_INTVECTOR2_H
 
-//std inc
+#ifndef GDK_MATH_INTVECTOR2_H
+#define GDK_MATH_INTVECTOR2_H
+
 #include <iosfwd>
 
 namespace gdk
@@ -18,12 +16,10 @@ namespace gdk
     */
     struct IntVector2 final
     {
-        // Data members
-        int x = 0, y = 0;
+        int x = {0}, y = {0};
             
         Vector2 toVector2() const;
     
-        // Non mutating operators
         bool operator==(const IntVector2 &) const;
         bool operator!=(const IntVector2 &) const;
         IntVector2 operator+(const IntVector2 &) const;
@@ -31,21 +27,18 @@ namespace gdk
         IntVector2 operator*(const float aScalar) const;
         IntVector2 operator*(const Vector2 &aVector2) const;
             
-        // Mutating operators
         IntVector2 &operator+=(const IntVector2 &);
         IntVector2 &operator-=(const IntVector2 &);
         IntVector2 &operator*=(const float);
         IntVector2 &operator=(const IntVector2 &) = default;
         IntVector2 &operator=(IntVector2 &&) = default;
             
-        // Constructors  &Destructors
         IntVector2(const int aX, const int aY);
         IntVector2() = default;
         IntVector2(const IntVector2 &) = default;
         IntVector2(IntVector2 &&) = default;
         ~IntVector2() = default;
             
-        // Special values
         static const IntVector2 Up;
         static const IntVector2 Down;
         static const IntVector2 Left;

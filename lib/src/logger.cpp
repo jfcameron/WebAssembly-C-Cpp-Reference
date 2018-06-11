@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 2017-06-29.
+
 #include <gdk/logger.h>
 
 #include <iostream>

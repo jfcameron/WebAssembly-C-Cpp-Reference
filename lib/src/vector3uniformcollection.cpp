@@ -1,6 +1,4 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-09.
 
 #include <gdk/vector3uniformcollection.h>
 #include <gdk/vector3.h>

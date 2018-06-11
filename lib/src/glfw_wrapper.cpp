@@ -1,18 +1,18 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 2018-05-15.
 
-#include <exception>
-#include <functional>
-#include <iostream>
-#include <sstream>
+#include <gdk/exception.h>
+#include <gdk/glfw_wrapper.h>
+#include <gdk/intvector2.h>
+#include <gdk/logger.h>
 
 #include <GLFW/glfw3.h>
 #include <emscripten/bind.h>
 #include <emscripten/emscripten.h>
 
-#include <gdk/exception.h>
-#include <gdk/glfw_wrapper.h>
-#include <gdk/intvector2.h>
+#include <exception>
+#include <functional>
+#include <iostream>
+#include <sstream>
 
 static constexpr char TAG[] = "GLFW Wrapper";
 
@@ -58,6 +58,18 @@ namespace
 
                                           WindowSizeCallback(aX, aY);
                                       });
+            
+            glfwSetJoystickCallback([](int joy, int event)
+                                    {
+                                        if (event == GLFW_CONNECTED)
+                                        {
+                                            std::cout << "Joystick was connected: " << joy << glfwGetJoystickName(joy) << std::endl;
+                                        }
+                                        else if (event == GLFW_DISCONNECTED)
+                                        {
+                                            std::cout << "Joystick was disconnected: " << joy << std::endl;
+                                        }
+                                    });
     
             return pGLFWWindow;
         }();
@@ -107,5 +119,10 @@ namespace glfw
     bool GetKey(const int aKeyCode)
     {
         return static_cast<bool>(glfwGetKey(pWindow, aKeyCode));
+    }
+
+    void PollEvents()
+    {
+        glfwPollEvents();
     }
 }

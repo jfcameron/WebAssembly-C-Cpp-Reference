@@ -1,16 +1,16 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Created on 17-07-02.
-#ifndef gdk_GLH_H
-#define gdk_GLH_H
+
+#ifndef GDK_GLH_H
+#define GDK_GLH_H
 
 /*!
  OpenGL header for gdk
  includes gl functions from glew and declares C++ friendly helpers in the GLH namespace
  */
 
-#include <string>
-
 #include <gdk/opengl.h>
+
+#include <string>
 
 namespace gdk
 {
@@ -37,11 +37,10 @@ namespace glh
     //void LogErrors(const bool &aDoNotLogIfNoErrors = false);
     void ClearErrors();*/
 
-    // Vertex binding
+    //! Vertex binding
     bool EnableVertexAttribute(const std::string &aAttributeName, const GLuint aProgramHandle, const int aAttributeSize,
                                const int aAttributeOffset, const int aTotalNumberOfVertexAttributeComponents);
-
-    //Uniform binding
+    
     bool BindTextureUniform(const GLuint aShaderHandle, const std::string &aUniformName, const GLuint aTextureHandle, const int aTextureUnit);//, final GLenum &aTextureType);
     bool Bind1FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const float aScalar);
     bool Bind2FloatUniform (const GLuint aShaderHandle, const std::string &aUniformName, const gdk::Vector2 &aVector2);

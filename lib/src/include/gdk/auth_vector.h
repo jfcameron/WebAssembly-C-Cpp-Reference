@@ -1,10 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-29.
+
 #ifndef GDK_MEMORY_AUTH_VECTOR_H
 #define GDK_MEMORY_AUTH_VECTOR_H
 
-//std inc
 #include <iosfwd>
 #include <vector>
 #include <memory>

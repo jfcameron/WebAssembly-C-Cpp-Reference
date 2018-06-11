@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#ifndef gdk_MATH_MAT4x4_H
-#define gdk_MATH_MAT4x4_H
+#ifndef GDK_MATH_MAT4x4_H
+#define GDK_MATH_MAT4x4_H
 
 #include <iosfwd>
 

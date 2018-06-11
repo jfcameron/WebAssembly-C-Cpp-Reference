@@ -1,7 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <iostream>
-
 #include <gdk/opengl.h>
 #include <gdk/glh.h>
 #include <gdk/camera.h>
@@ -13,6 +11,8 @@
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
 #include <gdk/logger.h>
+
+#include <iostream>
 
 using namespace gdk;
 

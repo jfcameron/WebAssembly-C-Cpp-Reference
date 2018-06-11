@@ -1,10 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-29.
+
 #ifndef GDK_MEMORY_AUTH_MAP_H
 #define GDK_MEMORY_AUTH_MAP_H
 
-//std inc
 #include <iosfwd>
 #include <map>
 #include <memory>
@@ -17,7 +15,7 @@ namespace gdk
     */
     template<typename KeyT, typename ValueT> class auth_map final
     {
-    public: // Nested types
+    public:
         using iterator =               typename std::map<KeyT, std::shared_ptr<ValueT>>::iterator;
         using const_iterator =         typename std::map<KeyT, std::shared_ptr<ValueT>>::const_iterator;
         using reverse_iterator =       typename std::map<KeyT, std::shared_ptr<ValueT>>::reverse_iterator;
@@ -29,11 +27,11 @@ namespace gdk
         using mapped_type_weakptr =    typename std::weak_ptr<ValueT>;
         using mapped_type_sharedptr =  typename std::shared_ptr<ValueT>;
             
-    private: // Data members
+    private:
         std::map<KeyT, mapped_type_sharedptr> m_Map;
 
-    public: // Public API
-            // Iterators
+    public:
+        // Iterators
         iterator               begin()         {return m_Map.begin();  }
         const_iterator         begin()   const {return m_Map.begin();  }
         const_iterator         cbegin()  const {return m_Map.cbegin(); }

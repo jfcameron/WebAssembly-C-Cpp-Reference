@@ -6,7 +6,6 @@
 
 namespace gdk
 {
-    //static const
     const Color Color::Black      (0.0f,0.0f,0.0f,1.0f);
     const Color Color::White      (1.0f,1.0f,1.0f,1.0f);
     const Color Color::Red        (1.0f,0.0f,0.0f,1.0f);
@@ -21,7 +20,6 @@ namespace gdk
         0.92941176470588235294117647058824,
         1.);
 
-    //operators
     std::ostream &operator<< (std::ostream &s, const Color &a)
     {
         s.clear();
@@ -44,7 +42,6 @@ namespace gdk
             a == aOther.a;
     }
 
-    //ctors
     Color::Color()
         : r(0.)
         , g(0.)

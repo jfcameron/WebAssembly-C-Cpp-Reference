@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#ifndef gdk_GFX_CAMERA_H
-#define gdk_GFX_CAMERA_H
+#ifndef GDK_GFX_CAMERA_H
+#define GDK_GFX_CAMERA_H
 
 #include "gdk/color.h"
 #include "gdk/vector2.h"
@@ -22,12 +22,9 @@ namespace gdk
     {
         friend std::ostream &operator<< (std::ostream &, const Camera &);
             
-    public:
-        //! Describes camera clear behaviour
-        enum class ClearMode {Nothing, Color, DepthOnly};
-            
-        //! The camera's projection mode
-        enum class ProjectionMode {Perspective, Orthographic};
+    public:        
+        enum class ClearMode {Nothing, Color, DepthOnly};      //!< Describes camera clear behaviour                    
+        enum class ProjectionMode {Perspective, Orthographic}; //!< The camera's projection mode
             
     private:
         gdk::Mat4x4 m_ViewMatrix =       gdk::Mat4x4::Identity; //!< World position of camera
@@ -42,9 +39,9 @@ namespace gdk
         //This is a bit logically messy. I dont know if this approach for generating the projection matrix is as legible as possible.
         ProjectionMode m_ProjectionMode =    ProjectionMode::Perspective;
         gdk::Vector2   m_OrthoSize =         {10, 10};
-        float          m_FieldOfView =       90.;
-        float          m_NearClippingPlane = 0.001f;
-        float          m_FarClippingPlane  = 20.;
+        float          m_FieldOfView =       {90.};
+        float          m_NearClippingPlane = {0.001};
+        float          m_FarClippingPlane  = {20.};
             
         //RenderTexture m_RenderTexture;
             

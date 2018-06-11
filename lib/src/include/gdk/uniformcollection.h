@@ -19,11 +19,9 @@ namespace gdk
     template<typename T> class UniformCollection
     {
     protected:
-        // Data members
         std::map<std::string,T> m_Map = {};
             
     public:
-        // Public methods
         void put(const std::string &aName, const T &aItem)
         {
             m_Map.insert({aName, aItem});
@@ -37,11 +35,9 @@ namespace gdk
         virtual void bind(const GLuint aProgramHandle) =   0;
         virtual void unbind(const GLuint aProgramHandle) = 0;
             
-        // Mutating operators
         UniformCollection &operator=(const UniformCollection &) = delete;
         UniformCollection &operator=(UniformCollection &&) = delete;
       
-        // Constructors, destructors
         UniformCollection() = default;
         UniformCollection(const UniformCollection &) = default;
         UniformCollection(UniformCollection &&) = default;

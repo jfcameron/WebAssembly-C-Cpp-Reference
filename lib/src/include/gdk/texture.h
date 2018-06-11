@@ -17,6 +17,7 @@ namespace gdk
     class Texture final
     {
         friend std::ostream &operator<< (std::ostream &, const Texture &);
+        
         std::string m_Name = {}; //!< Human friendly identifier
         GLuint m_Handle = {0};   //!< handle to the texture in the context
     
@@ -26,7 +27,7 @@ namespace gdk
             
         Texture &operator=(const Texture &) = delete;
         Texture &operator=(Texture &&) = delete;
-      
+        
         Texture(const std::string &aName, const std::vector<const GLubyte> &aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
         Texture() = delete;
         Texture(const Texture &) = delete;

@@ -24,8 +24,11 @@ namespace gdk
         //! Check if the button was just pressed
         bool getButton(const Button &aKeyCode);
 
-        //! Viewcoordinate of curosr
-        Vector2 getCursorPosition();            
+        //! Viewcoordinate of cursor
+        Vector2 getCursorPosition();
+
+        //! Get amount of cursor movement since the last frame
+        Vector2 getDelta();
     }
 }
 

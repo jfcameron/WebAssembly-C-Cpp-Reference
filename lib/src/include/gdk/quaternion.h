@@ -1,13 +1,9 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 2017-06-27.
-#ifndef gdk_MATH_QUATERNION_H
-#define gdk_MATH_QUATERNION_H
 
-//std inc
+#ifndef GDK_MATH_QUATERNION_H
+#define GDK_MATH_QUATERNION_H
+
 #include <iosfwd>
-
-class btQuaternion;
 
 namespace gdk
 {
@@ -18,26 +14,21 @@ namespace gdk
     */
     struct Quaternion final
     {
-        //Data members
-        float x = 0.f, y = 0.f, z = 0.f, w = 1.f;
+        float x = {0.}, y = {0.}, z = {0.}, w = {1.};
             
-        // Euler convenience
         void setFromEuler(const Vector3& aEulers);
         gdk::Vector3 toEuler() const;
             
-        // Mutating operators
         Quaternion &operator=(const Quaternion &) = default;
         Quaternion &operator=(Quaternion &&) = default;
             
-        // Constructors & Destructors
         Quaternion(const Vector3&);
         Quaternion(const float& aX, const float& aY, const float& aZ, const float& aW);
         Quaternion();
         Quaternion(const Quaternion&) = default;
         Quaternion(Quaternion&&) = default;
         ~Quaternion() = default;
-            
-        // Special values
+        
         static const Quaternion Identity;
     };
         

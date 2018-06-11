@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-09.
+
 #include <gdk/vector2uniformcollection.h>
 #include <gdk/opengl.h>
 #include <gdk/glh.h>

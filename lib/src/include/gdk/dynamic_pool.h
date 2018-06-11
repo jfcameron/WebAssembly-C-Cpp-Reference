@@ -3,7 +3,6 @@
 #ifndef GDK_MEMORY_DYNAMIC_POOL_H
 #define GDK_MEMORY_DYNAMIC_POOL_H
 
-//std inc
 #include <functional>
 #include <memory>
 #include <vector>
@@ -35,9 +34,7 @@ namespace gdk
             //! Get an object from the pool, guaranteed nonnull. pushes back the vector if no 1 count items currently exist
             value_type get() const
             {
-                for (const auto &item : m_Pool)
-                    if (item.use_count() == 1)
-                        return item;
+                for (const auto &item : m_Pool) if (item.use_count() == 1) return item;
               
                 m_Pool.push_back(std::make_shared<T>(m_NewObjectInitializer()));
                 
@@ -75,4 +72,4 @@ namespace gdk
     }
 }
 
-#endif /* GDK_MEMORY_DYNAMIC_POOL_H  */
+#endif

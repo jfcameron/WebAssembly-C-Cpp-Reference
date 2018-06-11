@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: gdk
-// Created on 2017-06-27.
+
 #include <gdk/quaternion.h>
 #include <gdk/vector3.h>
 #include <gdk/trigonometry.h>
@@ -11,10 +10,8 @@
 
 using namespace gdk;
 
-//static const
 const Quaternion Quaternion::Identity = Quaternion();
 
-//stringify
 std::ostream &gdk::operator<< (std::ostream &s, const gdk::Quaternion &a)
 {
     s.clear(); s
@@ -28,7 +25,6 @@ std::ostream &gdk::operator<< (std::ostream &s, const gdk::Quaternion &a)
     return s;
 }
 
-//ctors
 Quaternion::Quaternion() : x(0.f), y(0.f), z(0.f), w(1.f)
 {}
 
@@ -37,7 +33,6 @@ Quaternion::Quaternion(const Vector3 &aEulerAngles)
     setFromEuler(aEulerAngles);
 }
 
-//Euler convenience
 void Quaternion::setFromEuler(const Vector3 &aEulerAngles)
 {
     /*Vector3 eulerAngles = aEulerAngles;

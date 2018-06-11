@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#ifndef gdk_GFX_MESH_H
-#define gdk_GFX_MESH_H
+#ifndef GDK_GFX_MESH_H
+#define GDK_GFX_MESH_H
 
 #include <gdk/vertexformat.h>
 #include <gdk/lazy_ptr.h>

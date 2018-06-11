@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-03.
+
 #ifndef GDK_GFX_MODEL_H
 #define GDK_GFX_MODEL_H
 

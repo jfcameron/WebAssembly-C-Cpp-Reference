@@ -1,13 +1,11 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 17-07-15.
+
 #ifndef GDK_GFX_RESOURCEMANAGER_H
 #define GDK_GFX_RESOURCEMANAGER_H
 
-//gdk inc
 #include "Memory/default_ptr.h"
 #include "Debug/Exception.h"
-//std inc
+
 #include <string>
 #include <memory>
 #include <map>
@@ -27,7 +25,7 @@ namespace gdk
         std::shared_ptr<T> m_Default;
             
     public:
-        ///Get a default_ptr to a managed object
+        //! Get a default_ptr to a managed object
         default_ptr<T> get(const std::string &aName)
         {
             auto it = m_Map.find(aName);
@@ -37,26 +35,26 @@ namespace gdk
             return default_ptr<T>(m_Default);
         }
             
-        ///Add a new object to be managed
+        //! Add a new object to be managed
         void add(T &&t)
         {
             m_Map.insert({t.getName(), std::make_shared<T>(std::move(t))});
         }
            
-        ///Destroy the managed object with the given name
+        //! Destroy the managed object with the given name
         void remove(const std::string &aName)
         {
             m_Map.erase(aName);
         }
 
-        ///Destroy all managed objects
+        //! Destroy all managed objects
         void clear()
         {
             m_Map.clear();
         }
 
-        ///Removes resources with a reference count of 1
-        ///\Warn UNIMPLEMENTED
+        //! Removes resources with a reference count of 1
+        //  \Warn UNIMPLEMENTED
         void trim();
                       
         resource_manager &operator=(const resource_manager &) = delete;

@@ -1,16 +1,12 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-// Project: GDK
-// Created on 2017-07-13.
+
 #ifndef GDK_MEMORY_DEFAULT_PTR_H
 #define GDK_MEMORY_DEFAULT_PTR_H
 
-//std inc
 #include <memory>
 
 namespace gdk
-{
-    //template<typename T> class lazy_ptr;
-    
+{    
     /*! 
       a pointer that returns a default instance of T if the target instance has become null.
     */
@@ -42,11 +38,6 @@ namespace gdk
         : m_Target(aTarget)
             , m_Default(aDefault)
         {}
-
-        //This should probably replaced with an [explicit] cast from Lazy to Shared
-        //default_ptr(const lazy_ptr<T> &a, const std::shared_ptr<T> &aTarget = {})
-        //    : default_ptr(static_cast<std::shared_ptr<T>>(a), aTarget)
-        //{}
             
         default_ptr() = delete;
         default_ptr(const default_ptr &) = default;
