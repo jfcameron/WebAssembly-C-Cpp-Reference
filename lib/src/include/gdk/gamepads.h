@@ -10,7 +10,7 @@ namespace gdk
 {
     class Gamepad;
     
-    namespace Gamepads
+    namespace gamepads
     {
         //! Get a gamepad by index. Index value is based on order in
         //  which the device was connected to the system.
@@ -18,7 +18,18 @@ namespace gdk
 
         //! Get a gamepad by device name
         std::weak_ptr<Gamepad> get(const std::string &aName);
-    }
+
+
+        //! Updates gamepad states
+        // \WARN THIS SHOULD BE IN A SEPARATE [private]  HEADER
+        // \WARN IMPLEMENTATION IS INCOMPLETE
+        void update();
+
+        //! Initializes gamepads
+        // \WARN THIS SHOULD BE IN A SEPARATE [private]  HEADER
+        // \WARN IMPLEMENTATION IS INCOMPLETE
+        void initialize();
+    }    
 }
 
 #endif

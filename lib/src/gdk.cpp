@@ -17,6 +17,7 @@
 #include <gdk/mouse.h>
 #include <gdk/keyboard.h>
 #include <gdk/hack.h>
+#include <gdk/gamepads.h>
 
 #include <emscripten.h>
 
@@ -38,7 +39,7 @@ namespace
 namespace gdk
 {
     void init()
-    {
+    {        
         pCamera = std::make_shared<gdk::Camera>
             ([]()
              {
@@ -82,6 +83,9 @@ namespace gdk
         //char * file;
         
         //   emscripten_wget(url, file);
+
+        gdk::gamepads::initialize();
+
     }
 
     void draw()
@@ -106,7 +110,7 @@ namespace gdk
         pCamera2->draw(glfw::GetWindowSize());
         pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
 
-        hack();
+        gdk::gamepads::update();
 
         glfw::PollEvents();
     }

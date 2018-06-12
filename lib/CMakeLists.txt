@@ -4,7 +4,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 
 if (JFC_BUILD_LIB)
     project("gdk"
-        VERSION "1.0" 
+        VERSION "0.0" 
         DESCRIPTION "WebAssembly project shareable code")
 
     add_library(${PROJECT_NAME} STATIC
@@ -54,7 +54,8 @@ if (JFC_BUILD_LIB)
         # Time
 	${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
 
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
+        #hacks
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp        
     )
     
     target_include_directories(${PROJECT_NAME} PRIVATE
@@ -83,7 +84,7 @@ if (JFC_BUILD_LIB)
         
 	set(${PROJECT_NAME}_COMPILER_PARAMETERS
             #"-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s ASYNCIFY=1 -s DEMANGLE_SUPPORT=1"
-            "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1"
+            "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1"
             CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)
     endif()
 endif()

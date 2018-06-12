@@ -58,19 +58,7 @@ namespace
 
                                           WindowSizeCallback(aX, aY);
                                       });
-            
-            glfwSetJoystickCallback([](int joy, int event)
-                                    {
-                                        if (event == GLFW_CONNECTED)
-                                        {
-                                            std::cout << "Joystick was connected: " << joy << glfwGetJoystickName(joy) << std::endl;
-                                        }
-                                        else if (event == GLFW_DISCONNECTED)
-                                        {
-                                            std::cout << "Joystick was disconnected: " << joy << std::endl;
-                                        }
-                                    });
-    
+                
             return pGLFWWindow;
         }();
     }();
