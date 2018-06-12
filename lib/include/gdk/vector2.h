@@ -7,12 +7,10 @@
 
 namespace gdk
 {
-    /*!
-      Useful for storing 2D position, speed, direction, normalized coordinates.
-      \Note in reference to the static members: 
-      X is considered the lateral component, pointing right, 
-      Y the vertical, pointing up
-    */
+    //! Useful for storing 2D position, speed, direction, normalized coordinates.
+    /// \Note in reference to the static members: 
+    /// X is considered the lateral component, pointing right, 
+    /// Y the vertical, pointing up
     struct Vector2 final
     {
         float x = {0.}, y = {0.};

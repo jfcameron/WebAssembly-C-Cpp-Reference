@@ -11,9 +11,7 @@
 
 namespace gdk
 {
-    /*!
-      Vertex data representing a 3D graphical object
-    */
+    //! Vertex data representing a 3D graphical object
     class VertexData final
     {
         friend std::ostream &operator<< (std::ostream &, const VertexData &);
@@ -21,9 +19,9 @@ namespace gdk
     public:
         
         //! Hint to the graphics device about how the vertex data will be used.
-        //  Generally, dynamic data (data that is likely to be frequently rewritten) will be placed
-        //  in video memory with fast read write speeds while static will be placed in slower (and more plentiful)
-        //  video memory. Exact behaviours are implementation specific.        
+        /// Generally, dynamic data (data that is likely to be frequently rewritten) will be placed
+        /// in video memory with fast read write speeds while static will be placed in slower (and more plentiful)
+        /// video memory. Exact behaviours are implementation specific.        
         enum class Type {Static, Dynamic};
         
         //! Determines the primitive type used at the primitive assembly stage.        

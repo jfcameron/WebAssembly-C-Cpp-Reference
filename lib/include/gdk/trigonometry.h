@@ -5,10 +5,8 @@
 
 namespace gdk
 {
-    /*!
-      Trigonometry functions
-    */
-    namespace Trig
+    //! Trigonometry functions
+    namespace trig
     {
         extern const float PI;
             
@@ -16,7 +14,7 @@ namespace gdk
         float sin(const float);
         float abs(const float);
             
-        namespace Double
+        namespace doubleprecision
         {
             extern const double PI;
                 

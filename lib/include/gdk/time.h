@@ -4,11 +4,9 @@
 #define GDK_TIME_TIME_H
 
 namespace gdk::time
-{
-    //! getEpoch
-        
+{        
     //! Get time since program started
-    double sinceStart(void) noexcept; //getTimeSinceStart?
+    double sinceStart(void) noexcept;
         
     //! Gets delta time without resetting the delta timer
     double getDeltaTime(void) noexcept;

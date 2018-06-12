@@ -2,8 +2,8 @@
 
 #include <gdk/vector2.h>
 
-#include <math.h>
 #include <iostream>
+#include <math.h>
 
 using namespace gdk;
 

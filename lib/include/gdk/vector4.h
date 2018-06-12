@@ -9,15 +9,14 @@ namespace gdk
 {
     struct Vector3;
         
-    /*!
-         Like Vector3 but allows w to != 1. Used in Vector vs Mat4x4 operations
-    */
+    //! Like Vector3 but allows w to != 1. Used in Vector vs Mat4x4 operations
     struct Vector4 final
     {
         float x = {0.}, y = {0.}, z = {0.}, w = {1.};
             
         bool operator==(const Vector4&) const;
         bool operator!=(const Vector4&) const;
+
         Vector4& operator+=(const Vector4&);
         Vector4& operator*=(const float&);
         Vector4& operator=(const Vector4&) = default;

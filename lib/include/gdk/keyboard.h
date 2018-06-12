@@ -3,15 +3,12 @@
 #ifndef GDK_INPUT_KEYBOARD_H
 #define GDK_INPUT_KEYBOARD_H
 
-#include <iosfwd>
 #include <memory>
 
 namespace gdk
 {
-    /*!
-      Get keystates for a given Window
-    */
-    namespace Keyboard
+    //! Get keystates for a given Window
+    namespace keyboard
     {            
         //!  Represents all detectable keys       
         enum class Key

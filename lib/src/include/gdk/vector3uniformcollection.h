@@ -11,16 +11,17 @@ namespace gdk
 {
     struct Vector3;
     
-    /*!
-      Manages and supplies Vector3 data for shaderprogram consumption
-    */
+    //! Manages and supplies Vector3 data for shaderprogram consumption   
     class Vector3UniformCollection final : public UniformCollection<std::shared_ptr<Vector3>>
     {
         friend std::ostream &operator<< (std::ostream &, const Vector3UniformCollection &);
       
     public:
-        void bind(const GLuint aProgramHandle) override;
-        void unbind(const GLuint aProgramHandle) override;
+        //! Uploads uniform data to currently used program
+        void bind(const GLuint aProgramHandle) const override;
+        
+        //! zeroes uniform data in currently used program
+        void unbind(const GLuint aProgramHandle) const override;
             
         Vector3UniformCollection &operator=(const Vector3UniformCollection &) = delete;
         Vector3UniformCollection &operator=(Vector3UniformCollection &&) = delete;

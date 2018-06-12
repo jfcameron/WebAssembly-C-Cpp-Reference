@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/vector4.h>
 #include <gdk/vector3.h>
+#include <gdk/vector4.h>
 
 #include <iostream>
 

@@ -7,15 +7,15 @@
 
 namespace gdk
 {
-    /*!
-      Used to represent 3d position, scale, euler angles, etc. in a human friendly way.
-    */
+    //! 3 component floating point struct.
+    /// Used to represent 3d position, scale, euler angles.
     struct Vector3 final
     {
         float x = {0.}, y = {0.}, z = {0.};
 
         //! Calculates the length of the vector
         float length(void) const;
+        
         //! Sets length of vector to 1
         void normalize(void);
             

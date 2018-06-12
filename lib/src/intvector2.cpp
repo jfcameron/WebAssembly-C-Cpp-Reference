@@ -7,14 +7,12 @@
 
 using namespace gdk;
 
-// Special values
 const IntVector2 IntVector2::Up    = IntVector2( 0, 1);
 const IntVector2 IntVector2::Down  = IntVector2( 0,-1);
 const IntVector2 IntVector2::Left  = IntVector2(-1, 0);
 const IntVector2 IntVector2::Right = IntVector2( 1, 0);
 const IntVector2 IntVector2::Zero  = IntVector2( 0, 0);
 
-// Stringify
 std::ostream &gdk::operator<<(std::ostream &s, const gdk::IntVector2 &a)
 {
     s.clear(); s
@@ -26,7 +24,6 @@ std::ostream &gdk::operator<<(std::ostream &s, const gdk::IntVector2 &a)
     return s;
 }
 
-//Contructors
 IntVector2::IntVector2(const int aX, const int aY)
 : x(aX)
 , y(aY)
@@ -34,18 +31,22 @@ IntVector2::IntVector2(const int aX, const int aY)
 
 Vector2 IntVector2::toVector2() const
 {
-    return Vector2(x,y);
+    return Vector2(static_cast<float>(x), static_cast<float>(y));
 }
 
-// Non mutating operators
+IntVector2::operator Vector2() const
+{
+    return this->toVector2();
+}
+
 bool IntVector2::operator==(const IntVector2 &a) const
 {
-    return x == a.x && y == a.y ? true : false;
+    return (x == a.x && y == a.y);
 }
 
 bool IntVector2::operator!=(const IntVector2 &a) const
 {
-    return x != a.x || y != a.y ? true : false;
+    return (x != a.x || y != a.y);
 }
 
 IntVector2 IntVector2::operator+(const IntVector2 &aIntVector2) const
@@ -68,7 +69,6 @@ IntVector2 IntVector2::operator*(const Vector2& aVector2) const
     return IntVector2(x * aVector2.x, y * aVector2.y);
 }
 
-// Mutating operators
 IntVector2& IntVector2::operator+=(const IntVector2 &aIntVector2)
 {
     x += aIntVector2.x;

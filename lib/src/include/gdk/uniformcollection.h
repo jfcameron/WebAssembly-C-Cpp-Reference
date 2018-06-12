@@ -6,34 +6,38 @@
 #include <gdk/opengl.h>
 
 #include <iosfwd>
-#include <string>
 #include <map>
+#include <string>
 
 namespace gdk
 {
-    /*!
-      UniformCollection is used to supply data to shaderprograms.
-      It is a baseclass that manages, binds and unbinds a collection of T to a
-      shaderprogram
-    */
+    //! UniformCollection is used to supply data to shaderprograms.
+    /// It is a baseclass that manages, binds and unbinds a collection of T to a
+    /// shaderprogram
     template<typename T> class UniformCollection
     {
     protected:
-        std::map<std::string,T> m_Map = {};
+        std::map<std::string, T> m_Map = {}; //!< internal map
             
     public:
+        //! adds a T to the map at aName, overwriting if a T is already there.
         void put(const std::string &aName, const T &aItem)
         {
             m_Map.insert({aName, aItem});
         }
-            
+
+        //! returns a T at aName
+        /// \Warning I dont think the failure case is safe for all types T. Need to unit test different categories of T
         T get(const std::string &aName) const
         {
             return m_Map.find(aName);
         }
-            
-        virtual void bind(const GLuint aProgramHandle) =   0;
-        virtual void unbind(const GLuint aProgramHandle) = 0;
+
+        //! Uploads uniform data to currently used program
+        virtual void bind(const GLuint aProgramHandle) const = 0;
+
+        //! zeroes uniform data in currently used program
+        virtual void unbind(const GLuint aProgramHandle) const = 0;
             
         UniformCollection &operator=(const UniformCollection &) = delete;
         UniformCollection &operator=(UniformCollection &&) = delete;

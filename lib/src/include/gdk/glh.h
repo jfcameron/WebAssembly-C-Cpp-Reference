@@ -3,10 +3,8 @@
 #ifndef GDK_GLH_H
 #define GDK_GLH_H
 
-/*!
- OpenGL header for gdk
- includes gl functions from glew and declares C++ friendly helpers in the GLH namespace
- */
+//! OpenGL header for gdk
+/// includes gl functions from glew and declares C++ friendly helpers in the GLH namespace
 
 #include <gdk/opengl.h>
 

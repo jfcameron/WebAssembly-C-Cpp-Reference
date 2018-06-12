@@ -10,16 +10,17 @@
 
 namespace gdk
 {
-    /*!
-      Manages and supplies float data for shaderprogram consumption
-    */
+    //! Manages and supplies float data for shaderprogram consumption
     class FloatUniformCollection final : public UniformCollection<std::shared_ptr<float>>
     {
         friend std::ostream& operator<< (std::ostream &, const FloatUniformCollection &);
       
     public:
-        void bind(const GLuint aProgramHandle) override;
-        void unbind(const GLuint aProgramHandle) override;
+        //! Uploads uniform data to currently used program
+        void bind(const GLuint aProgramHandle) const override;
+
+        //! zeroes uniform data in currently used program
+        void unbind(const GLuint aProgramHandle) const override;
             
         FloatUniformCollection &operator=(const FloatUniformCollection &) = delete;
         FloatUniformCollection &operator=(FloatUniformCollection &&) = delete;

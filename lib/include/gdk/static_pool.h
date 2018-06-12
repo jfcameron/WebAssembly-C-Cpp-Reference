@@ -11,11 +11,9 @@ namespace gdk
 {
     namespace Memory
     {
-        /*!
-         Object pool of a fixed length. When get is called, an object with
-         a reference count of 1 (unused outside the pool) is returned. If
-         no unused objects exist, a nullptr is returned.
-         */
+        //! Object pool of a fixed length. When get is called, an object with
+        /// a reference count of 1 (unused outside the pool) is returned. If
+        /// no unused objects exist, a nullptr is returned.
         template<typename T, const size_t length> class static_pool final
         {
         public:

@@ -10,11 +10,11 @@
 
 #include <iostream>
 
-static constexpr char TAG[] = "Mouse";
+static constexpr char TAG[] = "mouse";
 
-namespace gdk::Mouse
+namespace gdk::mouse
 {
-    static inline int glfwMouseButtonFromButton(const Mouse::Button &a)
+    static inline int glfwmouseButtonFromButton(const mouse::Button &a)
     {
         switch(a)
         {
@@ -31,7 +31,7 @@ namespace gdk::Mouse
    
     bool getButtonDown(const Button &aButton)
     {
-        return static_cast<bool>(glfw::GetMouseButton(glfwMouseButtonFromButton(aButton)));
+        return static_cast<bool>(glfw::GetMouseButton(glfwmouseButtonFromButton(aButton)));
     }
 
     Vector2 getCursorPosition()
@@ -41,11 +41,11 @@ namespace gdk::Mouse
 
     bool getButton(const Button &aKeyCode)
     {
-        throw gdk::Exception(TAG, "Mouse::getButton(const Button &aKeyCode) not implemented");
+        throw gdk::Exception(TAG, "mouse::getButton(const Button &aKeyCode) not implemented");
     }
 
     Vector2 getDelta()
     {
-        throw gdk::Exception(TAG, "Mouse::getDelta not implemented");
+        throw gdk::Exception(TAG, "mouse::getDelta not implemented");
     }
 }

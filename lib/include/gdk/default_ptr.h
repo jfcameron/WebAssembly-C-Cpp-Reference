@@ -7,16 +7,15 @@
 
 namespace gdk
 {    
-    /*! 
-      a pointer that returns a default instance of T if the target instance has become null.
-    */
+    //! a weak pointer that returns a default pointer to T if the target pointer has become null.
     template<typename T> class default_ptr final
     {
-        std::weak_ptr<T> m_Target;
-        std::shared_ptr<T> m_Default;
+        std::weak_ptr<T> m_Target;    //! Non-owning pointer to T instance
+        std::shared_ptr<T> m_Default; //! Shared pointer to another instance of T, guaranteed to be
+                                      ///valid for lifetime of the default_ptr
             
     public:
-        //! Attempt to promote target to a shared ptr, returns default if target is null
+        //! Attempt to promote m_Target to a shared_ptr. Returns m_Default if m_Target is null
         std::shared_ptr<T> lock() const 
         {
             if (auto pTarget = m_Target.lock()) return pTarget;
@@ -24,7 +23,7 @@ namespace gdk
             return m_Default;
         }
             
-        bool operator== (const default_ptr &a) const
+        bool operator==(const default_ptr &a) const
         {
             return 
             m_Default == a.m_Default && 
@@ -33,7 +32,9 @@ namespace gdk
 
         default_ptr &operator= (const default_ptr &a) = default;
         default_ptr &operator= (default_ptr &&a) = default;
-            
+
+        /// \param aTarget the pointer to attempt to return when lock is called.
+        /// \param aDefault the pointer returned by lock if the target is null
         default_ptr(const std::shared_ptr<T> &aDefault, const std::shared_ptr<T> &aTarget = {}) 
         : m_Target(aTarget)
             , m_Default(aDefault)

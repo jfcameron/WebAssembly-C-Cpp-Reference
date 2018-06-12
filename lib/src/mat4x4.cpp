@@ -1,13 +1,13 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#include <gdk/exception.h>
+#include <gdk/logger.h>
 #include <gdk/mat4x4.h>
+#include <gdk/quaternion.h>
+#include <gdk/time.h>
+#include <gdk/trigonometry.h>
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
-#include <gdk/quaternion.h>
-#include <gdk/logger.h>
-#include <gdk/trigonometry.h>
-#include <gdk/exception.h>
-#include <gdk/time.h>
 
 #include <iostream>
 #include <math.h>

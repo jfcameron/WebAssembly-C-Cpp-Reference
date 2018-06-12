@@ -4,26 +4,24 @@
 #define GDK_MEMORY_LAZY_PTR_H
 
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <mutex>
-#include <iostream>
 
 namespace gdk
 {
-    /*! 
-      Pointer that delays initialization until the first time it is dereferenced
-    */
+    //! Pointer that delays initialization until the first time it is dereferenced or casted
     template<typename T> class lazy_ptr final
     {
     public:
         using InitializerSignature = std::function<T *const ()>;
 
     private:
-        const InitializerSignature m_Initializer;
+        const InitializerSignature m_Initializer; //!< function wrapper called at first dereference to init T instance pointee
 
-        mutable std::once_flag m_IsInitialized;
+        mutable std::once_flag m_IsInitialized; //!< indicates whether or not pointee is initialized 
 
-        mutable std::shared_ptr<T> m_SharedPtr = {};
+        mutable std::shared_ptr<T> m_SharedPtr = {}; //!< internal pointer to the T instance
 
         //! Initializes the pointer
         void initialize() const
@@ -46,11 +44,13 @@ namespace gdk
             return m_SharedPtr.get();
         }
 
+        //! dereference via standard dereference operator
         T &operator*() const
         {
             return *get();
         }
 
+        //! deref and access member via arrow operator
         T *operator->() const
         {
             return get();
@@ -61,6 +61,7 @@ namespace gdk
             return m_Initializer == a.m_Initializer;
         }
 
+        //! initialize pointee and return copy of internal shared_ptr via explicit cast semantic
         explicit operator std::shared_ptr<T>() const
         {
             initialize();
@@ -70,7 +71,8 @@ namespace gdk
 
         lazy_ptr &operator= (const lazy_ptr &a) = default;
         lazy_ptr &operator= (lazy_ptr &&a) = default;
-        
+
+        //! \param aInitializer function used to lazily initialize the T instance 
         lazy_ptr(const InitializerSignature aInitializer) : m_Initializer(aInitializer) {}            
         lazy_ptr() = delete;
         lazy_ptr(const lazy_ptr &) = default;

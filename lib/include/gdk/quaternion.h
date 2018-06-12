@@ -9,9 +9,7 @@ namespace gdk
 {
     struct Vector3;
         
-    /*!
-      Used to represent 3d rotations in a way insusceptible to gimblal lock (unlike Vector3)
-    */
+    //! Used to represent 3d rotations in a way insusceptible to gimblal lock (unlike Vector3)
     struct Quaternion final
     {
         float x = {0.}, y = {0.}, z = {0.}, w = {1.};

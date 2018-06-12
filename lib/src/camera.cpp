@@ -1,16 +1,16 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/opengl.h>
-#include <gdk/glh.h>
 #include <gdk/camera.h>
 #include <gdk/color.h>
 #include <gdk/exception.h>
+#include <gdk/glh.h>
 #include <gdk/intvector2.h>
+#include <gdk/logger.h>
 #include <gdk/mat4x4.h>
+#include <gdk/opengl.h>
 #include <gdk/quaternion.h>
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
-#include <gdk/logger.h>
 
 #include <iostream>
 

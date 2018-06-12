@@ -3,9 +3,9 @@
 #ifndef GDK_GFX_CAMERA_H
 #define GDK_GFX_CAMERA_H
 
-#include "gdk/color.h"
-#include "gdk/vector2.h"
-#include "gdk/mat4x4.h"
+#include <gdk/color.h>
+#include <gdk/vector2.h>
+#include <gdk/mat4x4.h>
 
 #include <iosfwd>
 
@@ -15,9 +15,7 @@ namespace gdk
     struct Vector3;   
     struct Quaternion;
     
-    /*!
-      Position, orientation and perspective from which Model(s) are drawn
-    */
+    //! Position, orientation and perspective from which Model(s) are drawn
     class Camera final
     {
         friend std::ostream &operator<< (std::ostream &, const Camera &);
@@ -36,7 +34,7 @@ namespace gdk
         gdk::Vector2 m_ViewportPosition = gdk::Vector2::Zero;   //!< position of the camera viewport within the device viewport
         gdk::Vector2 m_ViewportSize =     gdk::Vector2(1., 1.); //!< size of camera viewport within the device viewport
 
-        //This is a bit logically messy. I dont know if this approach for generating the projection matrix is as legible as possible.
+        //This is a bit logically messy. I dont know if this approach for generating the projection matrix is as legible as possible. This is a modal class. Shouldnt this be two subclasses?
         ProjectionMode m_ProjectionMode =    ProjectionMode::Perspective;
         gdk::Vector2   m_OrthoSize =         {10, 10};
         float          m_FieldOfView =       {90.};
@@ -46,7 +44,6 @@ namespace gdk
         //RenderTexture m_RenderTexture;
             
     public:
-        // Accessors
         void setViewportPosition(const gdk::Vector2 &);
         void setViewportPosition(const float x, const float y);
         gdk::Vector2 getViewportPosition() const;

@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#ifndef GDK_gdk_H
-#define GDK_gdk_H
+#ifndef GDK_GDK_H
+#define GDK_GDK_H
 
 extern "C" float js_to_cpp_test(float a);
 

@@ -8,15 +8,13 @@
 
 namespace gdk
 {
-    /*!
-      A vertex attribute is a component of a vertex (eg: position, uv, normal, color).
-      Vertex attributes are made up of an arbitrary set of components.
-      In the context of OpenGL, a component is a floating-point value.
-    */
+    //! A vertex attribute is a component of a vertex (eg: position, uv, normal, color).
+    /// Vertex attributes are made up of an arbitrary set of components.
+    /// In the context of OpenGL, a component is a floating-point value.
     struct VertexAttribute final
     {
-        std::string    name = "attribute";
-        unsigned short size = {0};
+        std::string name =    "attribute";//!< name of the attribute
+        unsigned short size = {0};        //!< number of components in the attribute
             
         VertexAttribute &operator=(const VertexAttribute &) = default;
         VertexAttribute &operator=(VertexAttribute &&) = default;

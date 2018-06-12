@@ -3,8 +3,8 @@
 #ifndef GDK_GFX_RESOURCEMANAGER_H
 #define GDK_GFX_RESOURCEMANAGER_H
 
-#include "Memory/default_ptr.h"
-#include "Debug/Exception.h"
+#include <Memory/default_ptr.h>
+#include <Debug/Exception.h>
 
 #include <string>
 #include <memory>
@@ -12,11 +12,9 @@
 
 namespace gdk
 {
-    /*!
-      A resource manager is responsible for solely managing the lifetime of some object T.
-      By serving resources via default_ptrs, the manager can safely destroy any T instance
-      without risking memory reading issues.
-    */
+    //! A resource manager is responsible for solely managing the lifetime of some object T.
+    /// By serving resources via default_ptrs, the manager can safely destroy any T instance
+    /// without risking memory reading issues.
     template<typename T> class resource_manager
     {
     protected:

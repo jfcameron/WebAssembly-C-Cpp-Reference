@@ -11,23 +11,21 @@
 
 namespace gdk
 {
-    /*!
-      Manages and supplies texture data for shaderprogram consumption
-    */
+    //! zeroes uniform data in currently used program
     class TextureUniformCollection final : public UniformCollection<default_ptr<Texture>>
     {
         friend std::ostream &operator<< (std::ostream &, const TextureUniformCollection &);
             
     public:
-        // Public methods
-        void bind(const GLuint aProgramHandle) override;
-        void unbind(const GLuint aProgramHandle) override;
+        //! zeroes uniform data in currently used program
+        void bind(const GLuint aProgramHandle) const override;
+
+        //! zeroes uniform data in currently used program
+        void unbind(const GLuint aProgramHandle) const override;
       
-        // Mutating operators
         TextureUniformCollection &operator=(const TextureUniformCollection &) = delete;
         TextureUniformCollection &operator=(TextureUniformCollection &&) = delete;
-            
-        // Constructors, destructors
+           
         TextureUniformCollection() = default;
         TextureUniformCollection(const TextureUniformCollection &) = default;
         TextureUniformCollection(TextureUniformCollection &&) = default;

@@ -11,10 +11,8 @@
 
 namespace gdk
 {
-    /*!
-      ShaderProgram specifies drawing behaviours at the programmable stages in the OpenGL
-      programmable pipeline.
-    */
+    //! ShaderProgram specifies drawing behaviours at the programmable stages in the OpenGL
+    /// programmable pipeline.
     class ShaderProgram final
     {
         friend std::ostream &operator<< (std::ostream &, const ShaderProgram &);
@@ -24,7 +22,7 @@ namespace gdk
         
     public:
         //! Installs the program to the pipeline. This program's programmable stages
-        //  will be used for draw calls until a different program is installed.
+        /// will be used for draw calls until a different program is installed.
         GLuint useProgram() const;
         
         std::string getName() const;

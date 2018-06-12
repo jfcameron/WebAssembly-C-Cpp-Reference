@@ -1,8 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/vertexformat.h>
 #include <gdk/glh.h>
 #include <gdk/opengl.h>
+#include <gdk/vertexformat.h>
 
 #include <iostream>
 

@@ -1,13 +1,13 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/opengl.h>
-#include <gdk/glh.h>
 #include <gdk/color.h>
+#include <gdk/glh.h>
 #include <gdk/intvector2.h>
+#include <gdk/mat4x4.h>
+#include <gdk/opengl.h>
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
 #include <gdk/vector4.h>
-#include <gdk/mat4x4.h>
 
 #include <vector>
 
@@ -171,15 +171,15 @@ std::string GetProgramInfoLog(const GLuint aShaderProgramHandle)
 // © 2018 Joseph Cameron - All Rights Reserved
 // Project: gdk
 // Created on 17-07-02.
-#include "GL.h"
+#include <GL.h>
 //gdk inc
-#include "Color.h"
-#include "Debug/Logger.h"
-#include "Math/IntVector2.h"
-#include "Math/Mat4x4.h"
-#include "Math/Vector2.h"
-#include "Math/Vector3.h"
-#include "Math/Vector4.h"
+#include <Color.h>
+#include <Debug/Logger.h>]
+#include <Math/IntVector2.h>
+#include <Math/Mat4x4.h>
+#include <Math/Vector2.h>
+#include <Math/Vector3.h>
+#include <Math/Vector4.h>
 //std inc
 #include <vector>
 using namespace gdk;

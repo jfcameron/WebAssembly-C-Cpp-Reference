@@ -22,15 +22,13 @@ std::ostream &operator<<(std::ostream &s, const FloatUniformCollection &a)
     return s;
 }
 
-void FloatUniformCollection::bind(const GLuint aProgramHandle)
+void FloatUniformCollection::bind(const GLuint aProgramHandle) const
 {
-    for (auto &pair : m_Map)
-        glh::Bind1FloatUniform(aProgramHandle, pair.first, *pair.second.get());
+    for (auto &pair : m_Map) glh::Bind1FloatUniform(aProgramHandle, pair.first, *pair.second.get());
 }
 
-void FloatUniformCollection::unbind(const GLuint aProgramHandle)
+void FloatUniformCollection::unbind(const GLuint aProgramHandle) const
 {
-    for (auto &pair : m_Map)
-        glh::Bind1FloatUniform(aProgramHandle, pair.first, 0);
+    for (auto &pair : m_Map) glh::Bind1FloatUniform(aProgramHandle, pair.first, 0);
 }
 }

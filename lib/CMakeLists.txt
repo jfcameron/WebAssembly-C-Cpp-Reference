@@ -49,7 +49,7 @@ if (JFC_BUILD_LIB)
 	${CMAKE_CURRENT_SOURCE_DIR}/src/vector4.cpp
 
         # Memory
-	${CMAKE_CURRENT_SOURCE_DIR}/src/lazy_ptr.cpp
+        #...
 
         # Time
 	${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp

@@ -6,12 +6,12 @@
 #include <GLFW/glfw3.h>
 #include <emscripten.h>
 
-#include <stdio.h>
 #include <assert.h>
-#include <string.h>
-#include <map>
-#include <vector>
 #include <iostream>
+#include <map>
+#include <stdio.h>
+#include <string.h>
+#include <vector>
 
 namespace gdk
 {

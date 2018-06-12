@@ -6,7 +6,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 if (JFC_BUILD_APP)
     project("main"
         VERSION "1.0" 
-        DESCRIPTION "Compiling C++ to web assembly example")
+        DESCRIPTION "GDK app compiling for web as wasm")
 
     add_executable(${PROJECT_NAME} #MACOSX_BUNDLE                
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)

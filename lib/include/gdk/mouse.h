@@ -3,17 +3,14 @@
 #ifndef GDK_INPUT_MOUSE_H
 #define GDK_INPUT_MOUSE_H
 
-#include <iosfwd>
 #include <memory>
 
 namespace gdk
 {
     struct Vector2;
     
-    /*!
-      Get mouse keys and position on a window
-    */
-    namespace Mouse
+    //! Get mouse keys and position on a window    
+    namespace mouse
     {      
         //! Represents all detectable mouse buttons
         enum class Button{ Left, Right, Middle, Four, Five, Six, Seven, Eight };

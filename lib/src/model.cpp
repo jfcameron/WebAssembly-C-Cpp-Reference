@@ -1,13 +1,13 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/camera.h>
-#include <gdk/logger.h>
-#include <gdk/opengl.h>
+#include <gdk/default_ptr.h>
 #include <gdk/glh.h>
+#include <gdk/logger.h>
 #include <gdk/mat4x4.h>
 #include <gdk/model.h>
+#include <gdk/opengl.h>
 #include <gdk/time.h>
-#include <gdk/default_ptr.h>
 
 #include <iostream>
 

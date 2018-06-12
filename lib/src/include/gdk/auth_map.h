@@ -9,10 +9,8 @@
 
 namespace gdk
 {
-    /*!
-      Map that strongly owns its data. insertion can only be done via rvalue reference,
-      map data can only be accessed via weak_ptr
-    */
+    //! Map that strongly owns its data. insertion can only be done via rvalue reference,
+    /// map data can only be accessed via weak_ptr
     template<typename KeyT, typename ValueT> class auth_map final
     {
     public:

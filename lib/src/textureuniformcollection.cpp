@@ -1,8 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/textureuniformcollection.h>
-#include <gdk/opengl.h>
 #include <gdk/glh.h>
+#include <gdk/opengl.h>
+#include <gdk/textureuniformcollection.h>
 
 #include <iostream>
 
@@ -27,7 +27,7 @@ std::ostream& gdk::operator<<(std::ostream& s, const TextureUniformCollection& a
     return s;
 }
 
-void TextureUniformCollection::bind(const GLuint aProgramHandle)
+void TextureUniformCollection::bind(const GLuint aProgramHandle) const
 {
     int i = 0;
     for (auto &pair : m_Map)
@@ -37,9 +37,8 @@ void TextureUniformCollection::bind(const GLuint aProgramHandle)
     }
 }
 
-void TextureUniformCollection::unbind(const GLuint aProgramHandle)
+void TextureUniformCollection::unbind(const GLuint aProgramHandle) const
 {
-    int i = 0;
-    for (auto &pair : m_Map)
-        glh::BindTextureUniform(aProgramHandle, pair.first, 0, i++);
+    int i = 0;    
+    for (auto &pair : m_Map) glh::BindTextureUniform(aProgramHandle, pair.first, 0, i++);
 }

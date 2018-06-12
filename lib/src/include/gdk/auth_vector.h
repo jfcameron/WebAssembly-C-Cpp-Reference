@@ -4,17 +4,15 @@
 #define GDK_MEMORY_AUTH_VECTOR_H
 
 #include <iosfwd>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace gdk
 {
     namespace Memory
     {
-        /*!
-         Vector that strongly owns its data. Data can only be inserted via rvalue references,
-         data can only be accessed via weak_ptrs.
-         */
+        //! Vector that strongly owns its data. Data can only be inserted via rvalue references,
+        /// data can only be accessed via weak_ptrs.
         template<typename T>
         class auth_vector final
         {

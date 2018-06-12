@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/time.h>
 #include <gdk/glfw_wrapper.h>
+#include <gdk/time.h>
 
 static double currentTime(0.);
 static double lastTime(0.);

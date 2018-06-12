@@ -3,17 +3,15 @@
 #ifndef GDK_GFX_TEXTURE_H
 #define GDK_GFX_TEXTURE_H
 
-#include <gdk/opengl.h>
 #include <gdk/lazy_ptr.h>
+#include <gdk/opengl.h>
 
 #include <iosfwd>
 #include <string>
 
 namespace gdk
 {
-    /*!
-      Texture represents an image. RGBA32, 2D.
-    */
+    //! Texture represents an image. RGBA32, 2D.
     class Texture final
     {
         friend std::ostream &operator<< (std::ostream &, const Texture &);
@@ -34,7 +32,7 @@ namespace gdk
         Texture(Texture &&);
         ~Texture();
 
-        static const gdk::lazy_ptr<gdk::Texture> CheckeredTextureOfDeath; //!< texture for indicating some kind of failure
+        static const gdk::lazy_ptr<gdk::Texture> CheckeredTextureOfDeath; //!< texture for indicating texture related failure
     };
 
     std::ostream &operator<< (std::ostream &, const Texture &);

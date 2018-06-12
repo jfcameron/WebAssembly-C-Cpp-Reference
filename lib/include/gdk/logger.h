@@ -11,22 +11,20 @@ namespace gdk
 {
         template<typename ...Args> void log(const char aTag[], Args &&...args);
         template<typename ...Args> void error(const char aTag[], Args &&...args);
-        
-        /*!
-         Used to render debug messages in some form. The default behaviour is to send the data to std::clog,
-         however this can be changed by passing a function of sig void(const std::string&) to the constructor. 
-         In this way, Logger can be used to output to files, pipes, over the network, etc.
-         
-         This header also declares the free standing functions log and error, which are gdk wrappers for
-         std::clog and std::cerr respectively.
-         */
+                
+        //! Used to render debug messages in some form. The default behaviour is to send the data to std::clog,
+        ///  however this can be changed by passing a function of sig void(const std::string&) to the constructor. 
+        /// In this way, Logger can be used to output to files, pipes, over the network, etc.
+        ///
+        /// This header also declares the free standing functions log and error, which are gdk wrappers for
+        /// std::clog and std::cerr respectively.        
         class Logger final
         {
             template<typename ...Args> friend void gdk::log(const char aTag[], Args &&...args);
             template<typename ...Args> friend void gdk::error(const char aTag[], Args &&...args);
             
-            static Logger s_gdkLogger;
-            static Logger s_gdkErrorLogger;
+            static Logger s_gdkLogger;      //!< Logger that wraps std::cout
+            static Logger s_gdkErrorLogger; //!< Logger rhat wraps std::cerr
             
             std::function<void(const std::string &)> m_LoggingBehaviourCallback;
             
@@ -43,6 +41,8 @@ namespace gdk
             }
             
         public:
+            //! variadic logging function
+            /// e.g: log("blar", 123, true, nullptr, 3.1415f)
             template<typename First, typename ...Rest>
             void log(First &&first, Rest &&...rest)
             {
@@ -56,7 +56,7 @@ namespace gdk
             Logger &operator=(Logger &&) = default;
             
             //! Change log behavior by passing a function pointer to your own logging function.
-            // Default behaviour is for the logger to display the debug message via std::clog
+            /// Default behaviour is for the logger to display the debug message via std::clog
             Logger(const std::function<void(const std::string &)> &aLoggingBehaviourCallback = nullptr);
             Logger(const Logger &) = default;
             Logger(Logger &&) = default;

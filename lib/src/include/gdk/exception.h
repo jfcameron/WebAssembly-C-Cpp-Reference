@@ -9,9 +9,7 @@
 
 namespace gdk
 {
-    /*!
-     gdk runtime exception type. This allows users to differentiate between nongdk and gdk exceptions.
-    */
+    //! gdk runtime exception type. This allows users to differentiate between nongdk and gdk exceptions.
     class Exception : public std::runtime_error
     {
         std::string toString(std::ostringstream &sstream)
@@ -43,7 +41,10 @@ namespace gdk
     public:
         Exception &operator=(const Exception &) = default;
         Exception &operator=(Exception &&) = default;
-        
+
+        //! Constructs a gdk exception.
+        /// Templated to allow for the exception message to be written in a safe variadic form e.g:
+        /// throw gdk::exception("Widget", "fatal error in ctor: height=", uHeight, " width=", uWidth); 
         template<typename First, typename ...Rest>
         Exception(const char aTag[], First &&first, Rest &&...rest)
         : std::runtime_error(std::string(aTag).append(": ").append([&first]()

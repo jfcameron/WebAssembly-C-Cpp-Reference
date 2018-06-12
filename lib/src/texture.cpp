@@ -1,7 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/texture.h>
 #include <gdk/exception.h>
+#include <gdk/texture.h>
 
 #include <stb/stb_image.h>
 
