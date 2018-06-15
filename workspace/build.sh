@@ -20,6 +20,9 @@ cd $(getPathToScript)
 rm -R lib
 rm -R src
 
+#Move this logic to cmake. bash should only be for convenience not implementation of build sript
+mkdir -p src/resource/ && cp ../resource/* "$_"
+
 cmake \
     -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" \
     -DCMAKE_TOOLCHAIN_FILE=${EMSCRIPTEN}/cmake/Modules/Platform/Emscripten.cmake \

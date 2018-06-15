@@ -1,0 +1,2 @@
+This is a test. This is an emscripten test. Test, test, TEST, tesT, teststestsetetet
+blar, blar, blar. blar, blar, blar.

@@ -51,6 +51,9 @@ if (JFC_BUILD_LIB)
         # Memory
         #...
 
+        # Resources
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
+        
         # Time
 	${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
 
@@ -84,7 +87,7 @@ if (JFC_BUILD_LIB)
         
 	set(${PROJECT_NAME}_COMPILER_PARAMETERS
             #"-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s ASYNCIFY=1 -s DEMANGLE_SUPPORT=1"
-            "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1"
+            "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 --preload-file resource/test.txt --preload-file resource/awesome.png"
             CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)
     endif()
 endif()

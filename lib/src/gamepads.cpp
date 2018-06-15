@@ -1,6 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#include <gdk/exception.h>
 #include <gdk/gamepads.h>
+#include <gdk/gamepads_private.h>
 #include <gdk/glfw_wrapper.h>
 
 #include <GLFW/glfw3.h>
@@ -13,17 +15,61 @@
 #include <string.h>
 #include <vector>
 
+static constexpr char TAG[] = "Gamepad";
+
 namespace gdk
 {
     class Gamepad final
     {
-        std::string m_Name;        
-    };   
+    public://delete
+        friend void gdk::gamepads::initialize();
+        
+        std::string m_Name;
+        std::vector<const unsigned char *> m_Buttons;
+        std::vector<const float *> m_Axes;
+
+        void update()
+        {
+            //check if my pointers in glfw context are null and my behaviour is now evil and undefined
+        }
+
+        Gamepad(const int aJoystickIndex)
+            : m_Name([&]()
+                     {
+                         const char *name = glfwGetJoystickName(aJoystickIndex);
+
+                         if (!name) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ",
+                                                         aJoystickIndex, " is there a gamepad connected at that index?");
+                         
+                         return name;
+                     }())
+            , m_Buttons([&]()
+                        {
+                            int button_count;
+                            const unsigned char *buttons = glfwGetJoystickButtons(aJoystickIndex, &button_count);
+                            
+                            if (!buttons) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ",
+                                                               aJoystickIndex, " is there a gamepad connected at that index?");
+                            
+                            return (std::vector<const unsigned char *>) {buttons, buttons + button_count};
+                        }())
+            , m_Axes([&]()
+                     {
+                         int axes_count;
+                         const float *axes = glfwGetJoystickAxes(aJoystickIndex, &axes_count);
+                         
+                         if (!axes) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ",
+                                                         aJoystickIndex, " is there a gamepad connected at that index?");
+
+                         return (std::vector<const float *>) {axes, axes + axes_count};
+                     }())
+            {}
+    };
 }
 
 namespace
 {
-    std::map<std::string, gdk::Gamepad> gamepadMap;
+//    std::map<std::string, gdk::Gamepad> gamepadMap; //for o1 retrieval?
     
     std::vector<gdk::Gamepad> gamepadList;
 }
@@ -37,18 +83,39 @@ namespace gdk::gamepads
             {
                 if (event == GLFW_CONNECTED)
                 {
-                    std::cout << "Joystick was connected: " << joy << glfwGetJoystickName(joy) << std::endl;
+                    std::cout << "Joystick connected: " << joy << glfwGetJoystickName(joy) << std::endl;
+                    
+                    gamepadList.push_back(gdk::Gamepad(joy));
                 }
                 else if (event == GLFW_DISCONNECTED)
                 {
-                    std::cout << "Joystick was disconnected: " << joy << std::endl;
+                    std::cout << "Joystick disconnected: " << joy << std::endl;
+
+                    gamepadList.erase(gamepadList.begin() + joy);
                 }
             });
     }
     
     void update()
     {
-        int joystick_count = 0;
+        for (const auto &gamepad : gamepadList)
+        {
+            std::cout << "Name: " << gamepad.m_Name << 
+            [&]()
+            {
+                std::string output;
+
+                int i = 0;
+                for (const auto &button : gamepad.m_Buttons) output += static_cast<int>(*button);
+
+                return output;
+            }()
+
+                      << std::endl;
+        }
+    }
+            
+        /*int joystick_count = 0;
     
         for (int j = GLFW_JOYSTICK_1; j < GLFW_JOYSTICK_16; ++j)
         {
@@ -62,6 +129,7 @@ namespace gdk::gamepads
             {
                 int axes_count;
                 float axes[16];
+                
                 int button_count;
                 unsigned char buttons[16];
             }
@@ -96,8 +164,6 @@ namespace gdk::gamepads
 
                 last_gamepad_state[joy].buttons[i] = buttons[i];
             }
-        }
-
-        if (joystick_count == 0) printf("No joysticsk detected\n");      
-    }
+            }*/
+    // }
 }

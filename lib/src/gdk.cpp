@@ -3,6 +3,7 @@
 #include <gdk.h>
 #include <gdk/camera.h>
 #include <gdk/color.h>
+#include <gdk/exception.h>
 #include <gdk/gamepads_private.h>
 #include <gdk/glfw_wrapper.h>
 #include <gdk/hack.h>
@@ -12,6 +13,7 @@
 #include <gdk/model.h>
 #include <gdk/mouse.h>
 #include <gdk/quaternion.h>
+#include <gdk/resources.h>
 #include <gdk/shaderprogram.h>
 #include <gdk/texture.h>
 #include <gdk/time.h>
@@ -28,6 +30,9 @@
 #include <sstream>
 #include <vector>
 #include <cmath>
+#include <vector>
+
+constexpr auto TAG = "gdk";
 
 namespace
 {
@@ -39,7 +44,9 @@ namespace
 namespace gdk
 {
     void init()
-    {        
+    {
+        try
+        {
         pCamera = std::make_shared<Camera>
             ([]()
              {
@@ -66,10 +73,18 @@ namespace gdk
             ([]()
              {
                  Model model("MySuperCoolModel",
-                                  default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
-                                  default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
+                             default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
+                             default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
 
-                 model.setTexture("_Texture", default_ptr<Texture>(static_cast<std::shared_ptr<Texture>>(Texture::CheckeredTextureOfDeath)));
+                 std::vector<unsigned char> imagebuffer = gdk::resources::load_RGBA32png_file("resource/awesome.png");
+
+                 const std::vector<const unsigned char> imageconverted (imagebuffer.begin(), imagebuffer.end());
+
+                 gdk::log(TAG, imagebuffer.size(), ", ", imageconverted.size());
+                 
+                 auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("blarblar", imageconverted));
+
+                 //model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));//Texture::CheckeredTextureOfDeath));
 
                  model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
      
@@ -86,6 +101,13 @@ namespace gdk
 
         gamepads::initialize();
 
+        hack_init();
+
+        }
+        catch (gdk::Exception exception)
+        {
+            std::cout << exception << std::endl;
+        }
     }
 
     void draw()
@@ -113,6 +135,8 @@ namespace gdk
         gamepads::update();
 
         glfw::PollEvents();
+
+        hack_update();
     }
 
     void update()
