@@ -76,15 +76,13 @@ namespace gdk
                              default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
                              default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
 
-                 std::vector<unsigned char> imagebuffer = gdk::resources::load_RGBA32png_file("resource/awesome.png");
+                 std::vector<unsigned char> imagebuffer = gdk::resources::local::loadBinaryFile("resource/awesome.png");
 
-                 const std::vector<const unsigned char> imageconverted (imagebuffer.begin(), imagebuffer.end());
+                 const std::vector<const unsigned char> imageconverted(imagebuffer.begin(), imagebuffer.end());
 
-                 gdk::log(TAG, imagebuffer.size(), ", ", imageconverted.size());
-                 
-                 auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("blarblar", imageconverted));
+                 auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", imageconverted));
 
-                 //model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));//Texture::CheckeredTextureOfDeath));
+                 model.setTexture("_Texture2", static_cast<std::shared_ptr<Texture>>(pTex));
 
                  model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
      
@@ -93,12 +91,23 @@ namespace gdk
 
         emscripten_set_main_loop(draw, -1, 0); // Negative fps will force requestAnimationFrame usage
         //emscripten_set_main_loop(update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
-
-        //char * url;
-        //char * file;
         
-        //   emscripten_wget(url, file);
+        resources::remote::fetchBinaryFile("https://jfcameron.github.io/Textures/brick.p1ng",
+                                           [](const bool aSucceeded, std::vector<unsigned char> &aData)
+                                           {
+                                               if (aSucceeded)
+                                               {
+                                                   gdk::log(TAG, "succeess. byte count: ", aData.size());
 
+                                                   const std::vector<const unsigned char> imageconverted(aData.begin(), aData.end());
+
+                                                   auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", imageconverted));
+
+                                                   pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                                               }
+                                               else gdk::log(TAG, "the fetch failed");
+                                           });
+        
         gamepads::initialize();
 
         hack_init();
