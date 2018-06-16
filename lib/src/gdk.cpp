@@ -23,13 +23,13 @@
 
 #include <emscripten.h>
 
+#include <cmath>
 #include <exception>
 #include <functional>
 #include <iostream>
 #include <memory>
 #include <sstream>
 #include <vector>
-#include <cmath>
 #include <vector>
 
 constexpr auto TAG = "gdk";
