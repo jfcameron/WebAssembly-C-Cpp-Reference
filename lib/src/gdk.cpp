@@ -82,7 +82,7 @@ namespace gdk
 
                  auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", imageconverted));
 
-                 model.setTexture("_Texture2", static_cast<std::shared_ptr<Texture>>(pTex));
+                 model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
 
                  model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
      
@@ -92,13 +92,11 @@ namespace gdk
         emscripten_set_main_loop(draw, -1, 0); // Negative fps will force requestAnimationFrame usage
         //emscripten_set_main_loop(update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
         
-        resources::remote::fetchBinaryFile("https://jfcameron.github.io/Textures/brick.p1ng",
+        resources::remote::fetchBinaryFile("https://jfcameron.github.io/Textures/brick.png",
                                            [](const bool aSucceeded, std::vector<unsigned char> &aData)
                                            {
                                                if (aSucceeded)
                                                {
-                                                   gdk::log(TAG, "succeess. byte count: ", aData.size());
-
                                                    const std::vector<const unsigned char> imageconverted(aData.begin(), aData.end());
 
                                                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", imageconverted));

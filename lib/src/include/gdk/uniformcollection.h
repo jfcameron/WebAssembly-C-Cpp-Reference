@@ -23,6 +23,8 @@ namespace gdk
         //! adds a T to the map at aName, overwriting if a T is already there.
         void put(const std::string &aName, const T &aItem)
         {
+            if (m_Map.find(aName) != m_Map.end()) m_Map.erase(aName);
+            
             m_Map.insert({aName, aItem});
         }
 

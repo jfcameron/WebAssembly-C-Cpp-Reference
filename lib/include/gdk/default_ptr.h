@@ -8,7 +8,8 @@
 namespace gdk
 {    
     //! a weak pointer that returns a default pointer to T if the target pointer has become null.
-    template<typename T> class default_ptr final
+    template<typename T>
+    class default_ptr final
     {
         std::weak_ptr<T> m_Target;    //! Non-owning pointer to T instance
         std::shared_ptr<T> m_Default; //! Shared pointer to another instance of T, guaranteed to be
