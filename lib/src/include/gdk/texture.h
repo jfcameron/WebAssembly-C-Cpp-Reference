@@ -26,7 +26,7 @@ namespace gdk
         Texture &operator=(const Texture &) = delete;
         Texture &operator=(Texture &&) = delete;
         
-        Texture(const std::string &aName, const std::vector<const GLubyte> &aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
+        Texture(const std::string &aName, const std::vector<GLubyte> &aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
         Texture() = delete;
         Texture(const Texture &) = delete;
         Texture(Texture &&);

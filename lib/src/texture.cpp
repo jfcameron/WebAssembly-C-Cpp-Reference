@@ -13,7 +13,7 @@ using namespace gdk;
 static constexpr char TAG[] = "Texture";
 
 const gdk::lazy_ptr<gdk::Texture> Texture::CheckeredTextureOfDeath([](){
-        std::vector<const GLubyte> textureData({
+        std::vector<GLubyte> textureData({
                     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
                     0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08,
                     0x08, 0x02, 0x00, 0x00, 0x00, 0x4b, 0x6d, 0x29, 0xdc, 0x00, 0x00, 0x00,
@@ -41,7 +41,7 @@ std::ostream &gdk::operator<<(std::ostream &s, const Texture &a)
     return s;
 }
 
-Texture::Texture(const std::string &aName, const std::vector<const GLubyte> &aTextureData)
+Texture::Texture(const std::string &aName, const std::vector<GLubyte> &aTextureData)
     : m_Name(aName)
 {
     //decode the png rgba32 data

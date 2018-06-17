@@ -76,11 +76,7 @@ namespace gdk
                              default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
                              default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
 
-                 std::vector<unsigned char> imagebuffer = gdk::resources::local::loadBinaryFile("resource/awesome.png");
-
-                 const std::vector<const unsigned char> imageconverted(imagebuffer.begin(), imagebuffer.end());
-
-                 auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", imageconverted));
+                 auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
 
                  model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
 
@@ -92,14 +88,12 @@ namespace gdk
         emscripten_set_main_loop(draw, -1, 0); // Negative fps will force requestAnimationFrame usage
         //emscripten_set_main_loop(update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
         
-        resources::remote::fetchBinaryFile("https://jfcameron.github.io/Textures/brick.png",
+        resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png",//"https://jfcameron.github.io/Textures/brick.png",
                                            [](const bool aSucceeded, std::vector<unsigned char> &aData)
                                            {
                                                if (aSucceeded)
                                                {
-                                                   const std::vector<const unsigned char> imageconverted(aData.begin(), aData.end());
-
-                                                   auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", imageconverted));
+                                                   auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
 
                                                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
                                                }
