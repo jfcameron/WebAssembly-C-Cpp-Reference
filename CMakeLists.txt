@@ -1,5 +1,5 @@
 # © 2018 Joseph Cameron - All Rights Reserved
-# Created on 2018-05-08.
+
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 # Build options
