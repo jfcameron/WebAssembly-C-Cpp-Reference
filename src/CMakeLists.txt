@@ -1,8 +1,6 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 # Created on 2018-05-08.
 
-include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
-
 if (JFC_BUILD_APP)
     project("main"
         VERSION "1.0" 

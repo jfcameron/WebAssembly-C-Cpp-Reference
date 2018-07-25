@@ -2,9 +2,6 @@
 
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
-#include("${CMAKE_SOURCE_DIR}/../../cmake/jfclib.cmake")
-
 #if (JFC_BUILD_LIB)
     project("gdk_ecs"
         VERSION "0.0"
@@ -12,11 +9,11 @@ include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
 
     add_library(${PROJECT_NAME} STATIC
         # Core
-	${CMAKE_CURRENT_SOURCE_DIR}/src/component.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/gameobject.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/scene.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/scenegraph.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/scenemanager.cpp
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/component.cpp
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/gameobject.cpp
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/scene.cpp
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/scenegraph.cpp
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/scenemanager.cpp
 
         #hacks
         #${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
