@@ -82,9 +82,10 @@ if (JFC_BUILD_LIB)
         CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
 
     if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-	target_include_directories(${PROJECT_NAME} PRIVATE
-		${emscripten_INCLUDE_DIR})
-	set(${PROJECT_NAME}_COMPILER_PARAMETERS
+	    target_include_directories(${PROJECT_NAME} PRIVATE
+		    ${emscripten_INCLUDE_DIR})
+    
+        set(${PROJECT_NAME}_COMPILER_PARAMETERS
             #"-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s ASYNCIFY=1 -s DEMANGLE_SUPPORT=1" #-s ASYNCIFY=1
             "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png"
             CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)

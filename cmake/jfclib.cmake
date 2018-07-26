@@ -149,11 +149,10 @@ function(jfc_project)
         "C++_STANDARD"
         "C_STANDARD")
 
-    #set(_OptionalFields...)
-
     set(_Required_List_Fields
         "SOURCE_LIST"
-        "HEADER_DIRECTORIES")
+        "INCLUDE_DIRECTORIES"
+        "LIBRARIES")
 
     set(_parse_mode "PARSE_SIMPLE_FIELDS") # PARSE_SIMPLE_FIELDS | any member of _Required_List_Fields
 
@@ -212,9 +211,11 @@ function(jfc_project)
         endif()
     endwhile()
 
-    foreach(field ${_Required_Simple_Fields})
+    # ======================== Using the stuff ===========================
+   
+    #[[foreach(field ${_Required_Simple_Fields})
         jfc_log(STATUS ${TAG} "${field}: ${${field}_value}")
-    endforeach()
+    endforeach()]]
 
     foreach(list ${_Required_List_Fields})
         set (list_values ${list${VALUES_POSTFIX}})
@@ -227,10 +228,24 @@ function(jfc_project)
             list(GET "${list_values}" ${_i} value)
             
             jfc_log(STATUS ${TAG} "\t${value}")
+
+            if (NOT ${list}_value)
+                set(${list}_value "${value}")
+            else()
+                string(CONCAT ${list}_value "${${list}_value}\n\t\t" "${value}")
+            endif()
             
             MATH(EXPR _i "${_i}+1")
         endwhile()
     endforeach()
 
+    JFC_LOG(STATUS "BLAR" "${NAME_value}")
+
     #generate project
+    set(THE_MESSAGE "blarblarblarHellogenerated!")
+
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/project.cmake.in
+        "${CMAKE_BINARY_DIR}/${NAME_value}.cmake" @ONLY)
+
+    include("${CMAKE_BINARY_DIR}/${NAME_value}.cmake")
 endfunction()

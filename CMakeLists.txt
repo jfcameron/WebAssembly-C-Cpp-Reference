@@ -30,7 +30,6 @@ jfc_project(
     NAME MyCoolProject
     VERSION 1.0
     DESCRIPTION "This is a project"
-
     C++_STANDARD 17
     C_STANDARD 11
 
@@ -38,9 +37,10 @@ jfc_project(
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp
 
-    HEADER_DIRECTORIES
+    INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include
+        
         ${stb_INCLUDE_DIR}
         ${glm_INCLUDE_DIR}
 
