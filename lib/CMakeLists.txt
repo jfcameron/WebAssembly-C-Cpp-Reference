@@ -1,13 +1,25 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
-cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
+jfc_project(library
+    NAME "gdk"
+    VERSION 0.0
+    DESCRIPTION "jfc game development kit"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
 
-if (JFC_BUILD_LIB)
-    project("gdk"
-        VERSION "0.0" 
-        DESCRIPTION "WebAssembly project shareable code")
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include # should be private
 
-    add_library(${PROJECT_NAME} STATIC
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${stb_INCLUDE_DIR}
+        ${glm_INCLUDE_DIR}
+
+    LIBRARIES
+        ${stb_LIBRARIES}
+
+    SOURCE_LIST
         # Core
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp
@@ -58,36 +70,14 @@ if (JFC_BUILD_LIB)
         ${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
 
         #hacks
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp        
-    )
-    
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${stb_INCLUDE_DIR}
-        ${glm_INCLUDE_DIR}) 
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp 
+)
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
-
-    #set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
-    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+    #[[target_include_directories(${PROJECT_NAME} PRIVATE
+        ${emscripten_INCLUDE_DIR})]]
     
-    set(${PROJECT_NAME}_INCLUDE_DIR
-        ${CMAKE_CURRENT_LIST_DIR}/include
-        CACHE PATH "${PROJECT_NAME}_INCLUDE_DIR include directory" FORCE)
-    
-    set(${PROJECT_NAME}_LIBRARIES
-        ${PROJECT_BINARY_DIR}/lib${PROJECT_NAME}.a;
-        ${stb_LIBRARIES}
-        CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
-
-    if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-	    target_include_directories(${PROJECT_NAME} PRIVATE
-		    ${emscripten_INCLUDE_DIR})
-    
-        set(${PROJECT_NAME}_COMPILER_PARAMETERS
-            #"-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s ASYNCIFY=1 -s DEMANGLE_SUPPORT=1" #-s ASYNCIFY=1
-            "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png"
-            CACHE PATH "${PROJECT_NAME}_COMPILER_PARAMETERS list of required emcc params for ${PROJECT_NAME}" FORCE)
-    endif()
+    set(${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS
+        "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png"
+        CACHE PATH "${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS list of required emcc params for ${PROJECT_NAME}" FORCE)
 endif()

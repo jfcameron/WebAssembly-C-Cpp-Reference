@@ -1,5 +1,9 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
+
+include_guard(DIRECTORY)
+
 #================================================================================================
 # Debug
 #================================================================================================
@@ -133,119 +137,159 @@ endfunction()
 
 jfc_get_git_repo_root()]]
 
-#====================
-# Private utilities
-#====================
-# loops...
-
 #================================================================================================
 # Projects
 #================================================================================================
-function(jfc_project)
-    set(_Required_Simple_Fields
-        "NAME"
-        "VERSION"
-        "DESCRIPTION"
-        "C++_STANDARD"
-        "C_STANDARD")
+set(JFC_LIBRARY_PROJECT_TEMPLATE_ABSOLUTE_PATH    ${CMAKE_CURRENT_LIST_DIR}/library_project_template.cmake.in)
+set(JFC_EXECUTABLE_PROJECT_TEMPLATE_ABSOLUTE_PATH ${CMAKE_CURRENT_LIST_DIR}/executable_project_template.cmake.in)
 
-    set(_Required_List_Fields
-        "SOURCE_LIST"
-        "INCLUDE_DIRECTORIES"
-        "LIBRARIES")
+function(jfc_project aType) # library | executable
+    set(_required_simple_fields
+        "NAME"                        # name of the project
+        "VERSION"                     # version of the project (no enforced foramt)
+        "DESCRIPTION"                 # description of the project
+        "C++_STANDARD"                # minimum ISO language standard required by the C++ compiler.
+        "C_STANDARD"                  # minimum ISO language standard required by the C compiler.
+    )
+    set(_optional_simple_fields 
+        ""
+    )
+    set(_required_list_fields
+        "SOURCE_LIST"                 # list of source files
+    )
+    set(_optional_list_fields
+        "PRIVATE_INCLUDE_DIRECTORIES" # Header paths hidden from downstream projects (internal use only)
+        "PUBLIC_INCLUDE_DIRECTORIES"  # Header paths accessible (and needed) by downstream projects 
+        "LIBRARIES"                   # binary lib files needed by this project (and therefore downstream projects)
+    )
 
-    set(_parse_mode "PARSE_SIMPLE_FIELDS") # PARSE_SIMPLE_FIELDS | any member of _Required_List_Fields
+    macro(jfc_library_project)
+        list(APPEND _required_simple_fields 
+            "TYPE"                    # STATIC | DYNAMIC
+        )
 
-    macro(_pop_front)
-        list(REMOVE_AT ARGV 0)
-        list(LENGTH ARGV _s)
+        set(_project_template_absolute_path "${JFC_LIBRARY_PROJECT_TEMPLATE_ABSOLUTE_PATH}")
+
+        _jfc_project_implementation()
     endmacro()
 
-    set(TAG "PROJECT")
+    macro(jfc_executable_project)
+        list(APPEND _optional_list_fields 
+            "EXECUTABLE_PARAMETERS"   # list of params. see cmake built in function add_executable
+        )
 
-    list(LENGTH ARGV _s)
-    while(_s GREATER 0)
+        set(_project_template_absolute_path "${JFC_EXECUTABLE_PROJECT_TEMPLATE_ABSOLUTE_PATH}")
+
+        _jfc_project_implementation()
+    endmacro()
+
+    macro(_jfc_project_implementation)
+        list(APPEND _all_simple_fields ${_required_simple_fields} ${_optional_simple_fields})
+        list(APPEND _all_list_fields   ${_required_list_fields}   ${_optional_list_fields})
+        list(APPEND _all_fields        ${_all_simple_fields}      ${_all_list_fields}) 
+
+        set(_parse_mode "PARSE_SIMPLE_FIELDS") # PARSE_SIMPLE_FIELDS | any member of _all_list_fields
+
+        macro(_pop_front)
+            list(REMOVE_AT ARGV 0)
+            list(LENGTH ARGV _s)
+        endmacro()
+
+        set(TAG "PROJECT")
+
         list(LENGTH ARGV _s)
-        list(GET ARGV 0 _item)
+        while(_s GREATER 0)
+            list(LENGTH ARGV _s)
+            list(GET ARGV 0 _item)
 
-        if (_parse_mode STREQUAL "PARSE_SIMPLE_FIELDS")
-            list(FIND _Required_Simple_Fields ${_item} _item_is_a_required_field) # do simple
-            if (_item_is_a_required_field GREATER_EQUAL 0)
-                if (${_s} GREATER 1)
-                    list(GET ARGV 1 _value)
+            if (_parse_mode STREQUAL "PARSE_SIMPLE_FIELDS")
+                list(FIND _required_simple_fields ${_item} _item_is_a_required_field)
+                if (_item_is_a_required_field GREATER_EQUAL 0)
+                    if (${_s} GREATER 1)
+                        list(GET ARGV 1 _value)
 
-                    list(FIND _Required_Simple_Fields ${_value} _value_is_a_required_field)
-
-                    if (_value_is_a_required_field GREATER_EQUAL 0)
-                        jfc_log(FATAL_ERROR ${TAG} "value of ${_item} is a requiredfield \"${_value}\"")
-                    endif()
+                        list(FIND _all_fields ${_value} _value_is_a_field)
+                        if (_value_is_a_field GREATER_EQUAL 0)
+                            jfc_log(FATAL_ERROR ${TAG} "The field ${_item} requires a value")
+                        endif()
                 
-                    set("${_item}_value" ${_value})
+                        set("${_item}_value" ${_value})
 
-                    _pop_front()
+                        _pop_front()
+                    else()
+                        jfc_log(FATAL_ERROR ${TAG} "${ARGV${_found_index}} requires a value")
+                    endif()
                 else()
-                    jfc_log(FATAL_ERROR ${TAG} "${ARGV${_found_index}} requires a value")
+                    list(FIND _all_list_fields ${_item} _item_is_a_list_field)
+                    if (_item_is_a_list_field GREATER_EQUAL 0)
+                        set(_parse_mode ${_item})
+                    else()
+                        jfc_log(FATAL_ERROR ${TAG} "\"${_item}\" is a value without a field!")
+                    endif()
                 endif()
-            else()
-                list(FIND _Required_List_Fields ${_item} _item_is_a_required_list_field) # flip mode
-                if (_item_is_a_required_list_field GREATER_EQUAL 0)
-                    set(_parse_mode ${_item})
-                else()
-                    jfc_log(FATAL_ERROR ${TAG} "\"${_item}\" is a value without a field!")
-                endif()
-            endif()
-
-            _pop_front()
-        else() # Parsing a list
-            list(FIND _Required_Simple_Fields ${_item} _item_is_a_required_field)
-            list(FIND _Required_List_Fields ${_item} _item_is_a_required_list_field)
-            if (_item_is_a_required_field GREATER_EQUAL 0 OR _item_is_a_required_list_field GREATER_EQUAL 0)
-                set(_parse_mode "PARSE_SIMPLE_FIELDS")
-            else()
-                set(VALUES_POSTFIX "_values" PARENT_SCOPE) #Need a var to expand
-
-                list(APPEND "${_parse_mode${VALUES_POSTFIX}}" "${_item}")
 
                 _pop_front()
+            else() # Parsing a list field
+                list(FIND _all_fields ${_item} _item_is_a_field)
+                if (_item_is_a_field GREATER_EQUAL 0)
+                    set(_parse_mode "PARSE_SIMPLE_FIELDS")
+                else()
+                    set(VALUES_POSTFIX "_values" PARENT_SCOPE)
+
+                    list(APPEND "${_parse_mode${VALUES_POSTFIX}}" "${_item}")
+
+                    _pop_front()
+                endif()
             endif()
-        endif()
-    endwhile()
-
-    # ======================== Using the stuff ===========================
-   
-    #[[foreach(field ${_Required_Simple_Fields})
-        jfc_log(STATUS ${TAG} "${field}: ${${field}_value}")
-    endforeach()]]
-
-    foreach(list ${_Required_List_Fields})
-        set (list_values ${list${VALUES_POSTFIX}})
-        list(LENGTH ${list_values} _s)
-
-        jfc_log(STATUS ${TAG} "${list}:")
-
-        set(_i "0")
-        while(${_i} LESS ${_s})
-            list(GET "${list_values}" ${_i} value)
-            
-            jfc_log(STATUS ${TAG} "\t${value}")
-
-            if (NOT ${list}_value)
-                set(${list}_value "${value}")
-            else()
-                string(CONCAT ${list}_value "${${list}_value}\n\t\t" "${value}")
-            endif()
-            
-            MATH(EXPR _i "${_i}+1")
         endwhile()
-    endforeach()
 
-    JFC_LOG(STATUS "BLAR" "${NAME_value}")
+        foreach(_field ${_required_simple_fields})
+            if ("${${_field}_value}" STREQUAL "")
+                jfc_log(FATAL_ERROR ${TAG} "${_field} is a required field")
+            endif()
+        endforeach()
 
-    #generate project
-    set(THE_MESSAGE "blarblarblarHellogenerated!")
+        foreach(list ${_required_list_fields})
+            set (list_values ${list${VALUES_POSTFIX}})
+            list(LENGTH ${list_values} _s)
 
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/project.cmake.in
-        "${CMAKE_BINARY_DIR}/${NAME_value}.cmake" @ONLY)
+            if ("${_s}" EQUAL 0)
+                jfc_log(FATAL_ERROR ${TAG} "${list} is a required list field and is missing or has no entries")
+            endif() 
+        endforeach()    
+        
+        foreach(list ${_all_list_fields})
+            set (list_values ${list${VALUES_POSTFIX}})
+            list(LENGTH ${list_values} _s)
 
-    include("${CMAKE_BINARY_DIR}/${NAME_value}.cmake")
+            set(_i "0")
+            while(${_i} LESS ${_s})
+                list(GET "${list_values}" ${_i} value)
+
+                if (NOT ${list}_value)
+                    set(${list}_value "${value}")
+                else()
+                    string(CONCAT ${list}_value "${${list}_value}\n\t" "${value}")
+                endif()
+            
+                MATH(EXPR _i "${_i}+1")
+            endwhile()
+        endforeach()
+
+        configure_file(${_project_template_absolute_path} "${CMAKE_BINARY_DIR}/${NAME_value}.cmake" @ONLY)
+
+        include("${CMAKE_BINARY_DIR}/${NAME_value}.cmake")
+
+        set(PROJECT_NAME "${PROJECT_NAME}" PARENT_SCOPE) # This is required to make
+    endmacro()
+
+    list(REMOVE_AT ARGV 0)
+
+    if ("${aType}" STREQUAL "library")
+        jfc_library_project("${ARGV}")
+    elseif ("${aType}" STREQUAL "executable")
+        jfc_executable_project("${ARGV}")
+    else()
+        jfc_log(FATAL_ERROR "JFCLIB" "jfc_project unrecognized type: ${aType}. Must be library | executable")
+    endif()
 endfunction()
