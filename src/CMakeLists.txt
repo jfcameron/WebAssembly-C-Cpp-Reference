@@ -15,7 +15,7 @@ jfc_project(executable
         ${gdk_LIBRARIES}
     
     SOURCE_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.c
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")

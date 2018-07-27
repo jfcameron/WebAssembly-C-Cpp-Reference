@@ -1,0 +1,2 @@
+generate buildinfo programatically: produce multiple buildinfo files for different iso standards of c and cpp. generate info fields and a print and a prettyprint func
+the prettyprint will have an overload: zeroparam writes to stdout form "Key: Value, ...", 1param takes a lambda of form (vector<string>akey, vector<string>avalue) -> void which allows the user to style and send data whereever. print will produce a string instead.

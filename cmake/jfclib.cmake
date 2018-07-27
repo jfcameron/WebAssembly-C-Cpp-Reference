@@ -119,29 +119,11 @@ function(jfc_add_dependencies)
 endfunction()
 
 #================================================================================================
-# Root
-#================================================================================================
-# Recalculates the path to the root of the current git repo, writing to JFC_CURRENT_REPO_ROOT
-#[[function(jfc_get_git_repo_root)
-    execute_process(COMMAND git rev-parse --show-toplevel
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        RESULT_VARIABLE _RESULT
-        OUTPUT_VARIABLE _OUTPUT)
-
-    set(JFC_CURRENT_REPO_ROOT ${_OUTPUT} PARENT_SCOPE)
-    
-    if (NOT ${_LAST_PROCESS_RESULT} MATCHES "0")
-        message(FATAL_ERROR "${_LAST_PROCESS_RESULT}")
-    endif()
-endfunction()
-
-jfc_get_git_repo_root()]]
-
-#================================================================================================
 # Projects
 #================================================================================================
 set(JFC_LIBRARY_PROJECT_TEMPLATE_ABSOLUTE_PATH    ${CMAKE_CURRENT_LIST_DIR}/library_project_template.cmake.in)
 set(JFC_EXECUTABLE_PROJECT_TEMPLATE_ABSOLUTE_PATH ${CMAKE_CURRENT_LIST_DIR}/executable_project_template.cmake.in)
+set(JFC_BUILDINFO_TEMPLATE_ABSOLUTE_PATH          ${CMAKE_CURRENT_LIST_DIR}/buildinfo.h.in)
 
 function(jfc_project aType) # library | executable
     set(_required_simple_fields
@@ -167,7 +149,6 @@ function(jfc_project aType) # library | executable
         list(APPEND _required_simple_fields 
             "TYPE"                    # STATIC | DYNAMIC
         )
-
         set(_project_template_absolute_path "${JFC_LIBRARY_PROJECT_TEMPLATE_ABSOLUTE_PATH}")
 
         _jfc_project_implementation()
@@ -177,7 +158,6 @@ function(jfc_project aType) # library | executable
         list(APPEND _optional_list_fields 
             "EXECUTABLE_PARAMETERS"   # list of params. see cmake built in function add_executable
         )
-
         set(_project_template_absolute_path "${JFC_EXECUTABLE_PROJECT_TEMPLATE_ABSOLUTE_PATH}")
 
         _jfc_project_implementation()
@@ -293,3 +273,31 @@ function(jfc_project aType) # library | executable
         jfc_log(FATAL_ERROR "JFCLIB" "jfc_project unrecognized type: ${aType}. Must be library | executable")
     endif()
 endfunction()
+
+#================================================================================================
+# Documentation: Doxygen
+#================================================================================================
+
+#================================================================================================
+# Formatting: Clang
+#================================================================================================
+
+#================================================================================================
+# Formatting: uncrustify
+#================================================================================================
+
+#================================================================================================
+# Documentation: Readme.md
+#================================================================================================
+
+#================================================================================================
+# BuildInfo generator
+#================================================================================================
+
+#================================================================================================
+# SPIRV compiler
+#================================================================================================
+
+#================================================================================================
+# Resource loader
+#================================================================================================
