@@ -1,34 +1,72 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
+set(_DESCRIPTION_ROOT "game development kit")
+
 jfc_project(library
-    NAME "gdk"
+    NAME "gdkdebug"
     VERSION 0.0
-    DESCRIPTION "jfc game development kit"
+    DESCRIPTION "${_DESCRIPTION_ROOT}: debug facilities for gdk"
     C++_STANDARD 17
     C_STANDARD 90
     TYPE STATIC
 
     PUBLIC_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/include # should be private
 
     PRIVATE_INCLUDE_DIRECTORIES
-        ${stb_INCLUDE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+
+    SOURCE_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/logger.cpp
+)
+
+jfc_project(library
+    NAME "gdkmath"
+    VERSION 0.0
+    DESCRIPTION "${_DESCRIPTION_ROOT}: math lib"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
+
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
         ${glm_INCLUDE_DIR}
 
+    SOURCE_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/intvector2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/quaternion.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/trigonometry.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector3.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector4.cpp
+)
+
+jfc_project(library
+    NAME "gdkgraphics"
+    VERSION 0.0
+    DESCRIPTION "${_DESCRIPTION_ROOT}: graphics lib"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
+
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        ${gdkmath_INCLUDE_DIRECTORIES}
+        ${stb_INCLUDE_DIR}
+
     LIBRARIES
+        ${gdkmath_LIBRARIES}
         ${stb_LIBRARIES}
 
     SOURCE_LIST
-        # Core
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp
-
-        # Debug
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/logger.cpp
-     
-        # Graphics
         ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/color.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/floatuniformcollection.cpp
@@ -45,39 +83,97 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vertexattribute.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vertexdata.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vertexformat.cpp
+)
 
-        # Input
+jfc_project(library
+    NAME "gdkinput"
+    VERSION 0.0
+    DESCRIPTION "${_DESCRIPTION_ROOT}: HID lib"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
+
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+    
+    #LIBRARIES
+
+    SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/keyboard.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/mouse.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gamepads.cpp
-        
-        # Math
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/intvector2.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/quaternion.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/trigonometry.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector2.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector3.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector4.cpp
+)
 
-        # Memory
-        #...
+jfc_project(library
+    NAME "gdkresources"
+    VERSION 0.0
+    DESCRIPTION "${_DESCRIPTION_ROOT}: local & remote resource loader lib"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
 
-        # Resources
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        ${stb_INCLUDE_DIR}
+
+    #LIBRARIES
+
+    SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
+)
+
+jfc_project(library
+    NAME "gdk"
+    VERSION 0.0
+    DESCRIPTION "${_DESCRIPTION_ROOT}"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
+
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include # should be private
+
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${gdkdebug_INCLUDE_DIRECTORIES}
+        ${gdkgraphics_INCLUDE_DIRECTORIES}
+        ${gdkinput_INCLUDE_DIRECTORIES}
+        ${gdkmath_INCLUDE_DIRECTORIES}
+        ${gdkresources_INCLUDE_DIRECTORIES}
+        ${stb_INCLUDE_DIR}
+        ${glm_INCLUDE_DIR}
+
+    LIBRARIES
+        ${gdkdebug_LIBRARIES}
+        ${gdkgraphics_LIBRARIES}
+        ${gdkinput_LIBRARIES}
+        ${gdkmath_LIBRARIES}
+        ${gdkresources_LIBRARIES}
+        ${stb_LIBRARIES}
+
+    SOURCE_LIST
+        # Core
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp # Not sure where to put this. It is implementation detail of multiple libs for desktop & emscripten platforms
         
         # Time
         ${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
 
         #hacks
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    #[[target_include_directories(${PROJECT_NAME} PRIVATE
-        ${emscripten_INCLUDE_DIR})]]
-    
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        ${emscripten_INCLUDE_DIR})
+
     set(${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS
-        "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png"
+        "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png" # Resources are inapropriate here
         CACHE PATH "${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS list of required emcc params for ${PROJECT_NAME}" FORCE)
 endif()

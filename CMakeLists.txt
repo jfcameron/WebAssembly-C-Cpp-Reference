@@ -19,7 +19,7 @@ set(JFC_TARGET_PLATFORM "${CMAKE_HOST_SYSTEM_NAME}" CACHE STRING "Platform to co
 set(JFC_REPOSITORY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}") #Currently not used
   
  #add_subdirectory(docs)
- #add_subdirectory(tests)
+add_subdirectory(test)
 add_subdirectory(thirdparty)
  #add_subdirectory(shaders)
  #add_subdirectory(resources)

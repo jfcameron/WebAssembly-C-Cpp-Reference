@@ -34,8 +34,10 @@ function(jfc_log aLogLevel aTag aMessage)
     message("${aLogLevel}" "${message_buffer}")
 endfunction()
 
-# log all variables in the global scope and halt execution.
-function(jfc_print_all_variables_and_halt)
+# log all variables currently available
+# useful for creating diffs to compare between function runs
+# useful for identifying and reducing state to avoid sideeffect related bugs
+function(jfc_print_all_variables)
     get_cmake_property(cmakevars VARIABLES)
     
     list(SORT cmakevars)
@@ -46,7 +48,7 @@ function(jfc_print_all_variables_and_halt)
     endforeach()
 
     jfc_log(STATUS "Dump" "Called from ${CMAKE_CURRENT_LIST_FILE}...\n${output}")
-    message(FATAL_ERROR "Dump end.")
+    jfc_log(STATUS "Dump" "end.")
 endfunction()
 
 #================================================================================================
@@ -79,7 +81,7 @@ endfunction()
 #                CACHE PATH "${JFC_DEPENDENCY_NAME} library object list" FORCE) 
 function(jfc_add_dependencies)
     function(jfc_add_dependency aName)
-        set(TAG "Library loading stage")
+        set(TAG "DEPENDENCY")
 
         jfc_log(STATUS ${TAG} "Processing submodule dependency \"${aName}\".")
 
@@ -125,7 +127,18 @@ set(JFC_LIBRARY_PROJECT_TEMPLATE_ABSOLUTE_PATH    ${CMAKE_CURRENT_LIST_DIR}/libr
 set(JFC_EXECUTABLE_PROJECT_TEMPLATE_ABSOLUTE_PATH ${CMAKE_CURRENT_LIST_DIR}/executable_project_template.cmake.in)
 set(JFC_BUILDINFO_TEMPLATE_ABSOLUTE_PATH          ${CMAKE_CURRENT_LIST_DIR}/buildinfo.h.in)
 
+# Generates a library or executable project.
+# See the options in the _required* sets below
+# See the output formats in the *_PROJECT_TEMPLATE_ABSOLUTE_PATHs above
+# Example usage:
+#   jfc_project(executable
+#       NAME MyExecutable
+#       SOURCE_LIST
+#           ${CMAKE_CURRENT_SOURCE_DIR}/main.c
+#   )
 function(jfc_project aType) # library | executable
+    set(TAG "PROJECT")
+
     set(_required_simple_fields
         "NAME"                        # name of the project
         "VERSION"                     # version of the project (no enforced foramt)
@@ -175,8 +188,6 @@ function(jfc_project aType) # library | executable
             list(LENGTH ARGV _s)
         endmacro()
 
-        set(TAG "PROJECT")
-
         list(LENGTH ARGV _s)
         while(_s GREATER 0)
             list(LENGTH ARGV _s)
@@ -214,9 +225,7 @@ function(jfc_project aType) # library | executable
                 if (_item_is_a_field GREATER_EQUAL 0)
                     set(_parse_mode "PARSE_SIMPLE_FIELDS")
                 else()
-                    set(VALUES_POSTFIX "_values" PARENT_SCOPE)
-
-                    list(APPEND "${_parse_mode${VALUES_POSTFIX}}" "${_item}")
+                    list(APPEND "${_parse_mode}" "${_item}")
 
                     _pop_front()
                 endif()
@@ -230,7 +239,7 @@ function(jfc_project aType) # library | executable
         endforeach()
 
         foreach(list ${_required_list_fields})
-            set (list_values ${list${VALUES_POSTFIX}})
+            set (list_values ${list})
             list(LENGTH ${list_values} _s)
 
             if ("${_s}" EQUAL 0)
@@ -239,7 +248,7 @@ function(jfc_project aType) # library | executable
         endforeach()    
         
         foreach(list ${_all_list_fields})
-            set (list_values ${list${VALUES_POSTFIX}})
+            set (list_values ${list})
             list(LENGTH ${list_values} _s)
 
             set(_i "0")
@@ -260,7 +269,7 @@ function(jfc_project aType) # library | executable
 
         include("${CMAKE_BINARY_DIR}/${NAME_value}.cmake")
 
-        set(PROJECT_NAME "${PROJECT_NAME}" PARENT_SCOPE) # This is required to make
+        set(PROJECT_NAME "${PROJECT_NAME}" PARENT_SCOPE) # This makes all project symbols available to the parent scope. I dont know why other symbols do not need to be explicitly promoted
     endmacro()
 
     list(REMOVE_AT ARGV 0)
@@ -270,8 +279,54 @@ function(jfc_project aType) # library | executable
     elseif ("${aType}" STREQUAL "executable")
         jfc_executable_project("${ARGV}")
     else()
-        jfc_log(FATAL_ERROR "JFCLIB" "jfc_project unrecognized type: ${aType}. Must be library | executable")
+        jfc_log(FATAL_ERROR ${TAG} "jfc_project unrecognized type: ${aType}. Must be library | executable")
     endif()
+endfunction()
+
+#================================================================================================
+# Unit tests
+#================================================================================================
+# jfc_parse_arguments( 
+#   OPTIONS
+#       blar
+#       blam
+#   REQUIRED_OPTIONS
+#       biff;bop;blap
+#   SINGLE_VALUES
+#       zip
+#   REQUIRED_SINGLE_VALUES
+#       zop
+#       zap
+#   LISTS etcetc
+#   REQUIRED_LISTS etc
+# )
+function(jfc_parse_arguments)
+endfunction()
+
+function(jfc_add_tests)
+    set(TAG "TEST")
+
+    jfc_log(WARNING ${TAG} "WIP!")
+
+    set(_OPTIONS_ARGS)
+    set(_ONE_VALUE_ARGS C++_STANDARD C_STANDARD)
+    set(_MULTI_VALUE_ARGS TEST_SOURCE_LIST)
+
+    cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGN})
+
+    macro(jfc_assert_required_args aArgType)
+        foreach(_one_value ${aArgType})
+            if (NOT _ARG_${_one_value})
+                jfc_log(FATAL_ERROR ${TAG} "_ARG_${_one_value} is required")
+            endif()
+        endforeach()
+    endmacro()
+
+    jfc_assert_required_args(${_ONE_VALUE_ARGS})
+    jfc_assert_required_args(${_MULTI_VALUE_ARGS})
+
+    # get catch2 -> this is dictated by jfccmake, not up to the using project
+    # generate the tests.cpp file somehwere in bin dir by grabbing and populating tests.cpp.in in jfccmake module
 endfunction()
 
 #================================================================================================

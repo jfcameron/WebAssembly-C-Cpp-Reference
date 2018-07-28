@@ -1,7 +1,13 @@
 #ifndef GDK_OPENGL
 #define GDK_OPENGL
 
-#include <GLES2/gl2.h> //This is not portable
+#include <gdkgraphics/buildinfo.h>
+
+#ifdef JFC_TARGET_PLATFORM_Emscripten
+#include <GLES2/gl2.h>
+#elif defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux
+#error desktop currently unsupported
+#endif
 
 namespace gdk
 {

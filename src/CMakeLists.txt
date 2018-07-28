@@ -1,5 +1,7 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
+#jfc_log(FATAL_ERROR "BLAR" "${gdk_LIBRARIES}")
+
 jfc_project(executable
     NAME "main"
     VERSION 1.0
@@ -15,7 +17,7 @@ jfc_project(executable
         ${gdk_LIBRARIES}
     
     SOURCE_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/main.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")

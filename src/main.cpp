@@ -6,7 +6,7 @@
 
 int main()
 {
-    std::cout << gdk::BuildInfo::TargetPlatform << std::endl;
+    std::cout << gdk_BuildInfo_TargetPlatform << std::endl;
 
     std::cout << "Greetings from C++\n";
 
