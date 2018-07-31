@@ -52,6 +52,115 @@ function(jfc_print_all_variables)
 endfunction()
 
 #================================================================================================
+# Utilities
+#================================================================================================
+# Convert ARGV into a series of options, named variables and named 
+# jfc_parse_arguments(${ARGV}
+#   OPTIONS
+#       blar
+#       blam
+#   REQUIRED_OPTIONS
+#       biff;bop;blap
+#   SINGLE_VALUES
+#       zip
+#   REQUIRED_SINGLE_VALUES
+#       zop
+#       zap
+#   LISTS etcetc
+#   REQUIRED_LISTS etc
+# )
+function(jfc_parse_arguments)
+    set(TAG "PARSE")
+
+    # Convert jfc_parse_arguments args into argv_passthrough and a list of criteria
+    set(NULL)
+    set(_MULTI_VALUE_ARGS
+        REQUIRED_OPTIONS REQUIRED_SINGLE_VALUES REQUIRED_LISTS
+                 OPTIONS          SINGLE_VALUES          LISTS)
+
+    set(_argv_passthrough)
+    foreach(_arg ${ARGV})
+        list(FIND _MULTI_VALUE_ARGS ${_arg} _item_is_a_name)
+
+        if (_item_is_a_name GREATER_EQUAL 0)
+            break()
+        endif()
+
+        list(APPEND _argv_passthrough ${_arg})
+    endforeach()
+    
+    cmake_parse_arguments("_ARG" "${NULL}" "${NULL}" "${_MULTI_VALUE_ARGS}" ${ARGC})
+
+    # At this point prepended argv is available as _argv_passthrough and names
+    foreach(name ${_MULTI_VALUE_ARGS})
+        jfc_log(STATUS "NAME" "${name}")
+
+        list(LENGTH _ARG_${name} _s)
+        set(_i "0")
+        while(${_i} LESS ${_s})
+            list(GET "_ARG_${name}" ${_i} value)
+
+            jfc_log(STATUS "BLAR" "  ${value}")
+            
+            MATH(EXPR _i "${_i}+1")
+        endwhile()
+    endforeach()
+
+    jfc_log(STATUS "ARGV" "${ARGV}")
+    
+    jfc_log(STATUS "=======================" "")
+
+    # TODO: parse _argv_passthrough with MULTI_VALUE_ARGS 
+    set(_OPTIONS_ARGS     "${_ARG_REQUIRED_OPTIONS}"      )# "${_ARG_OPTIONS}")
+    set(_ONE_VALUE_ARGS   "${_ARG_REQUIRED_SINGLE_VALUES}")# "${_ARG_SINGLE_VALUES}")
+    set(_MULTI_VALUE_ARGS "${_ARG_REQUIRED_LISTS}"      )#   "${_ARG_LISTS}")
+
+    #set(_MULTI_VALUE_ARGS "")
+    
+    foreach(_item ${_ARG_REQUIRED_LISTS})  # This is not working. TODO!
+        list(APPEND _MULTI_VALUE_ARGS ${_item})
+    endforeach()
+
+    set(ARGV "${_argv_passthrough}") # is an inner function better than manipulating argv directly?
+    list(LENGTH ARGV ARGC)
+    
+    #may have to do ARGC and argv{n}
+
+    jfc_log(STATUS "ARGV" "ARGV: ${ARGV}") #jfc_log(STATUS "ARGV" "${ARGV}")
+
+    cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGC})
+
+    list(LENGTH _MULTI_VALUE_ARGS _mvalen)
+    list(LENGTH _ARG_MULTI_VALUE_ARGS _mvalenlen)
+
+    jfc_log(STATUS "glorp" "_MULTI_VALUE_ARGS len: ${_mvalen}, _ARG_MULTI_VALUE_ARGS len: ${_mvalenlen}")
+
+    jfc_print_all_variables()
+
+    # Finally, behold
+    foreach(name ${_OPTIONS_ARGS})
+        jfc_log(STATUS "BLIPBLOP" "${name}")
+    endforeach()
+    
+
+endfunction()
+
+jfc_parse_arguments(this;is;my;argv;list;
+    REQUIRED_OPTIONS
+        blar;blam
+    OPTIONS
+        zip;zop
+    REQUIRED_SINGLE_VALUES
+        qwer;qwar
+    SINGLE_VALUES
+        gorgalon;gobaboob
+    REQUIRED_LISTS
+        nobu;noba
+    LISTS
+        zippy;zappy
+)
+
+#================================================================================================
 # Thirdparty
 #================================================================================================
 # build a dependant library project
@@ -286,23 +395,6 @@ endfunction()
 #================================================================================================
 # Unit tests
 #================================================================================================
-# jfc_parse_arguments( 
-#   OPTIONS
-#       blar
-#       blam
-#   REQUIRED_OPTIONS
-#       biff;bop;blap
-#   SINGLE_VALUES
-#       zip
-#   REQUIRED_SINGLE_VALUES
-#       zop
-#       zap
-#   LISTS etcetc
-#   REQUIRED_LISTS etc
-# )
-function(jfc_parse_arguments)
-endfunction()
-
 function(jfc_add_tests)
     set(TAG "TEST")
 
@@ -312,7 +404,7 @@ function(jfc_add_tests)
     set(_ONE_VALUE_ARGS C++_STANDARD C_STANDARD)
     set(_MULTI_VALUE_ARGS TEST_SOURCE_LIST)
 
-    cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGN})
+    cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGC})
 
     macro(jfc_assert_required_args aArgType)
         foreach(_one_value ${aArgType})
