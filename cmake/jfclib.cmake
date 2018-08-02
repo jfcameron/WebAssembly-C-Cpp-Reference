@@ -54,29 +54,40 @@ endfunction()
 #================================================================================================
 # Utilities
 #================================================================================================
-# Convert ARGV into a series of options, named variables and named 
+# @OPTIONS : booleans
+# @SINGLE_VALUES : single values that may be unset
+# @REQUIRED_SINGLE_VALUES : single values that must be set
+# @LISTS : lists that may be unset
+# @REQUIRED_LISTS : lists that must be set
+# Wrapper for cmake_parse_arguments that does the busy work of asserting the existence of required args.
+# FATAL_ERROR if a required is missing
+# the parsed arg list generates a series of variables with names matching your input e.g:
 # jfc_parse_arguments(${ARGV}
 #   OPTIONS
 #       blar
 #       blam
-#   REQUIRED_OPTIONS
-#       biff;bop;blap
 #   SINGLE_VALUES
 #       zip
-#   REQUIRED_SINGLE_VALUES
-#       zop
-#       zap
+#   REQUIRED_SINGLE_VALUES blar
 #   LISTS etcetc
 #   REQUIRED_LISTS etc
 # )
+# generates the following variables:
+# booleans: blar, blam (TRUE if present in ARGV, FALSE if not)
+# single value: zip (may be any value or unset if not present in argv)
+# single value: blar (any value, guaranteed to be set after successful call to parse_arguments)
+# list: etcetc (must use LIST family of functions to interact with content. unset if not present in ARGV)
+# list: etc (must use LIST family of functions to interact with content. guaranteed to be set after successful call to parse_arguments)
 function(jfc_parse_arguments)
-    set(TAG "PARSE")
+    set(TAG "jfc_parse_arguments")
 
-    # Convert jfc_parse_arguments args into argv_passthrough and a list of criteria
     set(NULL)
     set(_MULTI_VALUE_ARGS
-        REQUIRED_OPTIONS REQUIRED_SINGLE_VALUES REQUIRED_LISTS
-                 OPTIONS          SINGLE_VALUES          LISTS)
+        OPTIONS    
+        SINGLE_VALUES          
+        LISTS 
+        REQUIRED_SINGLE_VALUES 
+        REQUIRED_LISTS)
 
     set(_argv_passthrough)
     foreach(_arg ${ARGV})
@@ -88,77 +99,83 @@ function(jfc_parse_arguments)
 
         list(APPEND _argv_passthrough ${_arg})
     endforeach()
-    
-    cmake_parse_arguments("_ARG" "${NULL}" "${NULL}" "${_MULTI_VALUE_ARGS}" ${ARGC})
 
-    # At this point prepended argv is available as _argv_passthrough and names
-    foreach(name ${_MULTI_VALUE_ARGS})
-        jfc_log(STATUS "NAME" "${name}")
+    cmake_parse_arguments("_ARG" "${NULL}" "${NULL}" "${_MULTI_VALUE_ARGS}" ${ARGN})
 
-        list(LENGTH _ARG_${name} _s)
-        set(_i "0")
-        while(${_i} LESS ${_s})
-            list(GET "_ARG_${name}" ${_i} value)
+    macro(_promote_args_to_parent_scope argType bNoPrefix)
+        if (NOT ${bNoPrefix})
+            set(_prefix "_ARG_")
+        endif()
 
-            jfc_log(STATUS "BLAR" "  ${value}")
-            
-            MATH(EXPR _i "${_i}+1")
-        endwhile()
-    endforeach()
+        foreach(name ${${argType}})
+            list(LENGTH _ARG_${name} _s)
 
-    jfc_log(STATUS "ARGV" "${ARGV}")
-    
-    jfc_log(STATUS "=======================" "")
+            if (_s GREATER 0)
+                set(${_prefix}${name} "${_ARG_${name}}" PARENT_SCOPE)
+            endif()
+        endforeach()
+    endmacro()
 
-    # TODO: parse _argv_passthrough with MULTI_VALUE_ARGS 
-    set(_OPTIONS_ARGS     "${_ARG_REQUIRED_OPTIONS}"      )# "${_ARG_OPTIONS}")
-    set(_ONE_VALUE_ARGS   "${_ARG_REQUIRED_SINGLE_VALUES}")# "${_ARG_SINGLE_VALUES}")
-    set(_MULTI_VALUE_ARGS "${_ARG_REQUIRED_LISTS}"      )#   "${_ARG_LISTS}")
+    # Generate & assert requireds
+    function(_required_args_imp)
+        set(_ONE_VALUE_ARGS   "${_ARG_REQUIRED_SINGLE_VALUES}")
+        set(_MULTI_VALUE_ARGS "${_ARG_REQUIRED_LISTS}"        )
 
-    #set(_MULTI_VALUE_ARGS "")
-    
-    foreach(_item ${_ARG_REQUIRED_LISTS})  # This is not working. TODO!
-        list(APPEND _MULTI_VALUE_ARGS ${_item})
-    endforeach()
+        set(_ONE_VALUE_ARGS   "${_ARG_REQUIRED_SINGLE_VALUES}" PARENT_SCOPE) # Must be promoted to index output of this function in parent function
+        set(_MULTI_VALUE_ARGS "${_ARG_REQUIRED_LISTS}"         PARENT_SCOPE)
 
-    set(ARGV "${_argv_passthrough}") # is an inner function better than manipulating argv directly?
-    list(LENGTH ARGV ARGC)
-    
-    #may have to do ARGC and argv{n}
+        cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGN})
 
-    jfc_log(STATUS "ARGV" "ARGV: ${ARGV}") #jfc_log(STATUS "ARGV" "${ARGV}")
+        macro(_validate_and_promote_args_to_parent_scope argType)
+            foreach(name ${${argType}})
+                list(LENGTH _ARG_${name} _s)
 
-    cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGC})
+                if (_s GREATER 0)
+                    set(_i "0")
 
-    list(LENGTH _MULTI_VALUE_ARGS _mvalen)
-    list(LENGTH _ARG_MULTI_VALUE_ARGS _mvalenlen)
+                    while(${_i} LESS ${_s})
+                        list(GET "_ARG_${name}" ${_i} value)
 
-    jfc_log(STATUS "glorp" "_MULTI_VALUE_ARGS len: ${_mvalen}, _ARG_MULTI_VALUE_ARGS len: ${_mvalenlen}")
+                        MATH(EXPR _i "${_i}+1")
+                    endwhile()
+                else()
+                    jfc_log(FATAL_ERROR ${TAG} "Required arg \"${name}\" is missing or contains no values!")
+                endif()
+            endforeach()
 
-    jfc_print_all_variables()
+            _promote_args_to_parent_scope("${argType}" FALSE)
+        endmacro()
 
-    # Finally, behold
-    foreach(name ${_OPTIONS_ARGS})
-        jfc_log(STATUS "BLIPBLOP" "${name}")
-    endforeach()
-    
+        _validate_and_promote_args_to_parent_scope(_ONE_VALUE_ARGS)
+        _validate_and_promote_args_to_parent_scope(_MULTI_VALUE_ARGS)
+    endfunction()
+    _required_args_imp(${_argv_passthrough})
 
+    _promote_args_to_parent_scope(_ONE_VALUE_ARGS TRUE)
+    _promote_args_to_parent_scope(_MULTI_VALUE_ARGS TRUE)
+
+    # Generate optionals
+    function(_optional_args_imp)
+        set(_OPTIONS_ARGS     "${_ARG_OPTIONS}"      )
+        set(_ONE_VALUE_ARGS   "${_ARG_SINGLE_VALUES}")
+        set(_MULTI_VALUE_ARGS "${_ARG_LISTS}"        )
+
+        set(_OPTIONS_ARGS     "${_ARG_OPTIONS}"       PARENT_SCOPE)
+        set(_ONE_VALUE_ARGS   "${_ARG_SINGLE_VALUES}" PARENT_SCOPE)
+        set(_MULTI_VALUE_ARGS "${_ARG_LISTS}"         PARENT_SCOPE)
+
+        cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGN})
+
+        _promote_args_to_parent_scope(_OPTIONS_ARGS FALSE)
+        _promote_args_to_parent_scope(_ONE_VALUE_ARGS FALSE)
+        _promote_args_to_parent_scope(_MULTI_VALUE_ARGS FALSE)
+    endfunction()
+    _optional_args_imp(${_argv_passthrough})
+
+    _promote_args_to_parent_scope(_OPTIONS_ARGS TRUE)
+    _promote_args_to_parent_scope(_ONE_VALUE_ARGS TRUE)
+    _promote_args_to_parent_scope(_MULTI_VALUE_ARGS TRUE)
 endfunction()
-
-jfc_parse_arguments(this;is;my;argv;list;
-    REQUIRED_OPTIONS
-        blar;blam
-    OPTIONS
-        zip;zop
-    REQUIRED_SINGLE_VALUES
-        qwer;qwar
-    SINGLE_VALUES
-        gorgalon;gobaboob
-    REQUIRED_LISTS
-        nobu;noba
-    LISTS
-        zippy;zappy
-)
 
 #================================================================================================
 # Thirdparty
@@ -175,7 +192,7 @@ jfc_parse_arguments(this;is;my;argv;list;
 #    Example usage:
 #        {root}/extern/CMakeLists.txt
 #            include("${CMAKE_SOURCE_DIR}/cmake/jfclib.cmake")
-#            jfc_add_dependency("MyCoolLib")
+#            _add_dependency("MyCoolLib")
 #
 #        {root}/extern/MyCoolLib.cmake
 #            set(MYCOOLLIB_BUILD_TESTS OFF CACHE BOOL "Disabled testing for ${JFC_DEPENDENCY_NAME}")
@@ -189,7 +206,7 @@ jfc_parse_arguments(this;is;my;argv;list;
 #            set(${JFC_DEPENDENCY_NAME}_LIBRARIES "${CMAKE_BINARY_DIR}/extern/MyCoolLib/src/libMyCoolLib.a"
 #                CACHE PATH "${JFC_DEPENDENCY_NAME} library object list" FORCE) 
 function(jfc_add_dependencies)
-    function(jfc_add_dependency aName)
+    function(_add_dependency aName)
         set(TAG "DEPENDENCY")
 
         jfc_log(STATUS ${TAG} "Processing submodule dependency \"${aName}\".")
@@ -225,7 +242,7 @@ function(jfc_add_dependencies)
     MATH(EXPR ARGC "${ARGC}-1")
 
     foreach(loop_var RANGE ${ARGC})
-        jfc_add_dependency("${ARGV${loop_var}}")
+        _add_dependency("${ARGV${loop_var}}")
     endforeach()
 endfunction()
 
@@ -236,6 +253,7 @@ set(JFC_LIBRARY_PROJECT_TEMPLATE_ABSOLUTE_PATH    ${CMAKE_CURRENT_LIST_DIR}/libr
 set(JFC_EXECUTABLE_PROJECT_TEMPLATE_ABSOLUTE_PATH ${CMAKE_CURRENT_LIST_DIR}/executable_project_template.cmake.in)
 set(JFC_BUILDINFO_TEMPLATE_ABSOLUTE_PATH          ${CMAKE_CURRENT_LIST_DIR}/buildinfo.h.in)
 
+# TODO: Simplify implementation: make use of jfc_parse_arguments
 # Generates a library or executable project.
 # See the options in the _required* sets below
 # See the output formats in the *_PROJECT_TEMPLATE_ABSOLUTE_PATHs above
@@ -267,7 +285,7 @@ function(jfc_project aType) # library | executable
         "LIBRARIES"                   # binary lib files needed by this project (and therefore downstream projects)
     )
 
-    macro(jfc_library_project)
+    macro(_library_project)
         list(APPEND _required_simple_fields 
             "TYPE"                    # STATIC | DYNAMIC
         )
@@ -276,7 +294,7 @@ function(jfc_project aType) # library | executable
         _jfc_project_implementation()
     endmacro()
 
-    macro(jfc_executable_project)
+    macro(_executable_project)
         list(APPEND _optional_list_fields 
             "EXECUTABLE_PARAMETERS"   # list of params. see cmake built in function add_executable
         )
@@ -384,38 +402,61 @@ function(jfc_project aType) # library | executable
     list(REMOVE_AT ARGV 0)
 
     if ("${aType}" STREQUAL "library")
-        jfc_library_project("${ARGV}")
+        _library_project("${ARGV}")
     elseif ("${aType}" STREQUAL "executable")
-        jfc_executable_project("${ARGV}")
+        _executable_project("${ARGV}")
     else()
         jfc_log(FATAL_ERROR ${TAG} "jfc_project unrecognized type: ${aType}. Must be library | executable")
     endif()
 endfunction()
 
 #================================================================================================
+# Documentation: Readme.md
+#================================================================================================
+set(JFC_README_TEMPLATE_ABSOLUTE_PATH ${CMAKE_CURRENT_LIST_DIR}/README.md.in)
+
+function(jfc_generate_readme)
+    set(TAG "readme")
+
+    #set(REPO_NAME)
+
+    execute_process(COMMAND git rev-parse --show-toplevel
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            RESULT_VARIABLE _error
+            OUTPUT_VARIABLE _repo_path)
+
+    if (NOT _error EQUAL 0)
+        jfc_log(FATAL_ERROR ${TAG} "git failed with error: ${_error}")
+    endif()
+
+    file(_repo_path "$ENV{MY_DIR_VAR}" _repo_path)
+
+    jfc_log(FATAL_ERROR ${TAG} "output: ${_repo_path}")
+
+    configure_file(${JFC_README_TEMPLATE_ABSOLUTE_PATH} "${CMAKE_BINARY_DIR}/README.md" @ONLY)
+
+    jfc_log(STATUS ${TAG} "this is not completed at all")
+endfunction()
+
+jfc_generate_readme()
+
+#================================================================================================
 # Unit tests
 #================================================================================================
+# @TEST_SOURCE_LIST
+# @C++_STANDARD required iso langauge standard for C++ 
+# @C_STANDARD required iso language standard for C
 function(jfc_add_tests)
     set(TAG "TEST")
 
-    jfc_log(WARNING ${TAG} "WIP!")
+    jfc_log(STATUS ${TAG} "this is not completed at all")
 
-    set(_OPTIONS_ARGS)
-    set(_ONE_VALUE_ARGS C++_STANDARD C_STANDARD)
-    set(_MULTI_VALUE_ARGS TEST_SOURCE_LIST)
-
-    cmake_parse_arguments("_ARG" "${_OPTIONS_ARGS}" "${_ONE_VALUE_ARGS}" "${_MULTI_VALUE_ARGS}" ${ARGC})
-
-    macro(jfc_assert_required_args aArgType)
-        foreach(_one_value ${aArgType})
-            if (NOT _ARG_${_one_value})
-                jfc_log(FATAL_ERROR ${TAG} "_ARG_${_one_value} is required")
-            endif()
-        endforeach()
-    endmacro()
-
-    jfc_assert_required_args(${_ONE_VALUE_ARGS})
-    jfc_assert_required_args(${_MULTI_VALUE_ARGS})
+    jfc_parse_arguments(${ARGV}
+        REQUIRED_SINGLE_VALUES
+            C++_STANDARD
+            C_STANDARD
+            TEST_SOURCE_LIST
+    )
 
     # get catch2 -> this is dictated by jfccmake, not up to the using project
     # generate the tests.cpp file somehwere in bin dir by grabbing and populating tests.cpp.in in jfccmake module
@@ -424,27 +465,46 @@ endfunction()
 #================================================================================================
 # Documentation: Doxygen
 #================================================================================================
+function(jfc_generate_documentation_doxygen)
+    set(TAG "docs")
+
+    jfc_log(STATUS ${TAG} "this is not completed at all")
+endfunction()
 
 #================================================================================================
 # Formatting: Clang
 #================================================================================================
+function(jfc_format_code_clang)
+    set(TAG "format")
+
+    jfc_log(STATUS ${TAG} "this is not completed at all")
+endfunction()
 
 #================================================================================================
 # Formatting: uncrustify
 #================================================================================================
+function(jfc_format_code_uncrustify)
+    set(TAG "format")
 
-#================================================================================================
-# Documentation: Readme.md
-#================================================================================================
-
-#================================================================================================
-# BuildInfo generator
-#================================================================================================
+    jfc_log(STATUS ${TAG} "this is not completed at all")
+endfunction()
 
 #================================================================================================
 # SPIRV compiler
 #================================================================================================
+function(jfc_compile_SPIRV_shader_glsl)
+    set(TAG "shader compilation")
+
+    jfc_log(STATUS ${TAG} "this is not completed at all")
+endfunction()
 
 #================================================================================================
 # Resource loader
 #================================================================================================
+function(jfc_add_resources)
+    set(TAG "resources")
+    
+    jfc_log(STATUS ${TAG} "this is not completed at all")
+endfunction()
+
+jfc_log(FATAL_ERROR "blipblap" "blarblar")

@@ -1,12 +1,13 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
-cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
-
 jfc_add_tests(
+    C++_STANDARD 17
+    C_STANDARD 90
+
     TEST_SOURCE_LIST
-        "Blar"
-        "blop"
-        "qwety"
-        "zxcn"
-        "poiuytr"
+        "cooltest.cpp"
+        "neattest.cpp"
+        "blartest.cpp"
+        "gorgalontest.cpp"
+        "blipbloptest.cpp"
 )

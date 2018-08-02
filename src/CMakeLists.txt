@@ -1,7 +1,5 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
-#jfc_log(FATAL_ERROR "BLAR" "${gdk_LIBRARIES}")
-
 jfc_project(executable
     NAME "main"
     VERSION 1.0
