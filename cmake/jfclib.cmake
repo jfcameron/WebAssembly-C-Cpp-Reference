@@ -34,9 +34,8 @@ function(jfc_log aLogLevel aTag aMessage)
     message("${aLogLevel}" "${message_buffer}")
 endfunction()
 
-# log all variables currently available
-# useful for creating diffs to compare between function runs
-# useful for identifying and reducing state to avoid sideeffect related bugs
+# log all variables visible in the current scope
+# useful for identifying and state related bugs
 function(jfc_print_all_variables)
     get_cmake_property(cmakevars VARIABLES)
     
@@ -99,6 +98,11 @@ function(jfc_parse_arguments)
 
         list(APPEND _argv_passthrough ${_arg})
     endforeach()
+
+    list (LENGTH _argv_passthrough _s)
+    if (_s EQUAL 0)
+        jfc_log(FATAL_ERROR ${TAG} "nothing to parse! Did you forget to prepend $\{ARGV\} to your list of requirements?")
+    endif()
 
     cmake_parse_arguments("_ARG" "${NULL}" "${NULL}" "${_MULTI_VALUE_ARGS}" ${ARGN})
 
@@ -177,6 +181,105 @@ function(jfc_parse_arguments)
     _promote_args_to_parent_scope(_MULTI_VALUE_ARGS TRUE)
 endfunction()
 
+#
+# namespace for directory manipulation
+# contained commands are selected via value of ARGV0
+# e.g: jfc_directory(basename "/the/path/to/dir" currentdirectorybasename)
+#
+function(jfc_directory)
+    set(TAG "directory")
+
+    #
+    # given a directory path @aPath, writes the name of the current directory to identifier with name @aOutput
+    # (think: basename BSD utility)
+    # eg:
+    # jfc_directory(basename "/path/to/mydirectory" output)
+    # message(STATUS "${output}")
+    # result:
+    # mydirectory
+    #
+    macro(_basename aPath aOutput)
+        set(TAG "basename")
+
+        string(FIND ${aPath} "/" _i REVERSE) # There maybe a posix assumption here!
+
+        if (_i EQUAL -1)
+            jfc_log(FATAL_ERROR ${TAG} "Path is malformed. Could not determine basename")
+        endif()
+
+        math(EXPR _i "${_i}+1")
+
+        string(SUBSTRING ${aPath} ${_i} -1 ${aOutput})
+
+        set (${aOutput} ${${aOutput}} PARENT_SCOPE)
+    endmacro()
+
+    if (ARGN LESS_EQUAL 0)
+        jfc_log(FATAL_ERROR ${TAG} "requires at least one param to determine command to run")
+    endif()
+
+    list(REMOVE_AT ARGV 0)
+
+    string(TOLOWER "${ARGV0}" ARGV0)
+
+    if ("${ARGV0}" STREQUAL "basename")
+        _basename(${ARGV})
+    endif()
+endfunction()
+
+# Check if a program is installed on the system. Log and throw if it is not
+function(jfc_require_program aProgramName)
+    set(TAG "require program")
+
+    string(TOUPPER "${aProgramName}" _UpperProgramName)
+
+    find_program(${_UpperProgramName} NAMES "${aProgramName}")
+
+    if (${_UpperProgramName} STREQUAL "${_UpperProgramName}-NOTFOUND")
+        jfc_log(FATAL_ERROR ${TAG} "required program \"${aProgramName}\" could not be found!")
+    endif()
+endfunction()
+
+# Call git commands, throwing if there is an error
+# @COMMAND the command to run e.g: status
+# @OUTPUT the symbol this function will assign the standard out result of the git command to
+# example usage:
+# jfc_git(COMMAND rev-parse HEAD
+#   OUTPUT theCurrentCommitHash)
+#
+# message(STATUS "${theCurrentCommitHash}") # the current commit's hash
+#
+function(jfc_git)
+    set(TAG "git")
+
+    jfc_require_program("git")
+
+    jfc_parse_arguments(${ARGV}
+        REQUIRED_LISTS
+            COMMAND
+        REQUIRED_SINGLE_VALUES
+            OUTPUT
+    )
+
+    execute_process(COMMAND git ${COMMAND}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        RESULT_VARIABLE _return_value
+        OUTPUT_VARIABLE _output_value)
+
+    if (_return_value GREATER 0)
+        string(REPLACE ";" " " aGitCommand "${COMMAND}")
+
+        jfc_log(FATAL_ERROR ${TAG} "the command \"git ${aGitCommand}\" failed with return value of \"${_return_value}\"")
+    endif()
+
+    set(${OUTPUT} "${_output_value}" PARENT_SCOPE)
+endfunction()
+
+jfc_git(COMMAND rev-parse HEAD 
+    OUTPUT blamblap)
+
+jfc_log(FATAL_ERROR "BLAR" "${blamblap}")
+
 #================================================================================================
 # Thirdparty
 #================================================================================================
@@ -207,9 +310,7 @@ endfunction()
 #                CACHE PATH "${JFC_DEPENDENCY_NAME} library object list" FORCE) 
 function(jfc_add_dependencies)
     function(_add_dependency aName)
-        set(TAG "DEPENDENCY")
-
-        jfc_log(STATUS ${TAG} "Processing submodule dependency \"${aName}\".")
+        set(TAG "dependency")
 
         if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${aName}.cmake)
             jfc_log(FATAL_ERROR ${TAG} "${CMAKE_CURRENT_SOURCE_DIR}/${aName}.cmake does not exist. This is required to instruct the loader how to build dependency \"${aName}\".")
@@ -219,6 +320,10 @@ function(jfc_add_dependencies)
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             RESULT_VARIABLE GIT_RETURN_VALUE
             OUTPUT_VARIABLE GIT_ERRORS)
+
+        if (GIT_ERRORS)
+            jfc_log(FATAL_ERROR "BLAR" "blar: ${GIT_ERRORS}")
+        endif()
 
         if (GIT_RETURN_VALUE)
             jfc_log(FATAL_ERROR ${TAG} "git submodule \"${aName}\" init failed. Does it exist? Raw error message: ${JFC_GIT_ERROR}")
@@ -241,8 +346,8 @@ function(jfc_add_dependencies)
 
     MATH(EXPR ARGC "${ARGC}-1")
 
-    foreach(loop_var RANGE ${ARGC})
-        _add_dependency("${ARGV${loop_var}}")
+    foreach(_i RANGE ${ARGC})
+        _add_dependency("${ARGV${_i}}")
     endforeach()
 endfunction()
 
@@ -414,31 +519,39 @@ endfunction()
 # Documentation: Readme.md
 #================================================================================================
 set(JFC_README_TEMPLATE_ABSOLUTE_PATH ${CMAKE_CURRENT_LIST_DIR}/README.md.in)
+set(JFC_PROJECT_ROOT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Generates a readme.md, useful for github projects
+# @DESCRIPTION required, description of the project
 function(jfc_generate_readme)
     set(TAG "readme")
+    
+    jfc_parse_arguments(${ARGV}
+        REQUIRED_SINGLE_VALUES
+            BRIEF
+            DESCRIPTION
+        REQUIRED_LISTS
+            IMAGES
+    )
 
-    #set(REPO_NAME)
-
-    execute_process(COMMAND git rev-parse --show-toplevel
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            RESULT_VARIABLE _error
-            OUTPUT_VARIABLE _repo_path)
-
-    if (NOT _error EQUAL 0)
-        jfc_log(FATAL_ERROR ${TAG} "git failed with error: ${_error}")
-    endif()
-
-    file(_repo_path "$ENV{MY_DIR_VAR}" _repo_path)
-
-    jfc_log(FATAL_ERROR ${TAG} "output: ${_repo_path}")
+    jfc_directory(BASENAME ${JFC_PROJECT_ROOT_DIRECTORY} REPO_NAME)
 
     configure_file(${JFC_README_TEMPLATE_ABSOLUTE_PATH} "${CMAKE_BINARY_DIR}/README.md" @ONLY)
 
     jfc_log(STATUS ${TAG} "this is not completed at all")
 endfunction()
 
-jfc_generate_readme()
+jfc_generate_readme(
+    BRIEF "Example of building and deploying C++ project to the web as a webasm js module"
+    DESCRIPTION "\
+blimblam blar blar. galorbachev gorgalon the fourth.
+gooblalogbaprlg
+zimzam zap zork"
+    IMAGES
+        thing.png
+        blar.gif
+        zip.jpg
+)
 
 #================================================================================================
 # Unit tests
@@ -507,4 +620,13 @@ function(jfc_add_resources)
     jfc_log(STATUS ${TAG} "this is not completed at all")
 endfunction()
 
-jfc_log(FATAL_ERROR "blipblap" "blarblar")
+#jfc_log(FATAL_ERROR "blipblap" "blarblar")
+
+#================================================================================================
+# Emscripten index.html generator
+#================================================================================================
+function(jfc_generate_index_html)
+    set(TAG "html")
+    
+    jfc_log(STATUS ${TAG} "this is not completed at all")
+endfunction()
