@@ -597,6 +597,7 @@ endfunction()
 # Formatting: uncrustify
 #================================================================================================
 # TODO: type list with default fallback
+# TODO: where should the uncrustify settings come from? fallback + override?
 function(jfc_format_code_uncrustify aDirectory)
     set(TAG "format")
 
@@ -626,6 +627,7 @@ endfunction()
 #================================================================================================
 # Formatting: Clang
 #================================================================================================
+# TODO: where should the clang settings come from? fallback + override?
 function(jfc_format_code_clang) 
     set(TAG "format")
 
@@ -673,13 +675,18 @@ endfunction()
 #================================================================================================
 # Resource loader
 #================================================================================================
-function(jfc_add_resources)
-    set(TAG "resources")
-    
-    jfc_log(STATUS ${TAG} "this is not completed at all")
-endfunction()
+function(jfc_export_resource aResourceDirectory)
+    set(TAG "Resource exporter")
 
-#jfc_log(FATAL_ERROR "blipblap" "blarblar")
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${aResourceDirectory}" AND IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${aResourceDirectory}")
+        jfc_log(STATUS ${TAG} "Exporting ${aResourceDirectory}")
+
+        file(COPY "${aResourceDirectory}" 
+            DESTINATION ${CMAKE_SOURCE_DIR}/build/)
+    else()
+        jfc_log(FATAL_ERROR ${TAG} "\"${aResourceDirectory}\" does not exist or is not a directory.")
+    endif()
+endfunction()
 
 #================================================================================================
 # Emscripten index.html generator
