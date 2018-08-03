@@ -257,7 +257,7 @@ function(jfc_git)
     jfc_parse_arguments(${ARGV}
         REQUIRED_LISTS
             COMMAND
-        REQUIRED_SINGLE_VALUES
+        SINGLE_VALUES
             OUTPUT
     )
 
@@ -274,11 +274,6 @@ function(jfc_git)
 
     set(${OUTPUT} "${_output_value}" PARENT_SCOPE)
 endfunction()
-
-jfc_git(COMMAND rev-parse HEAD 
-    OUTPUT blamblap)
-
-jfc_log(FATAL_ERROR "BLAR" "${blamblap}")
 
 #================================================================================================
 # Thirdparty
@@ -316,22 +311,13 @@ function(jfc_add_dependencies)
             jfc_log(FATAL_ERROR ${TAG} "${CMAKE_CURRENT_SOURCE_DIR}/${aName}.cmake does not exist. This is required to instruct the loader how to build dependency \"${aName}\".")
         endif()
 
-        execute_process(COMMAND git submodule update --init -- ${CMAKE_CURRENT_SOURCE_DIR}/${aName}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            RESULT_VARIABLE GIT_RETURN_VALUE
-            OUTPUT_VARIABLE GIT_ERRORS)
-
-        if (GIT_ERRORS)
-            jfc_log(FATAL_ERROR "BLAR" "blar: ${GIT_ERRORS}")
-        endif()
-
-        if (GIT_RETURN_VALUE)
-            jfc_log(FATAL_ERROR ${TAG} "git submodule \"${aName}\" init failed. Does it exist? Raw error message: ${JFC_GIT_ERROR}")
-        endif()
+        jfc_git(COMMAND submodule update --init -- ${CMAKE_CURRENT_SOURCE_DIR}/${aName})
 
         set(JFC_DEPENDENCY_NAME "${aName}")
 
         include("${aName}.cmake")
+
+        # TODO: these should be promoted
 
         if (NOT DEFINED ${aName}_LIBRARIES)
             jfc_log(WARNING ${TAG} "${aName}.cmake did not define a variable \"${aName}_LIBRARIES\". Is it header only?")
@@ -581,6 +567,8 @@ endfunction()
 function(jfc_generate_documentation_doxygen)
     set(TAG "docs")
 
+    jfc_require_program("doxygen")
+
     jfc_log(STATUS ${TAG} "this is not completed at all")
 endfunction()
 
@@ -590,6 +578,8 @@ endfunction()
 function(jfc_format_code_clang)
     set(TAG "format")
 
+    jfc_require_program("clang")
+
     jfc_log(STATUS ${TAG} "this is not completed at all")
 endfunction()
 
@@ -598,6 +588,8 @@ endfunction()
 #================================================================================================
 function(jfc_format_code_uncrustify)
     set(TAG "format")
+
+    jfc_require_program("uncrustify")
 
     jfc_log(STATUS ${TAG} "this is not completed at all")
 endfunction()
