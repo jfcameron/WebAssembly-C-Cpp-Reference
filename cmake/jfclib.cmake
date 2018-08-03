@@ -564,29 +564,69 @@ endfunction()
 #================================================================================================
 # Documentation: Doxygen
 #================================================================================================
+# TODO: verify, consider changing
 function(jfc_generate_documentation_doxygen)
-    set(TAG "docs")
+    find_program(DOXYGEN doxygen)
 
-    jfc_require_program("doxygen")
+    if(NOT DOXYGEN)
+        jfc_log(FATAL_ERROR ${TAG} "doxygen not found! It is required to generate documentation.")
+    else()
+        set(DOXY_CONFIG_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+        set(DOXY_RESOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+        set(DOXY_CONFIG_FILENAME "doxy.config")
 
-    jfc_log(STATUS ${TAG} "this is not completed at all")
-endfunction()
+        configure_file(${DOXY_CONFIG_DIR}/${DOXY_CONFIG_FILENAME}.in 
+            ${CMAKE_CURRENT_SOURCE_DIR}/${DOXY_CONFIG_FILENAME} @ONLY)
 
-#================================================================================================
-# Formatting: Clang
-#================================================================================================
-function(jfc_format_code_clang)
-    set(TAG "format")
+        execute_process(COMMAND ${DOXYGEN} ${DOXY_CONFIG_FILENAME}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            RESULT_VARIABLE DOXYGEN_RETURN_VALUE
+            OUTPUT_VARIABLE DOXYGEN_ERRORS)
 
-    jfc_require_program("clang")
-
-    jfc_log(STATUS ${TAG} "this is not completed at all")
+        if (DOXYGEN_RETURN_VALUE)
+            jfc_log(FATAL_ERROR ${TAG} "Doxygen failed: ${DOXYGEN_ERRORS}")
+        else()
+            jfc_log(STATUS ${TAG} "Doxygen successfully completed")
+        endif()
+        
+        file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/${DOXY_CONFIG_FILENAME}")
+    endif()
 endfunction()
 
 #================================================================================================
 # Formatting: uncrustify
 #================================================================================================
-function(jfc_format_code_uncrustify)
+# TODO: type list with default fallback
+function(jfc_format_code_uncrustify aDirectory)
+    set(TAG "format")
+
+    if (NOT IS_DIRECTORY ${aDirectory})
+        jfc_log(FATAL_ERROR ${TAG} "${aDirectory} does not exist or is not a directory.")
+    endif()
+
+    set(FORMATTER_NAME "uncrustify")
+
+    find_program(FORMATTER "${FORMATTER_NAME}")
+
+    if(NOT FORMATTER)
+        jfc_log(FATAL_ERROR ${TAG} "${FORMATTER_NAME} not found! It is required to format the source code.")
+    else()
+        file(GLOB_RECURSE JFC_SOURCES
+            ${aDirectory}/*.h   ${aDirectory}/*.hpp
+            ${aDirectory}/*.cpp ${aDirectory}/*.cxx
+            ${aDirectory}/*.c)
+
+    execute_process(COMMAND ${FORMATTER} files ${JFC_SOURCES} --no-backup -c ${CMAKE_SOURCE_DIR}/.uncrustify #-l CPP
+        WORKING_DIRECTORY ${aDirectory}
+        RESULT_VARIABLE FORMATTER_RETURN_VALUE
+        OUTPUT_VARIABLE FORMATTER_ERRORS)
+    endif()
+endfunction()
+
+#================================================================================================
+# Formatting: Clang
+#================================================================================================
+function(jfc_format_code_clang) 
     set(TAG "format")
 
     jfc_require_program("uncrustify")
@@ -597,10 +637,37 @@ endfunction()
 #================================================================================================
 # SPIRV compiler
 #================================================================================================
+# Todo: verify
 function(jfc_compile_SPIRV_shader_glsl)
-    set(TAG "shader compilation")
+    find_program(GLSL_COMPILER glslangValidator)
 
-    jfc_log(STATUS ${TAG} "this is not completed at all")
+    set(TAG "Shader compiling stage")
+
+    if(NOT GLSL_COMPILER)
+        jfc_log(FATAL_ERROR ${TAG} "glslangValidator not found! It is required to compile GLSL source to SPIR-V.")
+    endif()
+
+    file(GLOB_RECURSE GLSL_SOURCE_FILES 
+        *.vert *.tesc *.tese *.geom *.frag *.comp)
+
+    foreach(GLSL ${GLSL_SOURCE_FILES})
+        get_filename_component(FILE_NAME ${GLSL} NAME)
+
+        set(SPIRV "${CMAKE_SOURCE_DIR}/build/shaders/${FILE_NAME}.spv")
+
+        make_directory("${CMAKE_SOURCE_DIR}/build/shaders/")
+
+        execute_process(COMMAND ${GLSL_COMPILER} -V ${GLSL} -o ${SPIRV}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            RESULT_VARIABLE GLSL_COMPILER_RETURN_VALUE
+            OUTPUT_VARIABLE GLSL_COMPILER_ERRORS)
+
+        if (GLSL_COMPILER_RETURN_VALUE)
+            jfc_log(FATAL_ERROR ${TAG} "\"${FILE_NAME}\" failed to compile: ${GLSL_COMPILER_ERRORS}")
+        else()
+            jfc_log(STATUS ${TAG} "\"${FILE_NAME}\" successfully compiled")
+        endif()
+    endforeach(GLSL)
 endfunction()
 
 #================================================================================================
