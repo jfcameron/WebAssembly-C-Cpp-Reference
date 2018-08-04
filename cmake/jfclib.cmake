@@ -42,8 +42,8 @@ function(jfc_print_all_variables)
     list(SORT cmakevars)
     set(output "")
     
-    foreach (currentvar ${cmakevars})
-        string(CONCAT output "${output}" "${currentvar}=${${currentvar}}\n")
+    foreach (cmakevar ${cmakevars})
+        string(CONCAT output "${output}" "${cmakevar}=${${cmakevar}}\n")
     endforeach()
 
     jfc_log(STATUS "Dump" "Called from ${CMAKE_CURRENT_LIST_FILE}...\n${output}")
@@ -116,6 +116,10 @@ function(jfc_parse_arguments)
 
             if (_s GREATER 0)
                 set(${_prefix}${name} "${_ARG_${name}}" PARENT_SCOPE)
+
+                if (NOT ${bNoPrefix})
+                    jfc_log(STATUS "${name}" "${_ARG_${name}}") #The leak is revealedhere. There is sometghing wrong with this function
+                endif() 
             endif()
         endforeach()
     endmacro()
@@ -160,9 +164,9 @@ function(jfc_parse_arguments)
 
     # Generate optionals
     function(_optional_args_imp)
-        set(_OPTIONS_ARGS     "${_ARG_OPTIONS}"      )
+        set(_OPTIONS_ARGS     "${_ARG_OPTIONS}")
         set(_ONE_VALUE_ARGS   "${_ARG_SINGLE_VALUES}")
-        set(_MULTI_VALUE_ARGS "${_ARG_LISTS}"        )
+        set(_MULTI_VALUE_ARGS "${_ARG_LISTS}")
 
         set(_OPTIONS_ARGS     "${_ARG_OPTIONS}"       PARENT_SCOPE)
         set(_ONE_VALUE_ARGS   "${_ARG_SINGLE_VALUES}" PARENT_SCOPE)
@@ -264,7 +268,8 @@ function(jfc_git)
     execute_process(COMMAND git ${COMMAND}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         RESULT_VARIABLE _return_value
-        OUTPUT_VARIABLE _output_value)
+        OUTPUT_VARIABLE _output_value
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
 
     if (_return_value GREATER 0)
         string(REPLACE ";" " " aGitCommand "${COMMAND}")
@@ -382,6 +387,17 @@ function(jfc_project aType) # library | executable
         )
         set(_project_template_absolute_path "${JFC_LIBRARY_PROJECT_TEMPLATE_ABSOLUTE_PATH}")
 
+        jfc_parse_arguments(${ARGV}
+            REQUIRED_SINGLE_VALUES ${_required_simple_fields} #no leaks
+            SINGLE_VALUES          ${_optional_simple_fields} #no leaks
+            REQUIRED_LISTS         ${_required_list_fields}   #no leaks
+            LISTS "PRIVATE_INCLUDE_DIRECTORIES" "PUBLIC_INCLUDE_DIRECTORIES" "LIBRARIES" #"PRIVATE_INCLUDE_DIRECTORIES" #"PUBLIC_INCLUDE_DIRECTORIES" #"LIBRARIES" # oh _no_....
+        )
+
+        #jfc_print_all_variables()
+
+        #jfc_log(STATUS ${TAG} "== Current project: ${NAME} ==")
+
         _jfc_project_implementation()
     endmacro()
 
@@ -397,7 +413,7 @@ function(jfc_project aType) # library | executable
     macro(_jfc_project_implementation)
         list(APPEND _all_simple_fields ${_required_simple_fields} ${_optional_simple_fields})
         list(APPEND _all_list_fields   ${_required_list_fields}   ${_optional_list_fields})
-        list(APPEND _all_fields        ${_all_simple_fields}      ${_all_list_fields}) 
+        list(APPEND _all_fields        ${_all_simple_fields}      ${_all_list_fields})
 
         set(_parse_mode "PARSE_SIMPLE_FIELDS") # PARSE_SIMPLE_FIELDS | any member of _all_list_fields
 
@@ -487,7 +503,9 @@ function(jfc_project aType) # library | executable
 
         include("${CMAKE_BINARY_DIR}/${NAME_value}.cmake")
 
-        set(PROJECT_NAME "${PROJECT_NAME}" PARENT_SCOPE) # This makes all project symbols available to the parent scope. I dont know why other symbols do not need to be explicitly promoted
+        # TODO: think about how to promote all project_* variables.
+        set(PROJECT_NAME       "${PROJECT_NAME}"       PARENT_SCOPE) # Project vars must be promoted to be accessible in call scope
+        set(PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" PARENT_SCOPE)
     endmacro()
 
     list(REMOVE_AT ARGV 0)
@@ -509,35 +527,29 @@ set(JFC_PROJECT_ROOT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Generates a readme.md, useful for github projects
 # @DESCRIPTION required, description of the project
-function(jfc_generate_readme)
+function(jfc_generate_readme_md)
     set(TAG "readme")
     
     jfc_parse_arguments(${ARGV}
         REQUIRED_SINGLE_VALUES
             BRIEF
+        SINGLE_VALUES
             DESCRIPTION
-        REQUIRED_LISTS
+        LISTS
             IMAGES
     )
 
     jfc_directory(BASENAME ${JFC_PROJECT_ROOT_DIRECTORY} REPO_NAME)
 
-    configure_file(${JFC_README_TEMPLATE_ABSOLUTE_PATH} "${CMAKE_BINARY_DIR}/README.md" @ONLY)
+    foreach(_current_url ${IMAGES})
+        string(CONFIGURE "<img src=\"@_current_url@\" width=\"100%\">" _currentImage)
+        
+        string(CONCAT IMAGES_OUTPUT "${IMAGES_OUTPUT}" "${_currentImage}")
+    endforeach()
+    
+    configure_file(${JFC_README_TEMPLATE_ABSOLUTE_PATH} "${JFC_PROJECT_ROOT_DIRECTORY}/README.md" @ONLY)
 
-    jfc_log(STATUS ${TAG} "this is not completed at all")
 endfunction()
-
-jfc_generate_readme(
-    BRIEF "Example of building and deploying C++ project to the web as a webasm js module"
-    DESCRIPTION "\
-blimblam blar blar. galorbachev gorgalon the fourth.
-gooblalogbaprlg
-zimzam zap zork"
-    IMAGES
-        thing.png
-        blar.gif
-        zip.jpg
-)
 
 #================================================================================================
 # Unit tests
@@ -673,26 +685,66 @@ function(jfc_compile_SPIRV_shader_glsl)
 endfunction()
 
 #================================================================================================
-# Resource loader
-#================================================================================================
-function(jfc_export_resource aResourceDirectory)
-    set(TAG "Resource exporter")
-
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${aResourceDirectory}" AND IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${aResourceDirectory}")
-        jfc_log(STATUS ${TAG} "Exporting ${aResourceDirectory}")
-
-        file(COPY "${aResourceDirectory}" 
-            DESTINATION ${CMAKE_SOURCE_DIR}/build/)
-    else()
-        jfc_log(FATAL_ERROR ${TAG} "\"${aResourceDirectory}\" does not exist or is not a directory.")
-    endif()
-endfunction()
-
-#================================================================================================
 # Emscripten index.html generator
 #================================================================================================
-function(jfc_generate_index_html)
+set(JFC_EMSCRIPTEN_INDEX_HTML_TEMPLATE_ABSOLUTE_PATH ${CMAKE_CURRENT_LIST_DIR}/emscripten_index_template.html.in)
+
+function(jfc_emscripten_generate_index_html_for_current_project)
     set(TAG "html")
-    
-    jfc_log(STATUS ${TAG} "this is not completed at all")
+
+    configure_file(${JFC_EMSCRIPTEN_INDEX_HTML_TEMPLATE_ABSOLUTE_PATH} "${PROJECT_BINARY_DIR}/index.html" @ONLY)
 endfunction()
+
+#================================================================================================
+# Resource loader
+#================================================================================================
+#
+function(jfc_resource)
+    jfc_log(FATAL_ERROR "blarblar" "resource must be implemented")
+
+    #
+    function(jfc_export_resource aResourceDirectory)
+        set(TAG "Resource exporter")
+
+        #[[if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${aResourceDirectory}" AND IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${aResourceDirectory}")
+            jfc_log(STATUS ${TAG} "Exporting ${aResourceDirectory}")
+
+            file(COPY "${aResourceDirectory}" 
+                DESTINATION ${CMAKE_SOURCE_DIR}/build/)
+        else()
+            jfc_log(FATAL_ERROR ${TAG} "\"${aResourceDirectory}\" does not exist or is not a directory.")
+        endif()]]
+
+        jfc_log(FATAL_ERROR ${TAG} "This is not implemented.")
+    endfunction()
+
+    #
+    function(jfc_compile_resources)
+        jfc_parse_arguments(${ARGV}
+            REQUIRED_LISTS
+                FILES
+        )
+
+        set(TAG "resource compile")
+
+        function(_compile_resource aFile)
+            file(READ "${aFile}" bytes HEX)
+    
+            string(REGEX REPLACE "(..)" "0x\\1, " bytes "${bytes}")
+
+            string(FIND "${bytes}" ", " _i REVERSE)
+
+            string(SUBSTRING "${bytes}" 0 ${_i} bytes)
+    
+            message("${bytes}")
+        endfunction()
+
+        foreach(_file ${FILES})
+            _compile_resource("${_file}")
+        endforeach()
+
+        jfc_log(FATAL_ERROR ${TAG} "This is not implemented.")
+    endfunction()
+endfunction()
+
+

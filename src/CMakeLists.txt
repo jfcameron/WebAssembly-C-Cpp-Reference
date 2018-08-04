@@ -19,6 +19,10 @@ jfc_project(executable
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-        "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js ${gdk_EMSCRIPTEN_LINK_FLAGS}")
+    set_target_properties(${PROJECT_NAME}
+        PROPERTIES 
+            LINK_FLAGS "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js ${gdk_EMSCRIPTEN_LINK_FLAGS}"
+    )
+
+    jfc_emscripten_generate_index_html_for_current_project()
 endif()
