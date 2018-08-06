@@ -7,3 +7,6 @@
 [submodule "thirdparty/stb"]
 	path = thirdparty/stb
 	url = https://github.com/nothings/stb.git
+[submodule "jfc-cmake"]
+	path = jfc-cmake
+	url = https://github.com/jfcameron/jfc-cmake.git
