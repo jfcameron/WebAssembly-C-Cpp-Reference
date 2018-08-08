@@ -11,7 +11,7 @@ option(JFC_BUILD_TESTS  "Build unit tests" OFF)
 option(JFC_AUTO_RUN_APP "Auto run the app on build" OFF)
 option(JFC_FORMAT_CODE  "Format code with a tool" OFF)
 
-#add_subdirectory(docs)
+add_subdirectory(docs)
 add_subdirectory(test)
 add_subdirectory(thirdparty)
 #add_subdirectory(resources)

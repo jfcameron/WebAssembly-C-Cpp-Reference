@@ -14,12 +14,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 90)
+
 # Organize headers into standard include format
 file(GLOB ${PROJECT_NAME}_HEADER_FILES 
     ${CMAKE_CURRENT_SOURCE_DIR}/${JFC_DEPENDENCY_NAME}/*.h) #This should NOT be a global variable.
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/build COMMENT "Creating and populating include/${PROJECT_NAME}" VERBATIM
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMENT "Creating and populating include/${PROJECT_NAME}" VERBATIM
     COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
     COMMAND ${CMAKE_COMMAND} -E copy ${${PROJECT_NAME}_HEADER_FILES} ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME})
 
