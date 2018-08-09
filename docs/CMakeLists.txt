@@ -9,7 +9,7 @@ jfc_generate_documentation_doxygen(
     
     INCLUDE_DIRECTORIES
         ../lib/include
-        ../lib/src/include # should the private include path be included? (no but this project is very much wip)
+        ../lib/src/include
 )
 
 jfc_generate_readme_md(
