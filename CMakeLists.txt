@@ -17,12 +17,3 @@ add_subdirectory(thirdparty)
 #add_subdirectory(resources)
 add_subdirectory(lib)
 add_subdirectory(src)
-
-jfc_generate_readme_md(
-    BRIEF "Reference project demonstrating how to compile C or C++ source to webassembly using CMake and Emscripten."
-#    DESCRIPTION "."
- #   IMAGES
-  #      thing.png
-   #     blar.gif
-    #    zip.jpg
-)

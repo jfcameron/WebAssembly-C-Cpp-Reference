@@ -1,8 +1,4 @@
-build/*
 workspace/*
-
-docs/doxy.config
-src/cmake.h
 
 !.keep
 !CMakeLists.txt
