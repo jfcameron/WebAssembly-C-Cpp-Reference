@@ -32,7 +32,7 @@ namespace gdk
         ShaderProgram &operator=(ShaderProgram &&) = delete;
                 
         ShaderProgram() = delete;
-        ShaderProgram(const std::string &aName, const std::string &aVertexSource, const std::string &aFragmentSource);
+        ShaderProgram(const std::string &aName, std::string aVertexSource, std::string aFragmentSource);
         ShaderProgram(const ShaderProgram &) = delete;
         ShaderProgram(ShaderProgram &&);
         ~ShaderProgram();

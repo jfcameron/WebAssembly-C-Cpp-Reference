@@ -6,7 +6,10 @@
 #include <gdk/glfw_wrapper.h>
 
 #include <GLFW/glfw3.h>
-#include <emscripten.h>
+
+#ifdef JFC_TARGET_PLATFORM_Emscripten
+    #include <emscripten.h>
+#endif
 
 #include <assert.h>
 #include <iostream>

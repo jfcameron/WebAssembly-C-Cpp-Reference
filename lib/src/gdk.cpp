@@ -1,5 +1,11 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#include <gdk/buildinfo.h>
+
+#ifdef JFC_TARGET_PLATFORM_Emscripten
+    #include <emscripten.h>
+#endif
+
 #include <gdk.h>
 #include <gdk/camera.h>
 #include <gdk/color.h>
@@ -20,8 +26,6 @@
 #include <gdk/vector3.h>
 #include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
-
-#include <emscripten.h>
 
 #include <cmath>
 #include <exception>
@@ -85,8 +89,11 @@ namespace gdk
                  return model;
              }());
 
+#if defined JFC_TARGET_PLATFORM_Emscripten
         emscripten_set_main_loop(draw, -1, 0); // Negative fps will force requestAnimationFrame usage
+        
         //emscripten_set_main_loop(update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
+#endif
         
         resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png",//"https://jfcameron.github.io/Textures/brick.png",
                                            [](const bool aSucceeded, std::vector<unsigned char> &aData)
@@ -109,6 +116,10 @@ namespace gdk
         {
             std::cout << exception << std::endl;
         }
+
+#if defined JFC_TARGET_PLATFORM_Darwin
+        for(;;) draw();
+#endif
     }
 
     void draw()
@@ -136,6 +147,7 @@ namespace gdk
         gamepads::update();
 
         glfw::PollEvents();
+        glfw::SwapBuffer(); // This is not required on emscriptn for whatever reason. That worries me a bit.
 
         hack_update();
     }

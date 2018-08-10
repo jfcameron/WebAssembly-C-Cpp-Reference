@@ -1,8 +1,11 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#include <gdkgraphics/buildinfo.h>
+
 #include <gdk/exception.h>
 #include <gdk/glh.h>
 #include <gdk/shaderprogram.h>
+#include <gdk/logger.h>
 
 #include <iostream>
 #include <sstream>
@@ -13,23 +16,29 @@ static constexpr char TAG[] = "ShaderProgram";
 
 const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
 {
-    const std::string vertexShaderSource = R"V0G0N(
-    #version 100
-    
+    const std::string vertexShaderSource = R"V0G0N(    
     //Uniforms
     uniform mat4 _MVP;
 
+#if defined Emscripten
     //VertIn
     attribute highp vec3 a_Position;
+    
+#elif defined Darwin
+    //VertIn
+    attribute vec3 a_Position;
+#endif
 
     void main ()
     {
         gl_Position = _MVP * vec4(a_Position,1.0);
     }
-    )V0G0N";
+)V0G0N";
 
     const std::string fragmentShaderSource = R"V0G0N(
+#if defined Emscripten
     precision mediump float;
+#endif
             
     const vec4 DEATHLY_PINK = vec4(1,0.2,0.8,1);
 
@@ -37,7 +46,7 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
     {
         gl_FragColor = DEATHLY_PINK;
     }
-    )V0G0N";
+)V0G0N";
 
     return new gdk::ShaderProgram("PinkShaderOfDeath", vertexShaderSource, fragmentShaderSource);
 });
@@ -45,16 +54,15 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
 const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
 {
     const std::string vertexShaderSource = R"V0G0N(
-    #version 100
-
-    //hack
+    //hack?
     uniform mat4  _Model;
     uniform mat4  _View;
     uniform mat4  _Projection;
 
     //Uniforms
     uniform mat4 _MVP;
-          
+    
+#if defined Emscripten
     //VertIn
     attribute highp   vec3 a_Position;
     attribute mediump vec2 a_UV;
@@ -62,24 +70,40 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
     //FragIn
     varying mediump vec2 v_UV;
 
+#elif defined Darwin
+    //VertIn
+    attribute vec3 a_Position;
+    attribute vec2 a_UV;
+
+    //FragIn
+    varying vec2 v_UV;
+#endif
+
     void main ()
     {
         gl_Position = _MVP * vec4(a_Position,1.0);
                
         v_UV = a_UV;
     }
-    )V0G0N";
+)V0G0N";
 
     const std::string fragmentShaderSource = R"V0G0N(
-    #version 100
+#if defined Emscripten
     precision mediump float;
+#endif
             
     //Uniforms
     uniform sampler2D _Texture;
-            
+
+#if defined Emscripten
     //FragIn
     varying lowp vec2 v_UV;
 
+#elif defined Darwin
+    //FragIn
+    varying vec2 v_UV;
+#endif
+    
     void main()
     {
         vec4 frag = texture2D(_Texture, v_UV);
@@ -88,7 +112,7 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
                 
         gl_FragColor = frag;                        
     }
-    )V0G0N";
+)V0G0N";
             
     return new gdk::ShaderProgram("AlphaCutOff", vertexShaderSource, fragmentShaderSource);
 });
@@ -110,10 +134,18 @@ std::ostream &gdk::operator<<(std::ostream &s, const ShaderProgram &a)
     return s;
 }
 
-ShaderProgram::ShaderProgram(const std::string &aName, const std::string &aVertexSource, const std::string &aFragmentSource)
+ShaderProgram::ShaderProgram(const std::string &aName, std::string aVertexSource, std::string aFragmentSource)
 : m_Name(aName)
 , m_ProgramHandle([&]()
 {
+    aVertexSource.insert  (0, std::string("#define ").append(gdkgraphics_BuildInfo_TargetPlatform).append("\n"));
+    aFragmentSource.insert(0, std::string("#define ").append(gdkgraphics_BuildInfo_TargetPlatform).append("\n"));
+
+#if defined JFC_TARGET_PLATFORM_Emscripten // version must be the first line in source. version must be present for WebGL platforms
+    aVertexSource.insert  (0, std::string("#version 100\n"));
+    aFragmentSource.insert(0, std::string("#version 100\n"));
+#endif
+
     // Compile vertex stage
     const char *const vertex_shader = aVertexSource.c_str();
     const GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -144,6 +176,8 @@ ShaderProgram::ShaderProgram(const std::string &aName, const std::string &aVerte
         << std::endl << "vertex shader compilation log: " <<   glh::GetShaderInfoLog(vs) << std::endl
         << std::endl << "fragment shader compilation log: " << glh::GetShaderInfoLog(fs);
         
+        gdk::log(TAG, glh::GetShaderInfoLog(vs), ", ", glh::GetShaderInfoLog(fs));
+
         throw gdk::Exception(TAG, message.str());
     }
 

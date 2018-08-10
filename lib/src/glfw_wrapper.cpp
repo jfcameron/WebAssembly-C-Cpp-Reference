@@ -1,13 +1,16 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#ifdef JFC_TARGET_PLATFORM_Emscripten
+    #include <emscripten/bind.h>
+    #include <emscripten/emscripten.h>
+#endif
+
+#include <GLFW/glfw3.h>
+
 #include <gdk/exception.h>
 #include <gdk/glfw_wrapper.h>
 #include <gdk/intvector2.h>
 #include <gdk/logger.h>
-
-#include <GLFW/glfw3.h>
-#include <emscripten/bind.h>
-#include <emscripten/emscripten.h>
 
 #include <exception>
 #include <functional>
@@ -41,8 +44,8 @@ namespace
         
             windowSize = aScreenSize;
         
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+            //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+            //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
             glfwWindowHint(GLFW_RESIZABLE, true);
     
             GLFWwindow *const pGLFWWindow = glfwCreateWindow(aScreenSize.x, aScreenSize.y, aName.c_str(), nullptr, nullptr);

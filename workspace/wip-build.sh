@@ -17,9 +17,6 @@ clear
 
 cd $(getPathToScript)
 
-#rm -R lib
-#rm -R src
-
 #Move this logic to cmake. bash should only be for convenience not implementation of build sript
 mkdir -p src/resource/ && cp ../resource/* "$_"
 

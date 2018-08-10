@@ -62,7 +62,7 @@ Texture::Texture(const std::string &aName, const std::vector<GLubyte> &aTextureD
         glBindTexture( GL_TEXTURE_2D,0);
         stbi_image_free(decodedData);
     }
-    else throw gdk::Exception(TAG, "Could not decode RGBA32 data.");
+    else throw gdk::Exception(TAG, "Could not decode RGBA32 data. Name: ", aName);
 }
 
 Texture::Texture(Texture &&other)

@@ -2,8 +2,10 @@
 #include <gdk/logger.h>
 #include <gdk/texture.h>
 
-#include <emscripten.h>
-#include <emscripten/fetch.h>
+#ifdef JFC_TARGET_PLATFORM_Emscripten
+    #include <emscripten.h>
+    #include <emscripten/fetch.h>
+#endif
 
 #include <stb/stb_image.h>
 
@@ -23,7 +25,7 @@ namespace gdk::resources::local
     {
         std::unique_ptr<FILE, std::function<void(FILE *const)>> pFile(
             fopen(aPath.c_str(), "r"),
-            [](FILE *const ptr){ fclose(ptr);});
+            [](FILE *const ptr){fclose(ptr);});
     
         std::string output;
 
@@ -55,6 +57,7 @@ namespace gdk::resources::remote
 {    
     void fetchBinaryFile(const std::string &aURL, std::function<void(const bool, std::vector<unsigned char> &)> aResponseHandler)
     {
+#ifdef JFC_TARGET_PLATFORM_Emscripten
         emscripten_fetch_attr_t attr;
         emscripten_fetch_attr_init(&attr);
 
@@ -95,5 +98,6 @@ namespace gdk::resources::remote
         }));
         
         emscripten_fetch(&attr, aURL.c_str());
+#endif
     }
 }
