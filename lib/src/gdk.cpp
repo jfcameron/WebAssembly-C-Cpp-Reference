@@ -49,6 +49,8 @@ namespace gdk
 {
     void init()
     {
+        gdk::log(TAG, "init");
+
         try
         {
         pCamera = std::make_shared<Camera>
@@ -117,7 +119,7 @@ namespace gdk
             std::cout << exception << std::endl;
         }
 
-#if defined JFC_TARGET_PLATFORM_Darwin
+#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Linux
         for(;;) draw();
 #endif
     }

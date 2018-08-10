@@ -15,6 +15,10 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     list(APPEND dependencies
         "glfw"    
     )
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    list(APPEND dependencies
+        "glfw"
+    )
 endif()
 
 jfc_add_submodule_dependencies(${dependencies})

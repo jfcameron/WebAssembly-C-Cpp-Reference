@@ -3,6 +3,8 @@
 #ifdef JFC_TARGET_PLATFORM_Emscripten
     #include <emscripten/bind.h>
     #include <emscripten/emscripten.h>
+#elif defined JFC_TARGET_PLATFORM_Linux
+    #include <GL/glew.h>
 #endif
 
 #include <GLFW/glfw3.h>
@@ -36,6 +38,13 @@ namespace
         
             if (!glfwInit()) throw gdk::Exception(TAG, "glfwInit failed");
         }();
+
+#if defined JFC_TARGET_PLATFORM_Linux
+        []()
+        {   
+            if (GLenum err = glewInit() != GLEW_OK) throw gdk::Exception(TAG, "glewinit failed: ", glewGetErrorString(err));
+        }();
+#endif
             
         return []()
         {

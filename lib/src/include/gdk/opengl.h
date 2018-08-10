@@ -7,8 +7,11 @@
     #include <GLES2/gl2.h>
 #elif defined JFC_TARGET_PLATFORM_Darwin
     #include <OpenGL/gl.h>
-#elif defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux
-    #error win and linux not supported
+#elif defined JFC_TARGET_PLATFORM_Linux
+//    #include <GL/gl.h>
+    #include <GL/glew.h>
+#elif defined JFC_TARGET_PLATFORM_Windows
+    #error win not supported
 #else
     #error the current platform is not supported
 #endif

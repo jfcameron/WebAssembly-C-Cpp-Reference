@@ -6,6 +6,7 @@
 #include <gdk/uniformcollection.h>
 
 #include <iosfwd>
+#include <memory>
 
 namespace gdk
 {

@@ -11,8 +11,8 @@ jfc_project(executable
     PRIVATE_INCLUDE_DIRECTORIES
         ${gdk_INCLUDE_DIRECTORIES}
 
-    LIBRARIES
-        ${gdk_LIBRARIES}
+   # LIBRARIES
+    #    ${gdk_LIBRARIES}
     
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
@@ -23,3 +23,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 
     jfc_emscripten_generate_index_html_for_current_project()
 endif()
+
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}  ${gdk_LIBRARIES})
+
+#set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS " -lm -ldl -lXinerama -lXrandr -lXi -lXcursor -lX11 -lXxf86vm -lpthread")
+
