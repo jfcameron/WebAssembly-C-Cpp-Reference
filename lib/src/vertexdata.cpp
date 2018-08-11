@@ -13,7 +13,6 @@ using namespace gdk;
 static constexpr char TAG[] = "VertexData";
 
 const gdk::lazy_ptr<gdk::VertexData> VertexData::Quad([](){
-    gdk::log(TAG, "blar");
         float size  = 1.;
         float hsize = size/2.;
         std::vector<GLfloat> data({

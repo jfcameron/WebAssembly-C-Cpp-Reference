@@ -31,10 +31,6 @@ namespace
     
     static GLFWwindow *const pWindow = []()
     {        
-        gdk::log(TAG, "window initializing");
-
-
-
         []()
         {       
             glfwSetErrorCallback(
