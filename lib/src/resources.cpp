@@ -1,6 +1,4 @@
-#include <gdk/exception.h>
-#include <gdk/logger.h>
-#include <gdk/texture.h>
+#include <gdkresources/buildinfo.h>
 
 #ifdef JFC_TARGET_PLATFORM_Emscripten
     #include <emscripten.h>
@@ -8,6 +6,10 @@
 #endif
 
 #include <stb/stb_image.h>
+
+#include <gdk/exception.h>
+#include <gdk/logger.h>
+#include <gdk/texture.h>
 
 #include <cstdio>
 #include <fstream>
@@ -98,6 +100,8 @@ namespace gdk::resources::remote
         }));
         
         emscripten_fetch(&attr, aURL.c_str());
+#else
+#error fetchBinaryFile is unimplemented on the current platform
 #endif
     }
 }
