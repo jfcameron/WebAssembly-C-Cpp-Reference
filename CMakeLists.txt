@@ -4,16 +4,24 @@ cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/jfc-cmake/jfclib.cmake")
 
-option(JFC_BUILD_DOCS   "Build documentation" OFF)
 option(JFC_BUILD_APP    "Build the app" ON)
-option(JFC_BUILD_LIB    "Build the reusable component of the app." ON)
+option(JFC_BUILD_DOCS   "Build documentation" OFF)
 option(JFC_BUILD_TESTS  "Build unit tests" OFF)
-option(JFC_AUTO_RUN_APP "Auto run the app on build" OFF)
-option(JFC_FORMAT_CODE  "Format code with a tool" OFF)
+#option(JFC_AUTO_RUN_APP "Auto run the app on build" OFF) #todo: implement
+#option(JFC_FORMAT_CODE  "Format code with a tool" OFF)
 
-add_subdirectory(docs)
-add_subdirectory(test)
+if(JFC_BUILD_DOCS)
+    add_subdirectory(docs)
+endif()
+
+if(JFC_BUILD_TESTS)
+    add_subdirectory(test)
+endif()
+
 add_subdirectory(thirdparty)
 #add_subdirectory(resources)
 add_subdirectory(lib)
-add_subdirectory(src)
+
+if(JFC_BUILD_APP)
+    add_subdirectory(src)
+endif()
