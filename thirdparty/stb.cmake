@@ -1,11 +1,17 @@
 # © 2018 Joseph Cameron - All Rights Reserved
-# Created on 2018-04-15.
 
-# Compile lib
 project("${JFC_DEPENDENCY_NAME}")
 
+# Generate implementation for stb
+set(_stb_imp_file_contents "#define STB_IMAGE_IMPLEMENTATION")
+
+string(APPEND _stb_imp_file_contents "\n#include \"stb_image.h\"") # todo: support for other implementation
+
+file(WRITE "${PROJECT_BINARY_DIR}/stb_implementation.c" "${_stb_imp_file_contents}")
+
+# build lib
 add_library(${PROJECT_NAME} STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/${JFC_DEPENDENCY_NAME}.c)
+    ${PROJECT_BINARY_DIR}/stb_implementation.c)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/${JFC_DEPENDENCY_NAME})
