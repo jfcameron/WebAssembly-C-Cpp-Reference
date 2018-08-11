@@ -1,26 +1,26 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 # Created on 2018-04-13.
 
-set(dependencies
+set(submodule_dependencies
     "glm"
     "stb"
     #"tinyobjloader"
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    list(APPEND dependencies
+    list(APPEND submodule_dependencies
         "emscripten"
     )
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    list(APPEND dependencies
+    list(APPEND submodule_dependencies
         "glfw"    
     )
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    list(APPEND dependencies
+    list(APPEND submodule_dependencies
         "glfw"
     )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    list(APPEND dependencies
+    list(APPEND submodule_dependencies
         "glfw"
     )
 endif()

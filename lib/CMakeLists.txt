@@ -178,26 +178,3 @@ jfc_project(library
         #hacks
         ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
 )
-
-# This works but should be moved. Here the platform specific work only applies to the GDK root project. It should be applied to each separate lib that actually needs it.
-if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${emscripten_INCLUDE_DIR})
-
-    set(${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS
-        "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png" # Resources are inapropriate here
-        CACHE PATH "${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS list of required emcc params for ${PROJECT_NAME}" FORCE
-    )
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-#[[    FIND_LIBRARY(COCOA_LIBRARY Cocoa)
-    FIND_LIBRARY(CORE_VIDEO CoreVideo)
-    FIND_LIBRARY(IO_KIT IOKit)
-    FIND_LIBRARY(OPENGL OpenGL)
-
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        ${COCOA_LIBRARY} 
-        ${CORE_VIDEO} 
-        ${IO_KIT} 
-        ${OPENGL}
-    )]]
-endif()

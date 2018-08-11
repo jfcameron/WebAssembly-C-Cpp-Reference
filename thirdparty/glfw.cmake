@@ -1,7 +1,5 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
-jfc_log(STATUS "blarblar" "glfw has started processing")
-
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "")
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "")
