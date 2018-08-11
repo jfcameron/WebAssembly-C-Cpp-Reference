@@ -25,7 +25,10 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 endif()
 
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}  ${gdk_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${gdk_LIBRARIES})
+
+#if window
+target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic)   # -static-libgcc -static-libstdc++ -lpthread)
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS " -lm -ldl -lXinerama -lXrandr -lXi -lXcursor -lX11 -lXxf86vm -lpthread")
 

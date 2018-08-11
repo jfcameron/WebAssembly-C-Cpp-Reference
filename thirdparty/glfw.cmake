@@ -1,5 +1,7 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
+jfc_log(STATUS "blarblar" "glfw has started processing")
+
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "")
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "")
@@ -9,27 +11,44 @@ set(GLFW_INSTALL OFF CACHE BOOL "")
 
 add_subdirectory(${JFC_DEPENDENCY_NAME})
 
-
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     FIND_LIBRARY(COCOA_LIBRARY Cocoa)
     FIND_LIBRARY(CORE_VIDEO CoreVideo)
     FIND_LIBRARY(IO_KIT IOKit)    
 
-    #    find_package(vulkan REQUIRED)
+    find_package(OpenGL REQUIRED) # find_package(vulkan REQUIRED)
+
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
     find_package(OpenGL REQUIRED)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    find_package(OpenGL REQUIRED)
-#    find_package(GLEW REQUIRED)
     find_package(X11 REQUIRED)
     find_package(Threads REQUIRED)
-
 
     # Trying to hide glew in glfw makes some sense but its kind of hard to read
     project("GLEW")
 
     add_library(${PROJECT_NAME} STATIC
         ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/src/glew.c)
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
+
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+
+    set(GLEW_LIBRARIES ${CMAKE_BINARY_DIR}/thirdparty/libGLEW.a)
+    set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
+
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    find_package(OpenGL REQUIRED)
+
+    # Trying to hide glew in glfw makes some sense but its kind of hard to read
+    project("GLEW")
+
+    add_library(${PROJECT_NAME} STATIC
+        ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/src/glew.c)
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
 
     set_target_properties(${PROJECT_NAME} PROPERTIES
         RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
@@ -38,7 +57,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
 
 else()
-    message(FATAL_ERROR "${JFC_DEPENDENCY_NAME}.cmake has not been configured to handle platform \"${JFC_TARGET_PLATFORM}\".")
+    message(FATAL_ERROR "${JFC_DEPENDENCY_NAME}.cmake has not been configured to handle platform \"${CMAKE_SYSTEM_NAME}\".")
 endif()
 
 set(${JFC_DEPENDENCY_NAME}_INCLUDE_DIR 

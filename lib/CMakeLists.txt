@@ -62,6 +62,8 @@ jfc_project(library
         ${gdkmath_INCLUDE_DIRECTORIES}
         ${stb_INCLUDE_DIR}
 
+        ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
+
     LIBRARIES
         ${gdkmath_LIBRARIES}
         ${stb_LIBRARIES}
@@ -123,6 +125,8 @@ jfc_project(library
     PRIVATE_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
         ${stb_INCLUDE_DIR}
+
+        ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
 
     #LIBRARIES
 
