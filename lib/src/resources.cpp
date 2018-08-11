@@ -1,8 +1,8 @@
 #include <gdkresources/buildinfo.h>
 
 #ifdef JFC_TARGET_PLATFORM_Emscripten
-    #include <emscripten.h>
-    #include <emscripten/fetch.h>
+#include <emscripten.h>
+#include <emscripten/fetch.h>
 #endif
 
 #include <stb/stb_image.h>
@@ -59,7 +59,7 @@ namespace gdk::resources::remote
 {    
     void fetchBinaryFile(const std::string &aURL, std::function<void(const bool, std::vector<unsigned char> &)> aResponseHandler)
     {
-#ifdef JFC_TARGET_PLATFORM_Emscripten
+#if defined JFC_TARGET_PLATFORM_Emscripten
         emscripten_fetch_attr_t attr;
         emscripten_fetch_attr_init(&attr);
 
@@ -100,6 +100,9 @@ namespace gdk::resources::remote
         }));
         
         emscripten_fetch(&attr, aURL.c_str());
+
+#elif defined JFC_TARGET_PLATFORM_Darwin
+        
 #else
 #error fetchBinaryFile is unimplemented on the current platform
 #endif
