@@ -22,9 +22,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     target_include_directories(${PROJECT_NAME} PRIVATE
         ${emscripten_INCLUDE_DIR})
 
-    set(${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS
+    set(gdk_EMSCRIPTEN_LINK_FLAGS
         "-s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png" # Resources are inapropriate here
-        CACHE PATH "${PROJECT_NAME}_EMSCRIPTEN_LINK_FLAGS list of required emcc params for ${PROJECT_NAME}" FORCE
     )
 
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js ${gdk_EMSCRIPTEN_LINK_FLAGS}")

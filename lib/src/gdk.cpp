@@ -49,8 +49,6 @@ namespace gdk
 {
     void init()
     {
-        gdk::log(TAG, "init");
-
         try
         {
         pCamera = std::make_shared<Camera>
