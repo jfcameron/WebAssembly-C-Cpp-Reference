@@ -24,7 +24,7 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
     //VertIn
     attribute highp vec3 a_Position;
     
-#elif defined Darwin
+#elif defined Darwin || defined Windows || defined Linux
     //VertIn
     attribute vec3 a_Position;
 #endif
@@ -70,7 +70,7 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
     //FragIn
     varying mediump vec2 v_UV;
 
-#elif defined Darwin
+#elif defined Darwin || defined Windows || defined Linux
     //VertIn
     attribute vec3 a_Position;
     attribute vec2 a_UV;
@@ -99,7 +99,7 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
     //FragIn
     varying lowp vec2 v_UV;
 
-#elif defined Darwin
+#elif defined Darwin || defined Windows || defined Linux
     //FragIn
     varying vec2 v_UV;
 #endif
@@ -113,7 +113,6 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
         gl_FragColor = frag;                        
     }
 )V0G0N";
-            
     return new gdk::ShaderProgram("AlphaCutOff", vertexShaderSource, fragmentShaderSource);
 });
 

@@ -1,9 +1,12 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#include <gdk/buildinfo.h>
+
 #ifdef JFC_TARGET_PLATFORM_Emscripten
     #include <emscripten/bind.h>
     #include <emscripten/emscripten.h>
-#elif defined JFC_TARGET_PLATFORM_Linux
+#elif defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
+    #define GLEW_STATIC
     #include <GL/glew.h>
 #endif
 
@@ -28,6 +31,10 @@ namespace
     
     static GLFWwindow *const pWindow = []()
     {        
+        gdk::log(TAG, "window initializing");
+
+
+
         []()
         {       
             glfwSetErrorCallback(
@@ -38,13 +45,6 @@ namespace
         
             if (!glfwInit()) throw gdk::Exception(TAG, "glfwInit failed");
         }();
-
-#if defined JFC_TARGET_PLATFORM_Linux
-        []()
-        {   
-            if (GLenum err = glewInit() != GLEW_OK) throw gdk::Exception(TAG, "glewinit failed: ", glewGetErrorString(err));
-        }();
-#endif
             
         return []()
         {
@@ -70,6 +70,13 @@ namespace
 
                                           WindowSizeCallback(aX, aY);
                                       });
+
+#if defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
+            []()
+            {   
+                if (GLenum err = glewInit() != GLEW_OK) throw gdk::Exception(TAG, "glewinit failed: ", glewGetErrorString(err));
+            }();    
+#endif
                 
             return pGLFWWindow;
         }();
