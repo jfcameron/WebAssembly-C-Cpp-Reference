@@ -49,8 +49,6 @@ namespace gdk
 {
     void init()
     {
-        gdk::log(TAG, "init");
-
         try
         {
         pCamera = std::make_shared<Camera>
@@ -108,7 +106,6 @@ namespace gdk
                                                }
                                                else gdk::log(TAG, "the fetch failed");
                                            });
-        
         gamepads::initialize();
 
         hack_init();
@@ -119,7 +116,7 @@ namespace gdk
             std::cout << exception << std::endl;
         }
 
-#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Linux
+#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
         for(;;) draw();
 #endif
     }

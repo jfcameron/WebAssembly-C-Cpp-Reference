@@ -2,6 +2,7 @@
 
 #include <gdk/exception.h>
 #include <gdk/glh.h>
+#include <gdk/logger.h>
 #include <gdk/opengl.h>
 #include <gdk/vertexdata.h>
 
@@ -23,7 +24,6 @@ const gdk::lazy_ptr<gdk::VertexData> VertexData::Quad([](){
                     0.0f -hsize, 0.0f -hsize, 0.0f, 0.0f, 1.0f, //  / |
                     size -hsize, 0.0f -hsize, 0.0f, 1.0f, 1.0f, // 1--2
                     });
-
         return new gdk::VertexData("Quad", gdk::VertexData::Type::Static, gdk::VertexFormat::Pos3uv2, data);
     });
 
