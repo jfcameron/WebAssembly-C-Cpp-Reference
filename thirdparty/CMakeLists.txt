@@ -4,7 +4,6 @@
 set(submodule_dependencies
     "glm"
     "stb"
-    #"tinyobjloader"
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
@@ -25,4 +24,4 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 endif()
 
-jfc_add_submodule_dependencies(${dependencies})
+jfc_add_submodule_dependencies(${submodule_dependencies})
