@@ -34,6 +34,7 @@ jfc_project(library
         
     PRIVATE_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        
         ${glm_INCLUDE_DIR}
 
     SOURCE_LIST
@@ -60,12 +61,13 @@ jfc_project(library
     PRIVATE_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
         ${gdkmath_INCLUDE_DIRECTORIES}
+        
         ${stb_INCLUDE_DIR}
-
         ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
 
     LIBRARIES
         ${gdkmath_LIBRARIES}
+        
         ${stb_LIBRARIES}
 
     SOURCE_LIST
@@ -102,13 +104,11 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 
         ${glfw_INCLUDE_DIR} #hmm
-    
-    #LIBRARIES
 
     SOURCE_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gamepads.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/keyboard.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/mouse.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/gamepads.cpp
 )
 
 jfc_project(library
@@ -122,16 +122,41 @@ jfc_project(library
     PUBLIC_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 
+        ${nlohmann_INCLUDE_DIR}
+
     PRIVATE_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        
         ${stb_INCLUDE_DIR}
-
         ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
+        ${curl_INCLUDE_DIR}
 
-    #LIBRARIES
+    LIBRARIES
+        ${curl_LIBRARIES}
 
     SOURCE_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/httprequest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
+)
+
+jfc_project(library
+    NAME "gdktime"
+    VERSION 0.0
+    DESCRIPTION "${_DESCRIPTION_ROOT} time lib"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
+
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+
+    SOURCE_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
+
 )
 
 jfc_project(library
@@ -152,10 +177,11 @@ jfc_project(library
         ${gdkinput_INCLUDE_DIRECTORIES}
         ${gdkmath_INCLUDE_DIRECTORIES}
         ${gdkresources_INCLUDE_DIRECTORIES}
-        ${stb_INCLUDE_DIR}
-        ${glm_INCLUDE_DIR}
+        ${gdktime_INCLUDE_DIRECTORIES}
 
         ${glfw_INCLUDE_DIR}
+        ${glm_INCLUDE_DIR}
+        ${stb_INCLUDE_DIR}
 
     LIBRARIES
         ${gdkdebug_LIBRARIES}
@@ -163,18 +189,13 @@ jfc_project(library
         ${gdkinput_LIBRARIES}
         ${gdkmath_LIBRARIES}
         ${gdkresources_LIBRARIES}
+        ${gdktime_LIBRARIES}
+        
+        ${glfw_LIBRARIES}
         ${stb_LIBRARIES}
 
-        ${glfw_LIBRARIES}
-
     SOURCE_LIST
-        # Core
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp # Not sure where to put this. It is implementation detail of multiple libs for desktop & emscripten platforms
-        
-        # Time
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
-
-        #hacks
         ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
 )

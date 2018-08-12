@@ -1,1 +1,0 @@
-jfc_log(FATAL_ERROR "blar" "unimplemented")
