@@ -7,7 +7,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "")
 set(GLFW_INSTALL OFF CACHE BOOL "")
 #set(GLFW_VULKAN_STATIC OFF CACHE BOOL "")
 
-add_subdirectory(${JFC_DEPENDENCY_NAME})
+add_subdirectory(${PROJECT_NAME})
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     FIND_LIBRARY(COCOA_LIBRARY Cocoa)
@@ -55,34 +55,32 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
 
 else()
-    message(FATAL_ERROR "${JFC_DEPENDENCY_NAME}.cmake has not been configured to handle platform \"${CMAKE_SYSTEM_NAME}\".")
+    message(FATAL_ERROR "${PROJECT_NAME}.cmake has not been configured to handle platform \"${CMAKE_SYSTEM_NAME}\".")
 endif()
 
-set(${JFC_DEPENDENCY_NAME}_INCLUDE_DIR 
-    ${CMAKE_CURRENT_LIST_DIR}/${JFC_DEPENDENCY_NAME}/include
+jfc_set_dependency_symbols(
+    INCLUDE_PATHS
+        ${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}/include
     
-    ${OPENGL_INCLUDE_DIR} #${Vulkan_INCLUDE_DIR} # vulk?
+        ${OPENGL_INCLUDE_DIR} #${Vulkan_INCLUDE_DIR} # vulk?
 
-    # Linux
-    ${GLEW_INCLUDE_DIR}
-    ${X11_INCLUDE_DIR}
+        # Linux
+        ${GLEW_INCLUDE_DIR}
+        ${X11_INCLUDE_DIR}
 
-    CACHE PATH "${JFC_DEPENDENCY_NAME} include directory" FORCE)
+    LIBRARIES
+        ${CMAKE_BINARY_DIR}/thirdparty/glfw/src/libglfw3.a
 
-set(${JFC_DEPENDENCY_NAME}_LIBRARIES 
-    ${CMAKE_BINARY_DIR}/thirdparty/glfw/src/libglfw3.a
+        #Macos specifc
+        ${COCOA_LIBRARY}
+        ${CORE_VIDEO} 
+        ${IO_KIT} 
 
-    #Macos specifc
-    ${COCOA_LIBRARY}
-    ${CORE_VIDEO} 
-    ${IO_KIT} 
+        ${OPENGL_LIBRARIES} #${Vulkan_LIBRARIES} # Should have option for vulk?
 
-    ${OPENGL_LIBRARIES} #${Vulkan_LIBRARIES} # Should have option for vulk?
-
-    #Linux specific
-    ${GLEW_LIBRARIES}
-    ${X11_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
-
-    CACHE PATH "${JFC_DEPENDENCY_NAME} library object list" FORCE)
+        #Linux specific
+        ${GLEW_LIBRARIES}
+        ${X11_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${CMAKE_DL_LIBS}
+)

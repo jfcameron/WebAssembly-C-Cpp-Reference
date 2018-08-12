@@ -1,7 +1,5 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
-project("${JFC_DEPENDENCY_NAME}")
-
 # generates source file and copies headers for the specific stb projects named in ARGV
 # eg: import_stb_projects("stb_image" "stb_perlin") will make available stb_image, perlin headers and define their symbols.
 function(import_stb_projects)
@@ -16,8 +14,8 @@ function(import_stb_projects)
 
     # Move selected headers to workspace
     foreach(_arg ${ARGV})
-        file(COPY "${CMAKE_CURRENT_LIST_DIR}/stb/${_arg}.h" 
-            DESTINATION "${PROJECT_BINARY_DIR}/include/stb/")
+        file(COPY "${CMAKE_CURRENT_LIST_DIR}/${JFC_DEPENDENCY_NAME}/${_arg}.h" 
+            DESTINATION "${PROJECT_BINARY_DIR}/include/${JFC_DEPENDENCY_NAME}/")
     endforeach()
 endfunction()
 
@@ -25,7 +23,6 @@ import_stb_projects(
     "stb_image"
 )
 
-# build lib
 add_library(${PROJECT_NAME} STATIC
     ${PROJECT_BINARY_DIR}/stb_implementation.c)
 
@@ -37,11 +34,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 90)
 
-# Define dependency symbols
-set(${PROJECT_NAME}_INCLUDE_DIR
-    ${PROJECT_BINARY_DIR}/include
-    CACHE PATH "${PROJECT_NAME}_INCLUDE_DIR include directory" FORCE)
+jfc_set_dependency_symbols(
+    INCLUDE_PATHS
+        ${PROJECT_BINARY_DIR}/include
 
-set(${PROJECT_NAME}_LIBRARIES
-    ${PROJECT_BINARY_DIR}/lib${PROJECT_NAME}.a
-    CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
+    LIBRARIES
+        ${PROJECT_BINARY_DIR}/lib${JFC_DEPENDENCY_NAME}.a
+)
