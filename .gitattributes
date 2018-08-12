@@ -1,4 +1,4 @@
 * text=auto
 
-thirdparty/*/* linguist-vendored=true
+thirdparty/*/ linguist-vendored
 
