@@ -1,5 +1,4 @@
 # © 2018 Joseph Cameron - All Rights Reserved
-# Created on 2018-04-13.
 
 set(submodule_dependencies
     "glm"

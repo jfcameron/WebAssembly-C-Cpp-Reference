@@ -2,33 +2,40 @@
 
 project("${JFC_DEPENDENCY_NAME}")
 
-# Generate implementation for stb
-set(_stb_imp_file_contents "#define STB_IMAGE_IMPLEMENTATION")
+# generates source file and copies headers for the specific stb projects named in ARGV
+# eg: import_stb_projects("stb_image" "stb_perlin") will make available stb_image, perlin headers and define their symbols.
+function(import_stb_projects)
+    # Generate implementation for stb
+    foreach(_arg ${ARGV})
+        string(TOUPPER ${_arg} _arg_upper)
 
-string(APPEND _stb_imp_file_contents "\n#include \"stb_image.h\"") # todo: support for other implementation
+        string(APPEND _stb_imp_file_contents "#define ${_arg_upper}_IMPLEMENTATION\n#include \"stb/${_arg}.h\"\n")
+    endforeach()
 
-file(WRITE "${PROJECT_BINARY_DIR}/stb_implementation.c" "${_stb_imp_file_contents}")
+    file(WRITE "${PROJECT_BINARY_DIR}/stb_implementation.c" "${_stb_imp_file_contents}")
+
+    # Move selected headers to workspace
+    foreach(_arg ${ARGV})
+        file(COPY "${CMAKE_CURRENT_LIST_DIR}/stb/${_arg}.h" 
+            DESTINATION "${PROJECT_BINARY_DIR}/include/stb/")
+    endforeach()
+endfunction()
+
+import_stb_projects(
+    "stb_image"
+)
 
 # build lib
 add_library(${PROJECT_NAME} STATIC
     ${PROJECT_BINARY_DIR}/stb_implementation.c)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/${JFC_DEPENDENCY_NAME})
+    ${PROJECT_BINARY_DIR}/include/)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 90)
-
-# Organize headers into standard include format
-file(GLOB ${PROJECT_NAME}_HEADER_FILES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/${JFC_DEPENDENCY_NAME}/*.h)
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMENT "Creating and populating include/${PROJECT_NAME}" VERBATIM
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
-    COMMAND ${CMAKE_COMMAND} -E copy ${${PROJECT_NAME}_HEADER_FILES} ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME})
 
 # Define dependency symbols
 set(${PROJECT_NAME}_INCLUDE_DIR
