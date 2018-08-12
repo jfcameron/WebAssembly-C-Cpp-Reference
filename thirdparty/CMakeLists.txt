@@ -23,4 +23,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 endif()
 
-jfc_add_submodule_dependencies(${submodule_dependencies})
+jfc_add_dependencies(
+    GIT_SUBMODULES
+        ${submodule_dependencies}
+)
