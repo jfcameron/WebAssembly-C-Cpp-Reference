@@ -1,8 +1,12 @@
 #include <gdkresources/buildinfo.h>
 
-#ifdef JFC_TARGET_PLATFORM_Emscripten
+#if defined JFC_TARGET_PLATFORM_Emscripten
 #include <emscripten.h>
 #include <emscripten/fetch.h>
+#endif
+
+#if defined JFC_TARGET_PLATFORM_Darwin
+#include <gdk/httprequest.h>
 #endif
 
 #include <stb/stb_image.h>
@@ -60,6 +64,7 @@ namespace gdk::resources::remote
     void fetchBinaryFile(const std::string &aURL, std::function<void(const bool, std::vector<unsigned char> &)> aResponseHandler)
     {
 #if defined JFC_TARGET_PLATFORM_Emscripten
+
         emscripten_fetch_attr_t attr;
         emscripten_fetch_attr_init(&attr);
 
@@ -103,6 +108,42 @@ namespace gdk::resources::remote
 
 #elif defined JFC_TARGET_PLATFORM_Darwin
         
+        const HTTPRequest::Get get
+        (
+            // URL:
+            aURL, //"https://www.duckduckgo.ca",
+            
+            // Headers:
+            {
+//                "User-Agent: API Explorer",
+            },
+
+            // Succeeded behaviour:
+            [](const std::string &aResponse)
+            {
+                gdk::log(TAG, aResponse); //aResponseHandler
+
+                std::vector<unsigned char> binaryData = std::vector<unsigned char>(&(fetch->data[0]), &(fetch->data[fetch->numBytes]));
+
+                auto pCallback = static_cast<callback_type *>(fetch->userData);
+
+                (*pCallback)(true, &binaryData);
+
+                delete pCallback;        
+                emscripten_fetch_close(fetch);
+            },
+
+            // Failed behaviour:
+            [](const std::string &aResponse)
+            {
+                gdk::log(TAG, aResponse);
+            }
+        );
+
+        while(get.getStatus() ==  HTTPRequest::Status::Pending);
+
+        get.performResponseCallback();
+
 #else
 #error fetchBinaryFile is unimplemented on the current platform
 #endif
