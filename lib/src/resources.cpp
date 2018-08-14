@@ -5,8 +5,16 @@
 #include <emscripten/fetch.h>
 #endif
 
-#if defined JFC_TARGET_PLATFORM_Darwin
+/*#if defined JFC_TARGET_PLATFORM_Darwin
 #include <gdk/httprequest.h>
+#endif*/
+
+#if defined JFC_TARGET_PLATFORM_Darwin
+#include <stdio.h>
+#include <curl/curl.h>
+#include <curl/easy.h>
+#include <string>
+#include <algorithm>
 #endif
 
 #include <stb/stb_image.h>
@@ -22,6 +30,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <iterator>
 
 static constexpr char TAG[] = "Resources";
 
@@ -107,45 +116,78 @@ namespace gdk::resources::remote
         emscripten_fetch(&attr, aURL.c_str());
 
 #elif defined JFC_TARGET_PLATFORM_Darwin
-        
-        const HTTPRequest::Get get
-        (
-            // URL:
-            aURL, //"https://www.duckduckgo.ca",
+
+        if (CURL *const curl = curl_easy_init())
+        {
+            FILE *fp = fopen(std::string("/Users/josephcameron/Downloads/").append(curl_easy_escape(curl, aURL.c_str(), aURL.size())).c_str(), "wb");
+
+            curl_easy_setopt(curl, CURLOPT_URL, aURL.c_str());
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, 
+                [&](void* ptr, size_t size, size_t nmemb, FILE* stream)
+                {
+                    size_t written;
+
+                    written = fwrite(ptr, size, nmemb, stream);
+
+                    return written;
+                }
+            );
+
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+            CURLcode res = curl_easy_perform(curl);
+
+            // always cleanup
+            curl_easy_cleanup(curl);
+            fclose(fp);
+        }
+
+        /*if (CURL *const curl = curl_easy_init())
+        {
+            //FILE *fp = fopen(std::string("/Users/josephcameron/Downloads/").append(curl_easy_escape(curl, aURL.c_str(), aURL.size())).c_str(), "wb");
+            std::vector<unsigned char> output;// = new std::vector<unsigned char>();
+
+            curl_easy_setopt(curl, CURLOPT_URL, aURL.c_str());
             
-            // Headers:
-            {
-//                "User-Agent: API Explorer",
-            },
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &output);
 
-            // Succeeded behaviour:
-            [](const std::string &aResponse)
-            {
-                gdk::log(TAG, aResponse); //aResponseHandler
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, static_cast<size_t (*)(const char *const, const size_t, const size_t, void *const)>
+            (
+                [](const char * contents, const size_t size, const size_t nmemb, void * userp)
+                {
+                    // *static_cast<std::vector<unsigned char> *>(userp) = std::vector<unsigned char>((const char *const)contents, (const char *const)contents + nmemb);
 
-                std::vector<unsigned char> binaryData = std::vector<unsigned char>(&(fetch->data[0]), &(fetch->data[fetch->numBytes]));
+                    for(size_t i = 0, s = nmemb; i < s; ++i)
+                    {
+                        static_cast<std::vector<unsigned char> *>(userp)->push_back(*contents);
 
-                auto pCallback = static_cast<callback_type *>(fetch->userData);
+                        contents++;
+                    }
 
-                (*pCallback)(true, &binaryData);
+                    gdk::log(TAG, "vecsize: ", (*static_cast<std::vector<unsigned char> *>(userp)).size(), ", nmemb: ", nmemb);
 
-                delete pCallback;        
-                emscripten_fetch_close(fetch);
-            },
+                    return size * nmemb;
+                }
+            ));
 
-            // Failed behaviour:
-            [](const std::string &aResponse)
-            {
-                gdk::log(TAG, aResponse);
-            }
-        );
+            gdk::log(TAG, "url: ", aURL);
 
-        while(get.getStatus() ==  HTTPRequest::Status::Pending);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
-        get.performResponseCallback();
+            CURLcode res = curl_easy_perform(curl);
 
+            curl_easy_cleanup(curl);
+            //fclose(fp);
+
+            //std::function<void(const bool, std::vector<unsigned char> &)> aResponseHandler
+//            aResponseHandler(true, output);
+        }*/
+ 
 #else
 #error fetchBinaryFile is unimplemented on the current platform
 #endif
     }
 }
+
+//This works: https://stackoverflow.com/questions/36702888/download-an-image-from-an-url-using-curl-in-c#36702936
