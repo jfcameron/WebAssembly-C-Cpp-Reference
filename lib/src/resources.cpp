@@ -68,6 +68,35 @@ namespace gdk::resources::local
     }
 }
 
+#if defined JFC_TARGET_PLATFORM_Darwin
+
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
+ 
+static size_t
+WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+ 
+  mem->memory = static_cast<char *>(realloc(mem->memory, mem->size + realsize + 1));
+  if(mem->memory == NULL) {
+    /* out of memory! */ 
+    printf("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+ 
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+ 
+  return realsize;
+}
+
+#endif
+
 namespace gdk::resources::remote
 {    
     void fetchBinaryFile(const std::string &aURL, std::function<void(const bool, std::vector<unsigned char> &)> aResponseHandler)
@@ -117,7 +146,84 @@ namespace gdk::resources::remote
 
 #elif defined JFC_TARGET_PLATFORM_Darwin
 
-        if (CURL *const curl = curl_easy_init())
+        CURL *curl_handle;
+        CURLcode res;
+        
+        struct MemoryStruct chunk;
+        
+        chunk.memory = static_cast<char *>(malloc(1));  /* will be grown as needed by the realloc above */ 
+        chunk.size = 0;    /* no data at this point */ 
+        
+        curl_global_init(CURL_GLOBAL_ALL);
+        
+        /* init the curl session */ 
+        curl_handle = curl_easy_init();
+        
+        /* specify URL to get */ 
+        curl_easy_setopt(curl_handle, CURLOPT_URL, aURL.c_str()); //"http://www.example.com/");
+        
+        /* send all data to this function  */ 
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+        
+        /* we pass our 'chunk' struct to the callback function */ 
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
+        
+        /* some servers don't like requests that are made without a user-agent
+            field, so we provide one */ 
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+        
+        /* get it! */ 
+        res = curl_easy_perform(curl_handle);
+        
+        /* check for errors */ 
+        if(res != CURLE_OK) {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                    curl_easy_strerror(res));
+        }
+        else {
+            /*
+            * Now, our chunk.memory points to a memory block that is chunk.size
+            * bytes big and contains the remote file.
+            *
+            * Do something nice with it!
+            */ 
+        
+            printf("%lu bytes retrieved\n", (unsigned long)chunk.size);
+
+            //std::vector<unsigned char> output(reinterpret_cast<const char *const>(chunk.memory), reinterpret_cast<const char *const>(chunk.memory) + (chunk.size/sizeof(chunk.size)));
+            //gdk::log(TAG, "size of output: ", output.size(), ", chunksizeof: ", sizeof(chunk.size), ", chunk.size: ", chunk.size);
+            //aResponseHandler(true, output);
+
+            FILE *fp = fopen(std::string("resource/mia.png").c_str(), "wb");
+            fwrite(chunk.memory, 1, chunk.size, fp); //This works! the file looks good.
+            fclose(fp);
+
+            
+
+            //auto output = gdk::resources::local::loadBinaryFile("resource/mia.png");
+            auto output = [&]() -> std::vector<unsigned char>
+            {        
+                std::vector<char> buffer(
+                    chunk.memory, 
+                    chunk.memory + (chunk.size));///sizeof(chunk.size)));
+
+                gdk::log(TAG, "remote size: ", chunk.size);
+                
+                return (std::vector<unsigned char>){buffer.begin(), buffer.end()};
+            }();
+            aResponseHandler(true, output);
+        }
+        
+        /* cleanup curl stuff */ 
+        curl_easy_cleanup(curl_handle);
+        
+        free(chunk.memory);
+        
+        /* we're done with libcurl, so clean it up */ 
+        curl_global_cleanup();
+
+
+        /*if (CURL *const curl = curl_easy_init())
         {
             FILE *fp = fopen(std::string("/Users/josephcameron/Downloads/").append(curl_easy_escape(curl, aURL.c_str(), aURL.size())).c_str(), "wb");
 
@@ -141,7 +247,7 @@ namespace gdk::resources::remote
             // always cleanup
             curl_easy_cleanup(curl);
             fclose(fp);
-        }
+        }*/
 
         /*if (CURL *const curl = curl_easy_init())
         {

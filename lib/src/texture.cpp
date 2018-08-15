@@ -1,6 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/exception.h>
+#include <gdk/logger.h>
 #include <gdk/texture.h>
 
 #include <stb/stb_image.h>
@@ -44,6 +45,8 @@ std::ostream &gdk::operator<<(std::ostream &s, const Texture &a)
 Texture::Texture(const std::string &aName, const std::vector<GLubyte> &aTextureData)
     : m_Name(aName)
 {
+    gdk::log(TAG, "name: ", aName, ", aTextureData.size:", aTextureData.size());
+
     //decode the png rgba32 data
     int width, height, components;
     if (GLubyte *const decodedData = stbi_load_from_memory(&aTextureData[0], static_cast<int>(aTextureData.size()), &width, &height, &components, 4))
@@ -61,8 +64,12 @@ Texture::Texture(const std::string &aName, const std::vector<GLubyte> &aTextureD
         //Cleanup
         glBindTexture( GL_TEXTURE_2D,0);
         stbi_image_free(decodedData);
+
+        gdk::log(TAG, "Greate successe");
     }
     else throw gdk::Exception(TAG, "Could not decode RGBA32 data. Name: ", aName);
+
+    gdk::log(TAG, "gorgalon5");
 }
 
 Texture::Texture(Texture &&other)

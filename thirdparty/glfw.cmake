@@ -9,51 +9,36 @@ set(GLFW_INSTALL OFF CACHE BOOL "")
 
 add_subdirectory(${PROJECT_NAME})
 
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    FIND_LIBRARY(COCOA_LIBRARY Cocoa)
-    FIND_LIBRARY(CORE_VIDEO CoreVideo)
-    FIND_LIBRARY(IO_KIT IOKit)    
-
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin" OR CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Windows")
     find_package(OpenGL REQUIRED) # find_package(vulkan REQUIRED)
 
-elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    find_package(OpenGL REQUIRED)
-    find_package(X11 REQUIRED)
-    find_package(Threads REQUIRED)
+    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        FIND_LIBRARY(COCOA_LIBRARY Cocoa)
+        FIND_LIBRARY(CORE_VIDEO CoreVideo)
+        FIND_LIBRARY(IO_KIT IOKit)
 
-    # Trying to hide glew in glfw makes some sense but its kind of hard to read
-    project("GLEW")
+    elseif(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Windows")
+        find_package(OpenGL REQUIRED)
 
-    add_library(${PROJECT_NAME} STATIC
-        ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/src/glew.c)
+        project("GLEW") # Its weird to hide glew here but it works...
 
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
+        add_library(${PROJECT_NAME} STATIC
+            ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/src/glew.c)
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+        target_include_directories(${PROJECT_NAME} PRIVATE
+            ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
 
-    set(GLEW_LIBRARIES ${CMAKE_BINARY_DIR}/thirdparty/libGLEW.a)
-    set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
+        set_target_properties(${PROJECT_NAME} PROPERTIES
+            RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    find_package(OpenGL REQUIRED)
+        set(GLEW_LIBRARIES ${CMAKE_BINARY_DIR}/thirdparty/libGLEW.a)
+        set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
 
-    # Trying to hide glew in glfw makes some sense but its kind of hard to read
-    project("GLEW")
-
-    add_library(${PROJECT_NAME} STATIC
-        ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/src/glew.c)
-
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
-
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
-
-    set(GLEW_LIBRARIES ${CMAKE_BINARY_DIR}/thirdparty/libGLEW.a)
-    set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
-
+        if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+            find_package(X11 REQUIRED)
+            find_package(Threads REQUIRED)
+        endif()
+    endif()
 else()
     message(FATAL_ERROR "${PROJECT_NAME}.cmake has not been configured to handle platform \"${CMAKE_SYSTEM_NAME}\".")
 endif()
@@ -61,26 +46,34 @@ endif()
 jfc_set_dependency_symbols(
     INCLUDE_PATHS
         ${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}/include
-    
-        ${OPENGL_INCLUDE_DIR} #${Vulkan_INCLUDE_DIR} # vulk?
+
+        # Graphics interface
+        ${OPENGL_INCLUDE_DIR}
+        ${Vulkan_INCLUDE_DIR}
+
+        # Linux or Windows
+        ${GLEW_INCLUDE_DIR}
 
         # Linux
-        ${GLEW_INCLUDE_DIR}
         ${X11_INCLUDE_DIR}
 
     LIBRARIES
         ${CMAKE_BINARY_DIR}/thirdparty/glfw/src/libglfw3.a
 
-        #Macos specifc
+        # Graphics interface
+        ${OPENGL_LIBRARIES}
+        ${Vulkan_LIBRARIES}
+
+        # Macos
         ${COCOA_LIBRARY}
         ${CORE_VIDEO} 
         ${IO_KIT} 
 
-        ${OPENGL_LIBRARIES} #${Vulkan_LIBRARIES} # Should have option for vulk?
+        # Linux or Windows
+        ${GLEW_LIBRARIES}
+        ${CMAKE_DL_LIBS}
 
         #Linux specific
-        ${GLEW_LIBRARIES}
         ${X11_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
-        ${CMAKE_DL_LIBS}
 )

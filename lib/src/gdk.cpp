@@ -80,9 +80,25 @@ namespace gdk
                              default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
                              default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
 
-                 auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
+                 //auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/mia.png")));
 
-                 model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                 //model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+
+                //https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png
+                 resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",//"https://jfcameron.github.io/Textures/brick.png",
+                                           [&](const bool aSucceeded, std::vector<unsigned char> &aData)
+                                           {
+                                                //gdk::log(TAG, "data.size: ", aData.size());
+
+                                               if (aSucceeded)
+                                               {
+                                                   auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
+
+                                                   //pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                                                   model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                                               }
+                                               else gdk::log(TAG, "the fetch failed");
+                                           });
 
                  model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
      
@@ -95,9 +111,11 @@ namespace gdk
         //emscripten_set_main_loop(update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
 #endif
         
-        resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png",//"https://jfcameron.github.io/Textures/brick.png",
+        /*resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png",//"https://jfcameron.github.io/Textures/brick.png",
                                            [](const bool aSucceeded, std::vector<unsigned char> &aData)
                                            {
+                                                //gdk::log(TAG, "data.size: ", aData.size());
+
                                                if (aSucceeded)
                                                {
                                                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
@@ -105,7 +123,7 @@ namespace gdk
                                                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
                                                }
                                                else gdk::log(TAG, "the fetch failed");
-                                           });
+                                           });*/
         gamepads::initialize();
 
         hack_init();
