@@ -45,7 +45,7 @@ endif()
 
 jfc_set_dependency_symbols(
     INCLUDE_PATHS
-        ${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}/include
+        ${CMAKE_CURRENT_LIST_DIR}/glfw/include
 
         # Graphics interface
         ${OPENGL_INCLUDE_DIR}

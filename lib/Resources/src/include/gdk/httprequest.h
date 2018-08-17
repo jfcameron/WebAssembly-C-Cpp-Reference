@@ -11,7 +11,7 @@ namespace HTTPRequest
 {
     using response_callback_type = std::function<void(const std::string &aResponse)>;
     
-    using header_list_type = std::list<const std::string>;
+    using header_list_type = std::list<std::string>;
 
     enum class Status
     {

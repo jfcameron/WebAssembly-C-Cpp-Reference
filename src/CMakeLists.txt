@@ -29,6 +29,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-o ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.js ${gdk_EMSCRIPTEN_LINK_FLAGS}")
     
     jfc_emscripten_generate_index_html_for_current_project()
+
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic) # something a bit weird here...
+    target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic -DCURL_STATICLIB -lcurl)
+
+   #target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -W) 
 endif()

@@ -9,7 +9,7 @@
 #include <gdk/httprequest.h>
 #endif*/
 
-#if defined JFC_TARGET_PLATFORM_Darwin
+#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows
 #include <stdio.h>
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -67,7 +67,7 @@ namespace gdk::resources::local
     }
 }
 
-#if defined JFC_TARGET_PLATFORM_Darwin
+#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows
 
 struct MemoryStruct {
   char *memory;
@@ -143,7 +143,7 @@ namespace gdk::resources::remote
         
         emscripten_fetch(&attr, aURL.c_str());
 
-#elif defined JFC_TARGET_PLATFORM_Darwin
+#elif defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows
 
         CURL *curl_handle;
         CURLcode res;
