@@ -20,13 +20,10 @@ jfc_project(library
     PUBLIC_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 
-    PRIVATE_INCLUDE_DIRECTORIES
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
-
+        ${gdkgraphics_INCLUDE_DIRECTORIES}
         ${gdkdebug_INCLUDE_DIRECTORIES}
         #${gdkentitycomponentsystem_INCLUDE_DIRECTORIES}
         ${gdkglfwwrapper_INCLUDE_DIRECTORIES}
-        ${gdkgraphics_INCLUDE_DIRECTORIES}
         ${gdkinput_INCLUDE_DIRECTORIES}
         ${gdkmath_INCLUDE_DIRECTORIES}
         ${gdkmemory_INCLUDE_DIRECTORIES}
@@ -48,6 +45,5 @@ jfc_project(library
         ${stb_LIBRARIES}
 
     SOURCE_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/gdk.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/delete_me.cpp
 )
