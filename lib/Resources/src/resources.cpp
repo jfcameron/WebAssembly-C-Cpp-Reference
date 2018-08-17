@@ -21,7 +21,6 @@
 
 #include <gdk/exception.h>
 #include <gdk/logger.h>
-#include <gdk/texture.h>
 
 #include <cstdio>
 #include <fstream>

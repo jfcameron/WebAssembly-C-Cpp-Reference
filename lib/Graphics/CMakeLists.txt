@@ -1,0 +1,62 @@
+# © 2018 Joseph Cameron - All Rights Reserved
+
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
+
+jfc_project(library
+    NAME "gdkgraphics"
+    VERSION 0.0
+    DESCRIPTION "game development kit graphics lib"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
+
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        
+        ${gdkmath_INCLUDE_DIRECTORIES}
+        ${gdkdebug_INCLUDE_DIRECTORIES}
+        ${gdkmemory_INCLUDE_DIRECTORIES}
+        ${gdktime_INCLUDE_DIRECTORIES}
+        ${gdkglfwwrapper_INCLUDE_DIRECTORIES}
+        
+        ${stb_INCLUDE_DIR}
+        ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
+
+    LIBRARIES
+        ${gdkmath_LIBRARIES}
+        
+        ${stb_LIBRARIES}
+
+    SOURCE_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/color.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/floatuniformcollection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/glh.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4uniformcollection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/model.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl.cpp        
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/shaderprogram.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/textureuniformcollection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector2uniformcollection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector3uniformcollection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vector4uniformcollection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vertexattribute.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vertexdata.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vertexformat.cpp
+)
+
+#[[if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+    jfc_add_tests(
+        C++_STANDARD 17
+        C_STANDARD 90
+
+        TEST_SOURCE_FILES
+            ${CMAKE_CURRENT_LIST_DIR}/test/example_test.cpp
+    )
+else()
+    jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
+endif()]]

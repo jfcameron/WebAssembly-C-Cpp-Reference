@@ -4,7 +4,6 @@
 #include <gdk/logger.h>
 #include <gdk/mat4x4.h>
 #include <gdk/quaternion.h>
-#include <gdk/time.h>
 #include <gdk/trigonometry.h>
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
@@ -16,16 +15,18 @@ using namespace gdk;
 
 static constexpr char TAG[] = "Mat4x4";
 
-const Mat4x4 Mat4x4::Identity = Mat4x4();
+const Mat4x4 Mat4x4::Identity = Mat4x4(); //This is reversed...
 
 std::ostream& gdk::operator<< (std::ostream &s, const gdk::Mat4x4& aMat)
 {
     s.clear();s
-                  
-    << "{" << aMat.m[0][0] << ", " << aMat.m[1][0] << ", " << aMat.m[2][0] << ", " << aMat.m[3][0] << "}\n"
-    << "{" << aMat.m[0][1] << ", " << aMat.m[1][1] << ", " << aMat.m[2][1] << ", " << aMat.m[3][1] << "}\n"
-    << "{" << aMat.m[0][2] << ", " << aMat.m[1][2] << ", " << aMat.m[2][2] << ", " << aMat.m[3][2] << "}\n"
-    << "{" << aMat.m[0][3] << ", " << aMat.m[1][3] << ", " << aMat.m[2][3] << ", " << aMat.m[3][3] << "}\n";
+
+    << "[" 
+    << "[" << aMat.m[0][0] << ", " << aMat.m[1][0] << ", " << aMat.m[2][0] << ", " << aMat.m[3][0] << "],\n"
+    << "[" << aMat.m[0][1] << ", " << aMat.m[1][1] << ", " << aMat.m[2][1] << ", " << aMat.m[3][1] << "],\n"
+    << "[" << aMat.m[0][2] << ", " << aMat.m[1][2] << ", " << aMat.m[2][2] << ", " << aMat.m[3][2] << "],\n"
+    << "[" << aMat.m[0][3] << ", " << aMat.m[1][3] << ", " << aMat.m[2][3] << ", " << aMat.m[3][3] << "]"
+    << "]";
     
     return s;
 }
@@ -39,22 +40,6 @@ Mat4x4::Mat4x4()
     {0.,0.,0.,1.}
 }
 {}
-
-/*Mat4x4::Mat4x4 //Why is the assignment block rotated 90deg?
-(
-    const float a00, const float a10, const float a20, const float a30,
-    const float a01, const float a11, const float a21, const float a31,
-    const float a02, const float a12, const float a22, const float a32,
-    const float a03, const float a13, const float a23, const float a33
-    )
-    : m
-{
-    {a00,a01,a02,a03},
-    {a10,a11,a12,a13},
-    {a20,a21,a22,a23},
-    {a30,a31,a32,a33}
-}
-{}*/
 
 void Mat4x4::setToIdentity()
 {
@@ -177,7 +162,7 @@ void Mat4x4::transpose()
     );
 }
 
-Mat4x4 Mat4x4::set( //GOOD
+Mat4x4 Mat4x4::set(
     const float m00, const float m01, const float m02, const float m03, const float m10, const float m11, const float m12, const float m13,
     const float m20, const float m21, const float m22, const float m23, const float m30, const float m31, const float m32, const float m33
     )
@@ -202,7 +187,7 @@ Mat4x4 Mat4x4::set( //GOOD
     return *this;
 }
 
-Mat4x4 Mat4x4::multiply(const Mat4x4 &right) //GOOD
+Mat4x4 Mat4x4::multiply(const Mat4x4 &right)
 {
      set(
         m[0][0] * right.m[0][0] + m[1][0] * right.m[0][1] + m[2][0] * right.m[0][2] + m[3][0] * right.m[0][3],

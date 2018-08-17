@@ -1,6 +1,6 @@
 # © 2018 Joseph Cameron - All Rights Reserved
 
-if (NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Emscripten")
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
     jfc_add_tests(
         C++_STANDARD 17
         C_STANDARD 90

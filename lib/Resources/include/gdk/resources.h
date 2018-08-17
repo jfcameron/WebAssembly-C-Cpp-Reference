@@ -11,12 +11,18 @@
 
 namespace gdk::resources
 {
-    namespace local
+    /*namespace local database?? 
+    {
+        readstring(key)
+        writestring(key,value)
+    }*/
+
+    namespace local /*filesystem*/
     {
         //! loads a file at aPath to a string
         /// \note this function is synchronous
         /// \exception if file does not exist
-        std::string loadTextFile(const std::string &aPath);
+        std::string loadTextFile(const std::string &aPath); //this is redundant
 
         //! loads a file at aPath to a vector of bytes
         /// \note this function is synchronous        

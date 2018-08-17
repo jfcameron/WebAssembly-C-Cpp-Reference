@@ -1,6 +1,6 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/buildinfo.h>
+#include <gdkglfwwrapper/buildinfo.h>
 
 #ifdef JFC_TARGET_PLATFORM_Emscripten
     #include <emscripten/bind.h>

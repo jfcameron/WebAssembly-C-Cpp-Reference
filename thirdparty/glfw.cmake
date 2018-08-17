@@ -35,7 +35,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin" OR CMAKE_SYSTEM_NAME MATCHES "Linux" OR CM
         set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/include)
 
         if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-            find_package(X11 REQUIRED)
+            find_package(X11 REQUIRED) # Mir? Wayland?
             find_package(Threads REQUIRED)
         endif()
     endif()

@@ -19,7 +19,7 @@ if(JFC_BUILD_TESTS)
 endif()
 
 add_subdirectory(thirdparty)
-#add_subdirectory(resources)
+    #add_subdirectory(resources)
 add_subdirectory(lib)
 
 if(JFC_BUILD_APP)
