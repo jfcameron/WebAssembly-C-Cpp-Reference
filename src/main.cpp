@@ -1,11 +1,6 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/buildinfo.h>
-
-#ifdef JFC_TARGET_PLATFORM_Emscripten
-    #include <emscripten.h>
-#endif
-
 #include <gdk/camera.h>
 #include <gdk/color.h>
 #include <gdk/exception.h>
@@ -26,32 +21,32 @@
 #include <gdk/vertexformat.h>
 
 #include <cmath>
+#include <cstdlib>
 #include <exception>
 #include <functional>
 #include <iostream>
 #include <memory>
 #include <sstream>
 #include <vector>
-#include <vector>
 
-constexpr auto TAG = "gdk";
+static constexpr auto TAG = "gdk";
+
+using namespace gdk;
 
 namespace
 {
     std::shared_ptr<gdk::Camera> pCamera, pCamera2;
+    std::vector<std::shared_ptr<gdk::Camera>> cameras;
     
     std::shared_ptr<gdk::Model> pModel;
-}
 
-namespace gdk
-{
     void draw()
     {        
         static Vector3 pos({0.,0.,-10.f});
-        static Quaternion rot;
         static Vector3 sca({1.,0.5,1.});
+        static Quaternion rot;
 
-        sca.z = sin(time::sinceStart()/2.f)*1.f;
+        sca.z = sin(time::sinceStart() / 2.f) * 1.f;
         rot.setFromEuler({time::sinceStart()/2.f, time::sinceStart(), 0});
 
         if (keyboard::getKeyDown(keyboard::Key::W)) pos.z -= 0.5;
@@ -60,134 +55,94 @@ namespace gdk
         if (keyboard::getKeyDown(keyboard::Key::D)) pos.x += 0.5;
         
         pModel->setModelMatrix(pos, rot, sca);
-        
-        pCamera->draw(glfw::GetWindowSize());
-        pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
 
-        pCamera2->draw(glfw::GetWindowSize());
-        pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());
+        for (std::shared_ptr<gdk::Camera> &camera : cameras)
+        {
+            camera->draw(glfw::GetWindowSize());
 
-        gamepads::update();
-
-        glfw::PollEvents();
-        glfw::SwapBuffer(); // This is not required on emscriptn for whatever reason. That worries me a bit.
-    }
-
-    void update()
-    {
-    }
-    
-    void free()
-    {
+            pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());            
+        }
     }
 
     void init()
     {
-        try
+        pCamera = std::make_shared<Camera>([]()
         {
-        pCamera = std::make_shared<Camera>
-            ([]()
-             {
-                 Camera camera;
+            Camera camera;
 
-                 camera.setViewportSize(0.5, 1.0);
+            camera.setViewportSize(0.5, 1.0);
               
-                 return camera;
-             }());
+            return camera;
+        }());
 
-        pCamera2 = std::make_shared<Camera>
-            ([]()
-             {
-                 Camera camera;
-
-                 camera.setViewportSize(0.5, 1.0);
-                 camera.setViewportPosition(0.5, 0.0);
-                 camera.setClearColor(Color::Blue);
-              
-                 return camera;
-             }());
-
-        pModel = std::make_shared<Model>
-            ([]()
-             {
-                 Model model("MySuperCoolModel",
-                             default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
-                             default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
-
-                 //auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/mia.png")));
-
-                 //model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-
-                //https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png
-                 resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",//"https://jfcameron.github.io/Textures/brick.png",
-                                           [&](const bool aSucceeded, std::vector<unsigned char> &aData)
-                                           {
-                                                //gdk::log(TAG, "data.size: ", aData.size());
-
-                                               if (aSucceeded)
-                                               {
-                                                   auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
-
-                                                   //pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-                                                   model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-                                               }
-                                               else gdk::log(TAG, "the fetch failed");
-                                           });
-
-                 model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
-     
-                 return model;
-             }());
-
-#if defined JFC_TARGET_PLATFORM_Emscripten
-        emscripten_set_main_loop(draw, -1, 0); // Negative fps will force requestAnimationFrame usage
-        
-        //emscripten_set_main_loop(update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
-#endif
-        
-        /*resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png",//"https://jfcameron.github.io/Textures/brick.png",
-                                           [](const bool aSucceeded, std::vector<unsigned char> &aData)
-                                           {
-                                                //gdk::log(TAG, "data.size: ", aData.size());
-
-                                               if (aSucceeded)
-                                               {
-                                                   auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
-
-                                                   pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-                                               }
-                                               else gdk::log(TAG, "the fetch failed");
-                                           });*/
-        gamepads::initialize();
-
-
-        }
-        catch (gdk::Exception exception)
+        pCamera2 = std::make_shared<Camera>([]()
         {
-            std::cout << exception << std::endl;
-        }
+            Camera camera;
 
-#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
-        for(;;) draw();
-#endif
+            camera.setViewportSize(0.5, 1.0);
+            camera.setViewportPosition(0.5, 0.0);
+            camera.setClearColor(Color::Blue);
+              
+            return camera;
+        }());
+
+        cameras.push_back(pCamera);
+        cameras.push_back(pCamera2);
+
+        pModel = std::make_shared<Model>([]()
+        {
+            Model model("MySuperCoolModel",
+                default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
+                default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
+
+            //local load
+            {
+                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
+
+                model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+            }
+
+            //remote load
+            {
+                resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png", //resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",
+                [&](const bool aSucceeded, std::vector<unsigned char> &aData)
+                {
+                    if (aSucceeded)
+                    {
+                        auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
+
+                        if (pModel) //This goofy thing comes from my curl usage. Curl is currently synchonous (wrong) wheras ajax on web is not (correct) so pModel is always going ot be null on desktop (until I switch to async)
+                        {
+                            pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex)); //Works on emscripten, segfaults on desktop
+                        }
+                        else
+                        {
+                            gdk::log(TAG, "pModel is null");
+
+//                            model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex)); // Works on desktop, not emscripten
+                        }
+                    }
+                    else gdk::log(TAG, "the fetch failed");
+                });
+            }
+
+            model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
+
+            return model;
+        }());
     }
 }
 
-#include <cstdlib>
-#include <iostream>
-
-//#include <gdk.h>
-#include <gdk/buildinfo.h>
-
 int main()
 {
-    std::cout << gdk_BuildInfo_TargetPlatform << std::endl;
+    std::cout << gdk_BuildInfo_TargetPlatform << std::endl << "Greetings from C++\n";
 
-    std::cout << "Greetings from C++\n";
+    init();
 
-    gdk::init();
+    gdk::time::addRenderCallback([](const double &deltaTime)
+    {
+        draw();
+    });
 
-    gdk::free();
-       
-    return EXIT_SUCCESS;
+    return gdk::main();
 }

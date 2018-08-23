@@ -9,6 +9,13 @@ set(GLFW_INSTALL OFF CACHE BOOL "")
 
 add_subdirectory(${PROJECT_NAME})
 
+#[[set_target_properties(${PROJECT_NAME} 
+    PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY $<1:${PROJECT_BINARY_DIR}> #The generator expression is always true. I use an expression to remove the extra subdirectories present on multi config generators (xcode, vs)
+        LIBRARY_OUTPUT_DIRECTORY $<1:${PROJECT_BINARY_DIR}>
+        ARCHIVE_OUTPUT_DIRECTORY $<1:${PROJECT_BINARY_DIR}>
+)]]
+
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin" OR CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Windows")
     find_package(OpenGL REQUIRED) # find_package(vulkan REQUIRED)
 

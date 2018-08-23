@@ -1,6 +1,12 @@
+// © 2018 Joseph Cameron - All Rights Reserved
+
 #include "gdk/httprequest.h"
 
-#include <curl/curl.h>
+#include <gdkresources/buildinfo.h>
+
+#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
+    #include <curl/curl.h>
+#endif
 
 using namespace HTTPRequest;
 

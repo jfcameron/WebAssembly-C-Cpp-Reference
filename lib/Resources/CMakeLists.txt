@@ -2,6 +2,12 @@
 
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten") # very much a hack
+    set(PLATFORM_SPECIFIC_SOURCE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/httprequest.cpp
+    )
+endif()
+
 jfc_project(library
     NAME "gdkresources"
     VERSION 0.0
@@ -24,11 +30,13 @@ jfc_project(library
         ${stb_INCLUDE_DIR}
 
     LIBRARIES
+        ${gdkdebug_LIBRARIES}
+        
         ${curl_LIBRARIES}
 
     SOURCE_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/httprequest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
+        ${PLATFORM_SPECIFIC_SOURCE}
 )
 
 #[[if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")

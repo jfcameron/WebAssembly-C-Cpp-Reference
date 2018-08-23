@@ -68,8 +68,6 @@ Texture::Texture(const std::string &aName, const std::vector<GLubyte> &aTextureD
         gdk::log(TAG, "Greate successe");
     }
     else throw gdk::Exception(TAG, "Could not decode RGBA32 data. Name: ", aName);
-
-    gdk::log(TAG, "gorgalon5");
 }
 
 Texture::Texture(Texture &&other)

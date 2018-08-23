@@ -1,26 +1,22 @@
 #include <gdkresources/buildinfo.h>
 
 #if defined JFC_TARGET_PLATFORM_Emscripten
-#include <emscripten.h>
-#include <emscripten/fetch.h>
+    #include <emscripten.h>
+    #include <emscripten/fetch.h>
 #endif
-
-/*#if defined JFC_TARGET_PLATFORM_Darwin
-#include <gdk/httprequest.h>
-#endif*/
 
 #if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows
-#include <stdio.h>
-#include <curl/curl.h>
-#include <curl/easy.h>
-#include <string>
-#include <algorithm>
+    #include <stdio.h>
+    #include <curl/curl.h>
+    #include <curl/easy.h>
+    #include <string>
+    #include <algorithm>
 #endif
-
-#include <stb/stb_image.h>
 
 #include <gdk/exception.h>
 #include <gdk/logger.h>
+
+#include <stb/stb_image.h>
 
 #include <cstdio>
 #include <fstream>
@@ -109,10 +105,14 @@ namespace gdk::resources::remote
 
         attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
 
-        using callback_type = std::function<void(const bool, std::vector<unsigned char> *const)>;       
+        using callback_type = std::function<void(const bool, std::vector<unsigned char> *const)>;
+
+        gdk::log(TAG, "fetch has begun");
                 
         attr.onsuccess = [](emscripten_fetch_t *const fetch)
             {
+                gdk::log(TAG, "fetch has succeeded");
+
                 std::vector<unsigned char> binaryData = std::vector<unsigned char>(&(fetch->data[0]), &(fetch->data[fetch->numBytes]));
 
                 auto pCallback = static_cast<callback_type *>(fetch->userData);
@@ -125,7 +125,9 @@ namespace gdk::resources::remote
         
         attr.onerror = [](emscripten_fetch_t *const fetch)
             {
-                //printf("Downloading %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+                gdk::log(TAG, "fetch has failed");
+
+                printf("Downloading %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
 
                 auto pCallback = static_cast<callback_type *>(fetch->userData);
 

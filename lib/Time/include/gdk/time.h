@@ -5,14 +5,25 @@
 
 namespace gdk::time
 {        
+    double getDeltaTime(void) noexcept; //destroy
+
+    using UpdateFunctionSignature = std::function<void(const double &)>;
+
+    //! 
+    void addUpdateCallback(const UpdateFunctionSignature aUpdateFunction);
+
+    //! 
+    void addRenderCallback(const UpdateFunctionSignature aUpdateFunction);
+
     //! Get time since program started
-    double sinceStart(void) noexcept;
-        
-    //! Gets delta time without resetting the delta timer
-    double getDeltaTime(void) noexcept;
-        
-    //! Returns time since this was last called, call in the program update loop
-    double updateDeltaTime(void) noexcept;
+    double sinceStart() noexcept;
+}
+
+// Should probbaly be moved?
+namespace gdk
+{
+    //! traps the calling thread in the game loop, where it will remain for the program's lifetime.
+    int main();
 }
 
 #endif

@@ -47,7 +47,7 @@ Model::Model()
 
 void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
 {
-    gdk::log(TAG, *this);
+    //gdk::log(TAG, *this);
 
     if (const auto pShader = m_ShaderProgram.lock())
     {

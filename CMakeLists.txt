@@ -10,6 +10,8 @@ option(JFC_BUILD_TESTS  "Build unit tests" OFF)
 #option(JFC_AUTO_RUN_APP "Auto run the app on build" OFF) #todo: implement
 #option(JFC_FORMAT_CODE  "Format code with a tool" OFF)
 
+set(CMAKE_CXX_FLAGS "-g") # what is this here for
+
 if(JFC_BUILD_DOCS)
     add_subdirectory(docs)
 endif()
