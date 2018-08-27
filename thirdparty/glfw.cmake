@@ -7,14 +7,21 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "")
 set(GLFW_INSTALL OFF CACHE BOOL "")
 #set(GLFW_VULKAN_STATIC OFF CACHE BOOL "")
 
+# Workaround to copy glfw output (at build time) to expected location (at generate time). add_custom_command must be called "in same dir" (meaning same CMakeList.txt) so must be injected.
+# Note this is only necessary for multi-profile generators (Visual Studio, Xcode)
+jfc_git(COMMAND checkout src/CMakeLists.txt WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/glfw")
+
+file(APPEND ${CMAKE_CURRENT_LIST_DIR}/glfw/src/CMakeLists.txt "
+    # == Hack that copies output to expected location. If you see this, checkout this file
+    add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD COMMAND \${CMAKE_COMMAND} -E copy \$<TARGET_FILE:${PROJECT_NAME}> \"\${PROJECT_BINARY_DIR}/src/\$<TARGET_FILE_NAME:${PROJECT_NAME}>\")
+    # == Hack that copies output to expected location. If you see this, checkout this file
+")
+
 add_subdirectory(${PROJECT_NAME})
 
-#[[set_target_properties(${PROJECT_NAME} 
-    PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY $<1:${PROJECT_BINARY_DIR}> #The generator expression is always true. I use an expression to remove the extra subdirectories present on multi config generators (xcode, vs)
-        LIBRARY_OUTPUT_DIRECTORY $<1:${PROJECT_BINARY_DIR}>
-        ARCHIVE_OUTPUT_DIRECTORY $<1:${PROJECT_BINARY_DIR}>
-)]]
+jfc_git(COMMAND checkout src/CMakeLists.txt WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/glfw")
+#end workaround
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin" OR CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Windows")
     find_package(OpenGL REQUIRED) # find_package(vulkan REQUIRED)
@@ -28,6 +35,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin" OR CMAKE_SYSTEM_NAME MATCHES "Linux" OR CM
         find_package(OpenGL REQUIRED)
 
         project("GLEW") # Its weird to hide glew here but it works...
+
+        add_custom_command(TARGET ${PROJECT_NAME}
+            POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${PROJECT_BINARY_DIR}/$<TARGET_FILE_NAME:${PROJECT_NAME}>")
 
         add_library(${PROJECT_NAME} STATIC
             ${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0/src/glew.c)

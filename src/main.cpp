@@ -97,14 +97,19 @@ namespace
 
             //local load
             {
-                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
+                //auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
 
+                //model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+            }
+            {
+                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesomer", gdk::resources::local::loadBinaryFile("resource/BG.png")));
+                
                 model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
             }
 
             //remote load
             {
-                resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png", //resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",
+                /*resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png", //resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",
                 [&](const bool aSucceeded, std::vector<unsigned char> &aData)
                 {
                     if (aSucceeded)
@@ -119,11 +124,11 @@ namespace
                         {
                             gdk::log(TAG, "pModel is null");
 
-//                            model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex)); // Works on desktop, not emscripten
+                            model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex)); // Works on desktop, not emscripten
                         }
                     }
                     else gdk::log(TAG, "the fetch failed");
-                });
+                });*/
             }
 
             model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});

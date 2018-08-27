@@ -112,6 +112,14 @@ static GLenum PrimitiveModeToOpenGLPrimitiveType(const VertexData::PrimitiveMode
 
 void VertexData::draw(const GLuint aShaderProgramHandle) const
 {
+    //
+    
+    std::string error;
+    
+    while(glh::GetError(&error)) gdk::log(TAG, "glerror: ", error);
+    
+    //
+    
     glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferHandle);
     
     m_VertexFormat.enableAttributes(aShaderProgramHandle);

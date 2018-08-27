@@ -32,3 +32,4 @@ jfc_project(library
 else()
     jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
 endif()]]
+

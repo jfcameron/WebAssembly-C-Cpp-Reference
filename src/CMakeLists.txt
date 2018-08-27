@@ -3,7 +3,7 @@
 jfc_project(executable
     NAME "main"
     VERSION 1.0
-    DESCRIPTION "GDK app compiling for web as wasm"
+    DESCRIPTION "GDK app compiling for wasm, linux, macos, windows"
     C++_STANDARD 17
     C_STANDARD 90
 
@@ -16,6 +16,20 @@ jfc_project(executable
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
+
+
+# This copies resource dir to the executable dir. Should be abstracted
+jfc_git(COMMAND rev-parse --show-toplevel
+    OUTPUT _path_to_repo_root)
+
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD #Pre because must be availalbe at compile time for emscripten
+    COMMAND 
+        ${CMAKE_COMMAND} -E copy_directory "${_path_to_repo_root}/resource" $<TARGET_FILE_DIR:${PROJECT_NAME}>/resource)
+
+
+# Required for xcode, which likes to make main before gdkgraphics. This should be doen cleaner: add_dep(main gdk), and set up dependencies within gdk separately
+add_dependencies(${PROJECT_NAME} "gdkgraphics") 
+
 
 # Move this stuff to gdk_project.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
