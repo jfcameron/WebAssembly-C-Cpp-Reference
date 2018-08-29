@@ -95,14 +95,15 @@ namespace
                 default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
                 default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
 
+///// TEX LOADING TESTS
             //local load
             {
-                //auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
+                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
 
-                //model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
             }
             {
-                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesomer", gdk::resources::local::loadBinaryFile("resource/BG.png")));
+                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("background", gdk::resources::local::loadBinaryFile("resource/BG.png")));
                 
                 model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
             }
@@ -129,6 +130,7 @@ namespace
                     }
                     else gdk::log(TAG, "the fetch failed");
                 });*/
+///// TEX LOADING TESTS
             }
 
             model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});

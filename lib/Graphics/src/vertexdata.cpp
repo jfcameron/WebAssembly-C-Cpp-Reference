@@ -125,7 +125,7 @@ void VertexData::draw(const GLuint aShaderProgramHandle) const
     m_VertexFormat.enableAttributes(aShaderProgramHandle);
     
     GLenum primitiveMode = PrimitiveModeToOpenGLPrimitiveType(m_PrimitiveMode);
-    
+
     if (m_IndexBufferHandle > 0)
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferHandle);
@@ -139,6 +139,9 @@ void VertexData::draw(const GLuint aShaderProgramHandle) const
         );
     }
     else glDrawArrays(primitiveMode, 0, m_VertexCount);
+
+    // It may be necessary to unbind?
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void VertexData::updateVertexData(

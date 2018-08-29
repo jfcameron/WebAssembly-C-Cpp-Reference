@@ -66,7 +66,7 @@ namespace
 
         for (const auto &item : drawFunctions) item(deltaTime);
 
-        //gamepads::update();
+        //gamepads::update(); //This stuff should be pushed back to a gdk::time::addMainLoopWork(work) or something like that. Reverse the dependencies. or maybe add some work in gdk that does such plumbing. private header called update etc.
         glfw::PollEvents();
         glfw::SwapBuffer(); // This is not required on emscriptn for whatever reason. That worries me a bit. 
     }

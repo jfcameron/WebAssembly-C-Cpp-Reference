@@ -21,13 +21,20 @@ namespace gdk
         GLuint m_Handle = {0};   //!< handle to the texture in the context
     
     public:
+        /*enum ImageType
+        {
+            PNG_RGBA32,
+            PNG_blahblah,
+            JPG_blahblah
+        }*/
+        
         std::string getName() const;
         GLuint getHandle() const;
             
         Texture &operator=(const Texture &) = delete;
         Texture &operator=(Texture &&) = delete;
         
-        Texture(const std::string &aName, const std::vector<GLubyte> &aRGBA32PNGTextureData /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
+        Texture(const std::string &aName, const std::vector<GLubyte> &aRGBA32PNGTextureData /* IMAGE_TYPE */ /*GLuint repeatmode = 0, GLuint magfilter = 0*/);
         Texture() = delete;
         Texture(const Texture &) = delete;
         Texture(Texture &&);

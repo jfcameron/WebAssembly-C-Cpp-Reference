@@ -7,4 +7,7 @@ else
     Build_Type=${1}
 fi
 
-cmake .. -DCMAKE_BUILD_TYPE=${Build_Type}  && make
+mkdir linux-or-mac && \
+pushd linux-or-mac && \
+cmake \
+  .. -DCMAKE_BUILD_TYPE=${Build_Type} && make
