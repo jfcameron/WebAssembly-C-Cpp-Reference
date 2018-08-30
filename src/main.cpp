@@ -156,21 +156,32 @@ int main()
 {
     std::cout << gdk_BuildInfo_TargetPlatform << std::endl << "Greetings from C++\n";
 
-#if !defined JFC_TARGET_PLATFORM_Emscripten
-    /*std::vector<std::thread>> m_Workers;
+#if !defined JFC_TARGET_PLATFORM_Emscripten // Webassm does not support threading
     
-    for (size_t i = 0; i < std::thread::hardware_concurrency(); ++i)
+    // Worker pool
+    std::vector<std::thread> workers;
+    
+    if (std::thread::hardware_concurrency() > 1)
     {
-        m_Workers.push_back(std::thread()
-    }*/
+    for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; ++i)
+    {
+        workers.push_back(std::thread([]()
+        {
+            while(true){workerupdate();}
+        }));
+    }
+    }
     
-    //if (std::thread::hardware_concurrency() > 1)
-    //{
-        auto blimblamblar = std::thread([]()
+    /*// Single worker
+    std::thread worker;
+    
+    if (std::thread::hardware_concurrency() > 1)
+    {
+        worker = std::thread([]()
         {
             while(true){workerupdate();}
         });
-    //}
+    }*/
 #endif
     
     init();

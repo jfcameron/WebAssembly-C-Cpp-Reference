@@ -1,7 +1,9 @@
+// © 2018 Joseph Cameron - All Rights Reserved
 #include <gdkresources/buildinfo.h>
 
 #include <gdk/exception.h>
 #include <gdk/logger.h>
+#include <gdk/locking_queue.h>
 
 #include <stb/stb_image.h>
 
@@ -33,20 +35,21 @@ static constexpr char TAG[] = "Resources";
 // PROTECTED (used by siblings or middleware; hide from the user for their own good)
 //
 // ========================================================
-#include <queue>
-
 namespace gdk::resources
 {
-    std::queue<std::function<void()>> queued_fetches;
+    locking_queue<std::function<void()>> queued_fetches;
+
     std::queue<std::function<void()>> queued_responses;
 
     void updateFetchQueue()
     {
-        if (queued_fetches.size() > 0)
+        std::function<void()> fetchTask;
+        
+        if (queued_fetches.pop(fetchTask))
         {
-            queued_fetches.front()();
-
-            queued_fetches.pop();
+            gdk::log(TAG,"Doing a task");
+            
+            fetchTask();
         }
     }
 
@@ -95,8 +98,6 @@ static_assert(std::is_standard_layout<MemoryStruct>::value, "MemoryStruct must b
  
 static size_t WriteMemoryCallback(void *const contentPointer, const size_t contentItemSize, const size_t contentItemCount, void *const userPointer)
 {
-    gdk::log(TAG, "WriteMemoryCallback");
-
     const size_t contentByteCount = contentItemSize * contentItemCount;
     
     auto pResponseBuffer = static_cast<struct MemoryStruct *const>(userPointer);
@@ -173,10 +174,8 @@ namespace gdk::resources::remote
 
 #elif defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux
 
-        queued_fetches.push([=]() 
+        queued_fetches.push([=]()
         {
-            gdk::log(TAG, "the fetch begins~~");
-
             curl_global_init(CURL_GLOBAL_ALL); // MOVE TO A CURL WRAPPER
 
             if (CURL * curl_handle = curl_easy_init())

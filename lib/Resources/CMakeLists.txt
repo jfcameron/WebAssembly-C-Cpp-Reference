@@ -25,6 +25,7 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 
         ${gdkdebug_INCLUDE_DIRECTORIES}
+        ${gdkmemory_INCLUDE_DIRECTORIES}
         
         ${curl_INCLUDE_DIR}
         ${stb_INCLUDE_DIR}

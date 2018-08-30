@@ -39,7 +39,7 @@ namespace gdk::resources
     // PROTECTED (used by siblings or middleware; hide from the user for their own good)
     //
     // ========================================================
-    void updateFetchQueue(); //!< call from mainthread or worker thread[s], processes the front of the fetch queue
+    void updateFetchQueue(); //!< call from mainthread or worker thread[s]; processes the front of the fetch queue
 
     void updateResponseQueue(); //!< call from mainthread
 }
