@@ -1,6 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/buildinfo.h>
+
 #include <gdk/camera.h>
 #include <gdk/color.h>
 #include <gdk/exception.h>
@@ -28,8 +29,9 @@
 #include <memory>
 #include <sstream>
 #include <vector>
+#include <thread>
 
-static constexpr auto TAG = "gdk";
+static constexpr auto TAG = "main";
 
 using namespace gdk;
 
@@ -40,7 +42,17 @@ namespace
     
     std::shared_ptr<gdk::Model> pModel;
 
-    void draw()
+    void workerupdate() //Thread safe work goes here
+    {
+        resources::updateFetchQueue();
+    }
+    
+    void update() // thread unsafe work goes here
+    {
+        resources::updateResponseQueue();
+    }
+    
+    void draw() //Main thread draw (gl is not threadsafe, stuck here)
     {        
         static Vector3 pos({0.,0.,-10.f});
         static Vector3 sca({1.,0.5,1.});
@@ -110,8 +122,8 @@ namespace
 
             //remote load
             {
-                /*resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png", //resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",
-                [&](const bool aSucceeded, std::vector<unsigned char> &aData)
+                resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png", //resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",
+                [&](const bool aSucceeded, std::vector<unsigned char> aData)
                 {
                     if (aSucceeded)
                     {
@@ -129,7 +141,7 @@ namespace
                         }
                     }
                     else gdk::log(TAG, "the fetch failed");
-                });*/
+                });
 ///// TEX LOADING TESTS
             }
 
@@ -144,10 +156,33 @@ int main()
 {
     std::cout << gdk_BuildInfo_TargetPlatform << std::endl << "Greetings from C++\n";
 
+#if !defined JFC_TARGET_PLATFORM_Emscripten
+    /*std::vector<std::thread>> m_Workers;
+    
+    for (size_t i = 0; i < std::thread::hardware_concurrency(); ++i)
+    {
+        m_Workers.push_back(std::thread()
+    }*/
+    
+    //if (std::thread::hardware_concurrency() > 1)
+    //{
+        auto blimblamblar = std::thread([]()
+        {
+            while(true){workerupdate();}
+        });
+    //}
+#endif
+    
     init();
 
     gdk::time::addRenderCallback([](const double &deltaTime)
     {
+        update();
+        
+#if defined JFC_TARGET_PLATFORM_Emscripten
+        workerupdate();
+#endif
+        
         draw();
     });
 

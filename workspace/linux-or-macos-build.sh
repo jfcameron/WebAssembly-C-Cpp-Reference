@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
-if [ -z ${1+x} ]; then
-    echo -e "build type not specified at arg1; defaulting to release"
-    Build_Type=Release 
-else
-    Build_Type=${1}
-fi
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 
-mkdir linux-or-mac && \
-pushd linux-or-mac && \
-cmake \
-  .. -DCMAKE_BUILD_TYPE=${Build_Type} && make
+function generateAndMoveToProjectWorkspaceSubdirectory()
+{
+  if (( $# != 1)); then echo "$0 requires 1 args"; exit 1; fi
+
+  BUILD_DIR="$1"
+
+  if [ ! -d "${BUILD_DIR}" ]; then mkdir "${BUILD_DIR}"; fi
+
+  pushd "${BUILD_DIR}"
+}
+
+generateAndMoveToProjectWorkspaceSubdirectory 'linux-or-macos' 
+
+cmake $PROJECT_ROOT && make

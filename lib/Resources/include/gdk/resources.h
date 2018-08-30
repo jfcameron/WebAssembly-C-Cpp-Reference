@@ -17,13 +17,8 @@ namespace gdk::resources
         writestring(key,value)
     }*/
 
-    namespace local /*filesystem*/
+    namespace local
     {
-        /*//! loads a file at aPath to a string
-        /// \note this function is synchronous
-        /// \exception if file does not exist
-        std::string loadTextFile(const std::string &aPath); //this is redundant*/
-
         //! loads a file at aPath to a vector of bytes
         /// \note this function is synchronous        
         /// \exception if file does not exist
@@ -36,8 +31,17 @@ namespace gdk::resources
         //! fetch a file at the URL
         /// \note this function is asynchronous
         /// \warn this is not thread safe
-        void fetchBinaryFile(const std::string &aURL, std::function<void(const bool, std::vector<unsigned char> &)> aResponseHandler);
+        void fetchBinaryFile(const std::string aURL, std::function<void(const bool, std::vector<unsigned char>)> aResponseHandler);
     }
+
+    // ========================================================
+    //
+    // PROTECTED (used by siblings or middleware; hide from the user for their own good)
+    //
+    // ========================================================
+    void updateFetchQueue(); //!< call from mainthread or worker thread[s], processes the front of the fetch queue
+
+    void updateResponseQueue(); //!< call from mainthread
 }
 
 #endif
