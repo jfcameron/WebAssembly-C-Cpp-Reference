@@ -45,5 +45,5 @@ jfc_project(library
         ${stb_LIBRARIES}
 
     SOURCE_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/delete_me.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/game.cpp
 )

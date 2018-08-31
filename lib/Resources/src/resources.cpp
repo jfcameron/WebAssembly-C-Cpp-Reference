@@ -1,10 +1,10 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-#include <gdkresources/buildinfo.h>
 
 #include <gdk/exception.h>
 #include <gdk/locking_queue.h>
 #include <gdk/logger.h>
 #include <gdk/resources.h>
+#include <gdkresources/buildinfo.h>
 
 #include <stb/stb_image.h>
 
@@ -31,12 +31,7 @@
 
 static constexpr char TAG[] = "Resources";
 
-// ========================================================
-//
-// PROTECTED (used by siblings or middleware; hide from the user for their own good)
-//
-// ========================================================
-namespace gdk::resources
+namespace gdk::resources::hidden
 {
     locking_queue<std::function<void()>> queued_fetches;
 
@@ -60,17 +55,11 @@ namespace gdk::resources
     }
 }
 
-// ========================================================
-//
-// PUBLIC
-//
-// ========================================================
-
 namespace gdk::resources::local
 {
-    void loadBinaryFile(const std::string aPath, response_handler_type aResponse)
+    void fetchFile(const std::string aPath, response_handler_type aResponse)
     {
-        queued_fetches.push([=]()
+        hidden::queued_fetches.push([=]()
         {
             gdk::log(TAG, "worker fetching ", aPath);
             
@@ -80,7 +69,7 @@ namespace gdk::resources::local
                 (std::istreambuf_iterator<char>(input)), 
                 (std::istreambuf_iterator<char>()));
             
-            queued_responses.push([=]()
+            hidden::queued_responses.push([=]()
             {
                 gdk::log(TAG, "main is responding to ", aPath);
                 
@@ -130,7 +119,7 @@ static size_t WriteMemoryCallback(void *const contentPointer, const size_t conte
 
 namespace gdk::resources::remote
 {    
-    void fetchBinaryFile(const std::string aURL, response_handler_type aResponseHandler)
+    void fetchFile(const std::string aURL, response_handler_type aResponseHandler)
     {
 #if defined JFC_TARGET_PLATFORM_Emscripten
 
@@ -183,7 +172,7 @@ namespace gdk::resources::remote
 
 #elif defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux
 
-        queued_fetches.push([=]()
+        hidden::queued_fetches.push([=]()
         {
             gdk::log(TAG, "worker fetching ", aURL);
             
@@ -216,14 +205,14 @@ namespace gdk::resources::remote
                     //FILE *fp = fopen(std::string("resource/mia.png").c_str(), "wb");
                     //fwrite(chunk.memory, 1, chunk.size, fp); //This works! the file looks good.
                     //fclose(fp);
-                    //auto output = gdk::resources::local::loadBinaryFile("resource/mia.png");
+                    //auto output = gdk::resources::local::fetchFile("resource/mia.png");
                 
                     auto output = (std::vector<unsigned char>) // This will have to change when i go async
                     {
                         chunk.memory, chunk.memory + (chunk.size)
                     };
 
-                    queued_responses.push([=]()
+                    hidden::queued_responses.push([=]()
                     {
                         gdk::log(TAG, "main is responding to ", aURL);
                         
@@ -241,7 +230,7 @@ namespace gdk::resources::remote
         });
  
 #else
-#error fetchBinaryFile is unimplemented on the current platform
+#error fetchFile is unimplemented on the current platform
 #endif
 
     }

@@ -5,7 +5,7 @@
 #include <gdk/camera.h>
 #include <gdk/color.h>
 #include <gdk/exception.h>
-#include <gdk/gamepads_private.h>
+#include <gdk/input_private.h>
 #include <gdk/glfw_wrapper.h>
 #include <gdk/intvector2.h>
 #include <gdk/keyboard.h>
@@ -14,6 +14,7 @@
 #include <gdk/mouse.h>
 #include <gdk/quaternion.h>
 #include <gdk/resources.h>
+#include <gdk/resources_private.h>
 #include <gdk/shaderprogram.h>
 #include <gdk/texture.h>
 #include <gdk/time.h>
@@ -44,17 +45,17 @@ namespace
 
     void workerupdate() //Thread safe work goes here
     {
-        resources::updateFetchQueue();
+        resources::hidden::updateFetchQueue();
     }
     
     void update() // thread unsafe work goes here
     {
-        resources::updateResponseQueue();
+        resources::hidden::updateResponseQueue();
     }
     
     void draw() //Main thread draw (gl is not threadsafe, stuck here)
     {        
-        static Vector3 pos({0., 0., -10.f});
+        static Vector3 pos({0., 0., -10.});
         static Vector3 sca({1., 0.5, 1.});
         static Quaternion rot;
 
@@ -107,8 +108,8 @@ namespace
                 default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
                 default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
                 
-            gdk::resources::local::loadBinaryFile("resource/awesome.png",
-            [&](const bool aSucceeded, std::vector<unsigned char> aData)
+            gdk::resources::local::fetchFile("resource/awesome.png",
+            [](const bool aSucceeded, std::vector<unsigned char> aData)
             {
                 if (aSucceeded)
                 {
@@ -119,8 +120,8 @@ namespace
                 else gdk::log(TAG, "the fetch failed");
             });
             
-            gdk::resources::local::loadBinaryFile("resource/BG.png",
-            [&](const bool aSucceeded, std::vector<unsigned char> aData)
+            gdk::resources::local::fetchFile("resource/BG.png",
+            [](const bool aSucceeded, std::vector<unsigned char> aData)
             {
                 if (aSucceeded)
                 {
@@ -131,8 +132,8 @@ namespace
                 else gdk::log(TAG, "the fetch failed");
             });
         
-            resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png",
-            [&](const bool aSucceeded, std::vector<unsigned char> aData)
+            resources::remote::fetchFile("https://jfcameron.updog.co/Public/mia.png",
+            [](const bool aSucceeded, std::vector<unsigned char> aData)
             {
                 if (aSucceeded)
                 {
@@ -161,25 +162,18 @@ int main()
     
     if (std::thread::hardware_concurrency() > 1)
     {
-    for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; ++i)
-    {
-        workers.push_back(std::thread([]()
+        std::atomic<bool> isAlive = true;
+        
+        for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; ++i)
         {
-            while(true){workerupdate();}
-        }));
+            workers.push_back(std::thread([&]()
+            {
+                while(isAlive) workerupdate();
+                
+                //for (auto &worker : workers) worker.join();
+            }));
+        }
     }
-    }
-    
-    /*// Single worker
-    std::thread worker;
-    
-    if (std::thread::hardware_concurrency() > 1)
-    {
-        worker = std::thread([]()
-        {
-            while(true){workerupdate();}
-        });
-    }*/
 #endif
     
     init();

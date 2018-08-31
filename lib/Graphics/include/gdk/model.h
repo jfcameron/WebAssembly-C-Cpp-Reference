@@ -21,11 +21,14 @@ namespace gdk
 {
     struct Mat4x4;
     
-    //! Represents an observable 3D object. 
-    /// Contains a VertexData, a set of uniform collections, a shader, animations, a skeleton.
+    /// \brief Represents an observable 3D object. 
     ///
-    /// \Warning: I think this class contains a bit too much implementation. (see draw method). It seems weird that "Model"
-    /// is responsible for binding and clearing all uniform data for the shader. the shaderprogram and uniform data (textures etc.) Should probably
+    /// \detailed Contains a VertexData, a set of uniform collections, a shader, animations, a skeleton.
+    ///
+    /// \warning I think this class contains a bit too much implementation. (see draw method). It seems weird that "Model"
+    /// is responsible for binding and clearing all uniform data for the shader. the shaderprogram and uniform data (textures etc.) 
+    ///
+    /// \todo Should probably
     /// be broken out into a new abstraction. This work would be a good match for the "material" class seen in many engines.
     class Model final
     {

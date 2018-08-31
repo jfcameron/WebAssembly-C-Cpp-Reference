@@ -11,8 +11,7 @@
 
 namespace gdk
 {
-    //! ShaderProgram specifies drawing behaviours at the programmable stages in the OpenGL
-    /// programmable pipeline.
+    /// \brief Specifies drawing behaviours at [at least 2] of the programmable stages in the OpenGL programmable pipeline.
     class ShaderProgram final
     {
         friend std::ostream &operator<< (std::ostream &, const ShaderProgram &);
@@ -22,7 +21,7 @@ namespace gdk
         
     public:
         //! Installs the program to the pipeline. This program's programmable stages
-        /// will be used for draw calls until a different program is installed.
+        /// will be used for subsequent draw calls until a different program is installed.
         GLuint useProgram() const;
         
         std::string getName() const;
@@ -38,7 +37,7 @@ namespace gdk
         ~ShaderProgram();
         
         static const gdk::lazy_ptr<gdk::ShaderProgram> PinkShaderOfDeath; //!< shader for indicating some kind of failure
-        static const gdk::lazy_ptr<gdk::ShaderProgram> AlphaCutOff;       //!< shader for drawing sprites
+        static const gdk::lazy_ptr<gdk::ShaderProgram> AlphaCutOff;       //!< shader for drawing unlit surfaces with alpha channel based transparency
     };
 
     std::ostream &operator<< (std::ostream &, const ShaderProgram &);

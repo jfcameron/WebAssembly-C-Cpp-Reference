@@ -12,7 +12,7 @@ namespace gdk
 {
     struct Vector4;
     
-    //! Set of Vector4s to upload to the shaderprogram currently in use by the gl context
+    /// \brief Set of Vector4s to upload to the shaderprogram currently in use by the gl context
     class Vector4UniformCollection final : public UniformCollection<std::shared_ptr<Vector4>>
     {
         friend std::ostream &operator<< (std::ostream &, const Vector4UniformCollection &);

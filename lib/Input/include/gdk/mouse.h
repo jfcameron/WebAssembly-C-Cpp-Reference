@@ -9,7 +9,7 @@ namespace gdk
 {
     struct Vector2;
     
-    //! Get mouse keys and position on a window    
+    /// \brief Get mouse keys and position on a window    
     namespace mouse
     {      
         //! Represents all detectable mouse buttons

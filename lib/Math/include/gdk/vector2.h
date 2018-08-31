@@ -7,40 +7,36 @@
 
 namespace gdk
 {
-    //! Useful for storing 2D position, speed, direction, normalized coordinates.
-    /// \Note in reference to the static members: 
+    /// \brief 2 component floating point struct. 
+    ///
+    /// \detailed useful for storing 2D position, speed, direction, normalized coordinates.
+    ///
+    /// \note in reference to the static members: 
     /// X is considered the lateral component, pointing right, 
     /// Y the vertical, pointing up
     struct Vector2 final
     {
         float x = {0.}, y = {0.};
-            
-        //! squareroot of the sum of the 2nd power of the components
-        float length() const;
-            
-        //! x component divided by the y component
-        float getAspectRatio() const;
-            
-        //! Reduce length of the vector to 1 while maintaning its direction
-        void normalize();
-            
-        bool operator==(const Vector2&) const;
-        bool operator!=(const Vector2&) const;
         
-        Vector2 operator+(const Vector2&) const;
-        Vector2 operator-(const Vector2&) const;
+        float length() const;         //!< squareroot of the sum of the 2nd power of the components
+        float getAspectRatio() const; //!< division of the x component by the y component
+        void normalize();             //!< Reduce length of the vector to 1 while maintaning its direction
+            
+        bool operator==(const Vector2 &) const;
+        bool operator!=(const Vector2 &) const;
+        
+        Vector2 operator+(const Vector2 &) const;
+        Vector2 operator-(const Vector2 &) const;
         Vector2 operator*(const float) const;
             
-        Vector2& operator+=(const Vector2&);
-        Vector2& operator-=(const Vector2&);
-        Vector2& operator*=(const float);
+        Vector2 &operator+=(const Vector2 &);
+        Vector2 &operator-=(const Vector2 &);
+        Vector2 &operator*=(const float);
 
-        Vector2& operator=(const Vector2&) = default;
+        Vector2 &operator=(const Vector2 &) = default;
 
-        //! Assign 1 fp value to all components
-        Vector2(const float);
-        //! Assign each component independently
-        Vector2(const float aX, const float aY);
+        Vector2(const float);                    //!< Assign 1 fp value to all components
+        Vector2(const float aX, const float aY); //!< Assign each component independently
         Vector2() = default;
         Vector2(const Vector2 &) = default;
         Vector2(Vector2 &&) = default;

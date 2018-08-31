@@ -2,11 +2,11 @@
 
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten") # very much a hack
+#[[if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten") # very much a hack
     set(PLATFORM_SPECIFIC_SOURCE 
         ${CMAKE_CURRENT_SOURCE_DIR}/src/httprequest.cpp
     )
-endif()
+endif()]]
 
 jfc_project(library
     NAME "gdkresources"

@@ -7,8 +7,9 @@
 
 namespace gdk
 {
-    //! 3 component floating point struct.
-    /// Used to represent 3d position, scale, euler angles.
+    /// \brief 3 component floating point struct.
+    ///
+    /// \detailed Used to represent 3d position, scale, euler angles.
     struct Vector3 final
     {
         float x = {0.}, y = {0.}, z = {0.};

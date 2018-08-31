@@ -9,7 +9,7 @@
 #ifndef GDK_GAMEPADS_PRIVATE_H
 #define GDK_GAMEPADS_PRIVATE_H
 
-namespace gdk::gamepads
+namespace gdk::input::hidden::gamepads
 {
     //! Initializes gamepads handler. Must be called once, before gamepads is used.
     void initialize();

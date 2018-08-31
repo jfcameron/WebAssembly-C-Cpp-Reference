@@ -12,10 +12,11 @@ namespace gdk
         template<typename ...Args> void log(const char aTag[], Args &&...args);
         template<typename ...Args> void error(const char aTag[], Args &&...args);
                 
-        //! Used to render debug messages in some form. The default behaviour is to send the data to std::clog,
-        ///  however this can be changed by passing a function of sig void(const std::string&) to the constructor. 
-        /// In this way, Logger can be used to output to files, pipes, over the network, etc.
+        /// \brief Used to render debug messages in some form. 
         ///
+        /// \detailed The default behaviour is to send the data to std::clog,
+        /// however this can be changed by passing a function of sig void(const std::string&) to the constructor. 
+        /// In this way, Logger can be used to output to files, pipes, over the network, etc.
         /// This header also declares the free standing functions log and error, which are gdk wrappers for
         /// std::clog and std::cerr respectively.        
         class Logger final

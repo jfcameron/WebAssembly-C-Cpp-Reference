@@ -10,7 +10,7 @@
 
 namespace gdk
 {
-    //! Manages and supplies float data for shaderprogram consumption
+    /// \brief Manages and supplies float data for shaderprogram consumption
     class FloatUniformCollection final : public UniformCollection<std::shared_ptr<float>>
     {
         friend std::ostream& operator<< (std::ostream &, const FloatUniformCollection &);

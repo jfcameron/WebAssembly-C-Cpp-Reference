@@ -1,5 +1,4 @@
 // © 2018 Joseph Cameron - All Rights Reserved
-//! Resources provides APIs to load different resource files (images, text) from disk
 
 #ifndef GDK_RESOURCES_H
 #define GDK_RESOURCES_H
@@ -9,41 +8,38 @@
 #include <string>
 #include <vector>
 
+//! Resources provides APIs to load different resource files (images, text) from disk
 namespace gdk::resources
 {
+    /// signature for resource aquisition callbacks. bool indicates success or failure. vector of bytes contains data.
     using response_handler_type = std::function<void(const bool, std::vector<unsigned char>)>;
 
     /*namespace local database?? 
+    //! RAII wrapper for local database
+    class DataBase [final? abstract? is this tied to sqlite or is it an interface?]
     {
         readstring(key)
         writestring(key,value)
+
+    public:
+        DataBase(const std::string aPathToDatabase);
     }*/
 
+    //! fetch data from the local filesystem
     namespace local
     {
-        //! loads a file at aPath to a vector of bytes
-        /// \note this function is synchronous        
-        /// \exception if file does not exist
-        /// \exception if file is not a PNG of form RGBA32
-        void loadBinaryFile(const std::string aPath, response_handler_type aResponse);
+        //! loads a file at aPath to an array of bytes
+        /// \note this function is asynchronous
+        void fetchFile(const std::string aPath, response_handler_type aResponse);
     }
 
+    //! fetch data over the network or internet
     namespace remote
     {
-        //! fetch a file at the URL
+        //! loads a file at aURL to an array of bytes
         /// \note this function is asynchronous
-        /// \warn this is not thread safe
-        void fetchBinaryFile(const std::string aURL, response_handler_type aResponse);
+        void fetchFile(const std::string aURL, response_handler_type aResponse /*, aTimeoutMS*/ /*, aAuthToken? etc.*/);
     }
-
-    // ========================================================
-    //
-    // PROTECTED (used by siblings or middleware; hide from the user for their own good)
-    //
-    // ========================================================
-    void updateFetchQueue(); //!< call from mainthread or worker thread[s]; processes the front of the fetch queue
-
-    void updateResponseQueue(); //!< call from mainthread
 }
 
 #endif

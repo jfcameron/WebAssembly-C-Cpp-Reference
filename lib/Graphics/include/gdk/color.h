@@ -7,7 +7,7 @@
 
 namespace gdk
 {
-    //! Represents a 4 channel color: {Red, Green, Blue, Alpha}.
+    /// \brief Represents a 4 channel color: {Red, Green, Blue, Alpha}.
     struct Color final
     {
         float r = {0.f}, g = {0.f}, b = {0.f}, a = {1.f};

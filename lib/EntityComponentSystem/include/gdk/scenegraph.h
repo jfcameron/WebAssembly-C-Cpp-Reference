@@ -13,7 +13,7 @@ namespace gdk
     class Scene;
     class Component;
 
-    //! Defines a scene capability. ECS abstraction of a Renderer or Physics Engine etc.
+    /// \brief Defines a scene capability. ECS abstraction of a Renderer or Physics Engine etc.
     class SceneGraph
     {
         friend std::ostream& operator<< (std::ostream &, const ECS::SceneGraph &);

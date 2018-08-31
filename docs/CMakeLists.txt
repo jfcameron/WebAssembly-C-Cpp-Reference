@@ -8,8 +8,8 @@ jfc_generate_documentation_doxygen(
     README_PATH  ../README.md
     
     INCLUDE_DIRECTORIES
-        ../lib/include
-        ../lib/src/include
+  #      ../lib/include
+        ../lib/
 )
 
 jfc_generate_readme_md(

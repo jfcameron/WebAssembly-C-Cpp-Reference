@@ -12,7 +12,7 @@
 
 namespace gdk
 {
-    //! No description provided for SceneManager
+    /// \brief No description provided for SceneManager
     class SceneManager final
     {
         friend std::ostream& operator<< (std::ostream &, const ECS::SceneManager &);

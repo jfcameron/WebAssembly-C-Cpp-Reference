@@ -13,8 +13,8 @@ namespace gdk
     class SceneGraph;
     class Scene;
 
-    //! GameObject::Add will fail if a T already exists in its component list
-    /// \Warn Unimplemented
+    /// \brief GameObject::Add will fail if a T already exists in its component list
+    /// \warning Unimplemented
     class UniqueComponent{};
         
     //! Gameobject will silently add a component of type T if one does not already exist in its component list

@@ -2,72 +2,80 @@
 
 #include <gdk/exception.h>
 #include <gdk/gamepads.h>
-#include <gdk/gamepads_private.h>
+#include <gdk/input_private.h>
 #include <gdk/glfw_wrapper.h>
 
 #include <GLFW/glfw3.h>
 
 #ifdef JFC_TARGET_PLATFORM_Emscripten
-    #include <emscripten.h>
+#include <emscripten.h>
 #endif
 
-#include <assert.h>
 #include <iostream>
 #include <map>
+#include <vector>
+
+#include <assert.h> // Remove cstdlib dependencies
 #include <stdio.h>
 #include <string.h>
-#include <vector>
 
 static constexpr char TAG[] = "Gamepad";
 
 namespace gdk
 {
+    /// \brief a gamepad attached to the system.
+    ///
+    /// \detailed
+    ///
+    /// \note this class cannot be directly accessed by the user; it is an implementation detail of the gamepads.h api
     class Gamepad final
     {
-    public://delete
-        friend void gdk::gamepads::initialize();
+        friend void gdk::input::hidden::gamepads::initialize();
         
+        Gamepad(const int aJoystickIndex);
+        
+    public:
         std::string m_Name;
+        
         std::vector<const unsigned char *> m_Buttons;
         std::vector<const float *> m_Axes;
-
-        void update()
-        {
-            //check if my pointers in glfw context are null and my behaviour is now evil and undefined
-        }
-
-        Gamepad(const int aJoystickIndex)
-            : m_Name([&]()
-                     {
-                         const char *name = glfwGetJoystickName(aJoystickIndex);
-
-                         if (!name) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ",
-                                                         aJoystickIndex, " is there a gamepad connected at that index?");
-                         
-                         return name;
-                     }())
-            , m_Buttons([&]()
-                        {
-                            int button_count;
-                            const unsigned char *buttons = glfwGetJoystickButtons(aJoystickIndex, &button_count);
-                            
-                            if (!buttons) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ",
-                                                               aJoystickIndex, " is there a gamepad connected at that index?");
-                            
-                            return (std::vector<const unsigned char *>) {buttons, buttons + button_count};
-                        }())
-            , m_Axes([&]()
-                     {
-                         int axes_count;
-                         const float *axes = glfwGetJoystickAxes(aJoystickIndex, &axes_count);
-                         
-                         if (!axes) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ",
-                                                         aJoystickIndex, " is there a gamepad connected at that index?");
-
-                         return (std::vector<const float *>) {axes, axes + axes_count};
-                     }())
-            {}
+        
+        void update();
     };
+    
+    void Gamepad::update()
+    {
+        //check if my pointers in glfw context are null and my behaviour is now evil and undefined
+    }
+
+    Gamepad::Gamepad(const int aJoystickIndex)
+    : m_Name([&]()
+    {
+        const char *name = glfwGetJoystickName(aJoystickIndex);
+
+        if (!name) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ", aJoystickIndex, " is there a gamepad connected at that index?");
+                        
+        return name;
+    }())
+    , m_Buttons([&]()
+    {
+        int button_count;
+        const unsigned char *buttons = glfwGetJoystickButtons(aJoystickIndex, &button_count);
+                        
+        if (!buttons) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ", aJoystickIndex, " is there a gamepad connected at that index?");
+                        
+                        return (std::vector<const unsigned char *>) {buttons, buttons + button_count};
+    }())
+    , m_Axes([&]()
+    {
+        int axes_count;
+        const float *axes = glfwGetJoystickAxes(aJoystickIndex, &axes_count);
+                        
+        if (!axes) throw gdk::Exception(TAG, "Gamepad handler failed to create a gdk::Gamepad using index: ", aJoystickIndex, " is there a gamepad connected at that index?");
+
+        return (std::vector<const float *>) {axes, axes + axes_count};
+    }())
+    {}
 }
 
 namespace
@@ -77,7 +85,7 @@ namespace
     std::vector<gdk::Gamepad> gamepadList;
 }
 
-namespace gdk::gamepads
+namespace gdk::input::hidden::gamepads
 {
     void initialize()
     {

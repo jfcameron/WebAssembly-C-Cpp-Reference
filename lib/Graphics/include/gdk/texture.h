@@ -12,7 +12,9 @@
 
 namespace gdk
 {
-    //! Texture represents an image. RGBA32, 2D.
+    /// \brief Texture represents an image. RGBA32, 2D.
+    ///
+    /// \todo Either throw on non power 2 textures OR support them (by padding or cropping)
     class Texture final
     {
         friend std::ostream &operator<< (std::ostream &, const Texture &);

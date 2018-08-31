@@ -8,8 +8,9 @@
 
 namespace gdk
 {
-    //! A vertex attribute is a component of a vertex (eg: position, uv, normal, color).
-    /// Vertex attributes are made up of an arbitrary set of components.
+    /// \brief A vertex attribute is a component of a vertex (eg: position, uv, normal, color).
+    ///
+    /// \detailed Vertex attributes are made up of an arbitrary set of components.
     /// In the context of OpenGL, a component is a floating-point value.
     struct VertexAttribute final
     {

@@ -9,7 +9,7 @@
 
 namespace gdk
 {
-    //! gdk runtime exception type. This allows users to differentiate between nongdk and gdk exceptions.
+    /// \brief gdk runtime exception type. This allows users to differentiate between nongdk and gdk exceptions.
     class Exception : public std::runtime_error
     {
         std::string toString(std::ostringstream &sstream)

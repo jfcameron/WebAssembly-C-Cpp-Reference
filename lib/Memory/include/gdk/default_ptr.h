@@ -7,7 +7,7 @@
 
 namespace gdk
 {    
-    //! a weak pointer that returns a default pointer to T if the target pointer has become null.
+    /// \brief a weak pointer that returns a default pointer to T if the target pointer has become null.
     template<typename T>
     class default_ptr final
     {

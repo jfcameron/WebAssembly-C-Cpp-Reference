@@ -11,8 +11,9 @@
 
 namespace gdk
 {
-    //! UniformCollection is used to supply data to shaderprograms.
-    /// It is a baseclass that manages, binds and unbinds a collection of T to a
+    /// \brief is used to supply data to shaderprograms.
+    ///
+    /// \detailed It is a baseclass that manages, binds and unbinds a collection of T to a
     /// shaderprogram
     template<typename T> class UniformCollection
     {

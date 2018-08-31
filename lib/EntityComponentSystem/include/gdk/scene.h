@@ -16,7 +16,7 @@ namespace gdk
     class SceneGraph;
     class Component; 
         
-    //! A 3D space, contains GameObjects. The capabilities of the scene are defined by its SceneGraphs
+    /// \brief A 3D space, contains GameObjects. The capabilities of the scene are defined by its SceneGraphs
     class Scene final : public std::enable_shared_from_this<Scene>
     {
         friend std::ostream &operator<< (std::ostream &, const ECS::Scene &);

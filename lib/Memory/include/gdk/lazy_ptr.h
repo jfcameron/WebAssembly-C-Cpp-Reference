@@ -10,7 +10,7 @@
 
 namespace gdk
 {
-    //! Pointer that delays initialization until the first time it is dereferenced or casted
+    /// \brief pointer that delays initialization until the first time it is dereferenced or casted
     template<typename T> class lazy_ptr final
     {
     public:

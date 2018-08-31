@@ -9,8 +9,9 @@ namespace gdk
 {
     struct Vector2;
         
-    //! Behaves like a Vector2 but uses integers for storage rather than floats.
-    /// Useful for describing such things as non-normalized texel position,
+    /// \brief Behaves like a Vector2 but uses integers for storage rather than floats.
+    ///
+    /// \detailed Useful for describing such things as non-normalized texel position,
     /// tilegrid position, window size, etc.
     struct IntVector2 final
     {

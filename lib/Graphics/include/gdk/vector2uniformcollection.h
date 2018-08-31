@@ -12,7 +12,7 @@ namespace gdk
 {
     struct Vector2;
     
-    //! Manages and supplies Vector2 data for shaderprogram consumption
+    /// \brief Manages and supplies Vector2 data for shaderprogram consumption
     class Vector2UniformCollection final : public UniformCollection<std::shared_ptr<Vector2>>
     {
         friend std::ostream &operator<< (std::ostream &, const Vector2UniformCollection &);

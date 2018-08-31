@@ -4,6 +4,7 @@
 #define GDK_MATH_MAT4X4_H
 
 #include <iosfwd>
+//#include <type_traits>
 
 namespace gdk
 {
@@ -11,9 +12,12 @@ namespace gdk
     struct Vector3;
     struct Quaternion;
 
-    //! 4 by 4 matrix of floating point numbers, used to calculate 3D transformations and camera projections.
+    /// \brief 4 by 4 matrix of floating point numbers, used to calculate 3D transformations and camera projections.
+    //template<typename T = float>
     struct Mat4x4 final
     {
+        //static_assert(std::is_floating_point<T>::value, "MemoryStruct must be C compatible");
+
         float m[4][4] = {}; //<! the 16 floats of data, arranged in 2d grid
 
         //! Sets matrix to an identity matrix

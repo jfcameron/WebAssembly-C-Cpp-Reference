@@ -11,7 +11,7 @@ namespace gdk
 {
     namespace Memory
     {
-        //! Vector that strongly owns its data. Data can only be inserted via rvalue references,
+        ///\brief Vector that strongly owns its data. Data can only be inserted via rvalue references,
         /// data can only be accessed via weak_ptrs.
         template<typename T>
         class auth_vector final
@@ -26,7 +26,6 @@ namespace gdk
             using T_weakptr              = typename std::weak_ptr<T>;
             using T_const_weakptr        = const typename std::weak_ptr<T>;
             
-            // Data members
             std::vector<T> m_Vector;
             
         public:

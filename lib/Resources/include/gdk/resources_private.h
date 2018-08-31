@@ -1,0 +1,17 @@
+// © 2018 Joseph Cameron - All Rights Reserved
+
+/// \brief These APIs must be used in order for resources.h to perform correctly.
+///
+/// \detailed this file should be used and hidden behind a wrapper or intermediary library.
+/// this file should be hidden from the end user (the user of your library); it is irrelevant to them.
+namespace gdk::resources::hidden
+{
+    //! as fetches are made, fetch tasks are put in the fetch queue.
+    /// this function processes the fetch queue, performing the fetches.
+    /// \note thread safe
+    void updateFetchQueue();
+
+    //! runs the response handlers for completed fetches.
+    /// \note not thread safe; only call from mainthread
+    void updateResponseQueue();
+}

@@ -9,7 +9,7 @@ namespace gdk
 {
     struct Vector3;
         
-    //! Like Vector3 but allows w to != 1. Used in Vector vs Mat4x4 operations
+    /// \brief Like Vector3 but allows w to != 1. Used in Vector vs Mat4x4 operations
     struct Vector4 final
     {
         float x = {0.}, y = {0.}, z = {0.}, w = {1.};

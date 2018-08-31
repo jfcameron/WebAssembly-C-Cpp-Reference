@@ -15,7 +15,7 @@
 
 namespace gdk
 {
-    //! GameObject has a list of components and belongs to a scene
+    /// \brief GameObject has a list of components and belongs to a scene
     class GameObject final : public std::enable_shared_from_this<GameObject>
     {
         friend std::ostream &operator<< (std::ostream &, const ECS::GameObject &);

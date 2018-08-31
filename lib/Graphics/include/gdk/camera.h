@@ -15,7 +15,7 @@ namespace gdk
     struct Vector3;   
     struct Quaternion;
     
-    //! Position, orientation and perspective from which Model(s) are drawn
+    /// \brief Position, orientation and perspective from which Model(s) are drawn
     class Camera final
     {
         friend std::ostream &operator<< (std::ostream &, const Camera &);

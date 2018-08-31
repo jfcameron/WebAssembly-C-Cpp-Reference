@@ -12,8 +12,9 @@
 
 namespace gdk
 {
-    //! A resource manager is responsible for solely managing the lifetime of some object T.
-    /// By serving resources via default_ptrs, the manager can safely destroy any T instance
+    /// \brief responsible for solely managing the lifetime of some object T.
+    ///
+    /// \detailed By serving resources via default_ptrs, the manager can safely destroy any T instance
     /// without risking memory reading issues.
     template<typename T> class resource_manager
     {

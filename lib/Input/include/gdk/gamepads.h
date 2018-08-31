@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace gdk
 {
@@ -18,7 +19,7 @@ namespace gdk
 
         //! Get a gamepad by device name
         std::weak_ptr<Gamepad> get(const std::string &aName);
-    }    
+    }
 }
 
 #endif

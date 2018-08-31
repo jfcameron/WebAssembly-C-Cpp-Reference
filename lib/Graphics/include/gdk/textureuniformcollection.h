@@ -11,7 +11,7 @@
 
 namespace gdk
 {
-    //! zeroes uniform data in currently used program
+    /// \brief collection of textures to be uploaded to the shader stages at draw time
     class TextureUniformCollection final : public UniformCollection<default_ptr<Texture>>
     {
         friend std::ostream &operator<< (std::ostream &, const TextureUniformCollection &);

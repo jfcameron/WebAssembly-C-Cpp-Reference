@@ -11,7 +11,9 @@ namespace gdk
 {
     namespace Memory
     {
-        //! Object pool of variable length. When get is called, an object with
+        /// \brief Object pool of variable length. 
+        ///
+        /// \detailed When get is called, an object with
         /// a reference count of 1 (unused outside the pool) is returned. If
         /// no unused objects exist, a new instance of T is added to the pool and returned
         template<typename T> class dynamic_pool final

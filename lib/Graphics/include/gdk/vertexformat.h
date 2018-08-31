@@ -13,8 +13,9 @@
 
 namespace gdk
 {
-    //! The purpose of VertexFormat is to inform the context how to interpret Vertex data.
-    /// Vertex data [in the context of OpenGL] is reprented as an array of floating-point values.
+    /// \brief informs the gl context how to interpret the currently bound vertex data.
+    ///
+    /// \detailed Vertex data [in the context of OpenGL] is reprented as an array of floating-point values.
     /// The data and the format of that data is completely arbitrary and user defined and the GL context
     /// therefore has to be informed how to interpret it.
     /// An example of a typical format would be something like this: {Position3, UV2, Normal3, Tangent3}.
@@ -34,6 +35,7 @@ namespace gdk
         //! prepares gl context to draw vertex data formatted according to this vertex format
         void enableAttributes(const GLuint aShaderProgramHandle) const;
 
+        //!
         int getSumOfAttributeComponents() const;
             
         VertexFormat& operator=(const VertexFormat &) = default;

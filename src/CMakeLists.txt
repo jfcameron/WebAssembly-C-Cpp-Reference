@@ -17,7 +17,6 @@ jfc_project(executable
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
-
 # This copies resource dir to the executable dir. Should be abstracted
 jfc_git(COMMAND rev-parse --show-toplevel
     OUTPUT _path_to_repo_root)
@@ -47,5 +46,5 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
     target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic -DCURL_STATICLIB -lcurl)
 
-   #target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -W) 
+    #target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -W) 
 endif()

@@ -10,7 +10,7 @@
 
 namespace gdk
 {
-    //! Set of Mat4x4s to upload to the shaderprogram currently in use by the gl context
+    /// \brief Set of Mat4x4s to upload to the shaderprogram currently in use by the gl context
     class Mat4x4UniformCollection final : public gdk::UniformCollection<gdk::Mat4x4>
     {
         friend std::ostream& operator<< (std::ostream&, const Mat4x4UniformCollection&);

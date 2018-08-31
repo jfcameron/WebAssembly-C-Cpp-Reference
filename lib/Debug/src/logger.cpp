@@ -29,9 +29,13 @@ Logger Logger::s_gdkErrorLogger
 (
     [](const std::string &aMessage)
     {
+        using namespace std::chrono;
+        
+        milliseconds ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+        
         std::ostringstream stringStream;
         
-        stringStream << "E/" << aMessage << std::endl;
+        stringStream << "Epoch " << ms.count() << " Thread " << std::this_thread::get_id() << " E/" << aMessage << std::endl;
         
         std::clog << stringStream.str();
     }
