@@ -11,7 +11,11 @@ Logger Logger::s_gdkLogger
 (
     [](const std::string &aMessage)
     {
-        std::clog << "D/" << aMessage << std::endl;
+        std::ostringstream stringStream;
+        
+        stringStream << "D/" << aMessage << std::endl;
+        
+        std::clog << stringStream.str();
     }
 );
 
@@ -19,7 +23,11 @@ Logger Logger::s_gdkErrorLogger
 (
     [](const std::string &aMessage)
     {
-        std::cerr << "E/" << aMessage << std::endl;
+        std::ostringstream stringStream;
+        
+        stringStream << "E/" << aMessage << std::endl;
+        
+        std::clog << stringStream.str();
     }
 );
 
