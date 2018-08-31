@@ -106,44 +106,42 @@ namespace
             Model model("MySuperCoolModel",
                 default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
                 default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
-
-///// TEX LOADING TESTS
-            //local load
-            {
-                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", gdk::resources::local::loadBinaryFile("resource/awesome.png")));
-
-                model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-            }
-            {
-                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("background", gdk::resources::local::loadBinaryFile("resource/BG.png")));
                 
-                model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-            }
-
-            //remote load
+            gdk::resources::local::loadBinaryFile("resource/awesome.png",
+            [&](const bool aSucceeded, std::vector<unsigned char> aData)
             {
-                resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png", //resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/Github/Intro-To-WebGL/Example/awesome.png",
-                [&](const bool aSucceeded, std::vector<unsigned char> aData)
+                if (aSucceeded)
                 {
-                    if (aSucceeded)
-                    {
-                        auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
+                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", aData));
+                    
+                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                }
+                else gdk::log(TAG, "the fetch failed");
+            });
+            
+            gdk::resources::local::loadBinaryFile("resource/BG.png",
+            [&](const bool aSucceeded, std::vector<unsigned char> aData)
+            {
+                if (aSucceeded)
+                {
+                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", aData));
+                
+                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                }
+                else gdk::log(TAG, "the fetch failed");
+            });
+        
+            resources::remote::fetchBinaryFile("https://jfcameron.updog.co/Public/mia.png",
+            [&](const bool aSucceeded, std::vector<unsigned char> aData)
+            {
+                if (aSucceeded)
+                {
+                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
 
-                        if (pModel) //This goofy thing comes from my curl usage. Curl is currently synchonous (wrong) wheras ajax on web is not (correct) so pModel is always going ot be null on desktop (until I switch to async)
-                        {
-                            pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex)); //Works on emscripten, segfaults on desktop
-                        }
-                        else
-                        {
-                            gdk::log(TAG, "pModel is null");
-
-                            model.setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex)); // Works on desktop, not emscripten
-                        }
-                    }
-                    else gdk::log(TAG, "the fetch failed");
-                });
-///// TEX LOADING TESTS
-            }
+                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+                }
+                else gdk::log(TAG, "the fetch failed");
+            });
 
             model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
 

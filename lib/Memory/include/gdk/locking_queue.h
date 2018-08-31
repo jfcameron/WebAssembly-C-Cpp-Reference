@@ -23,7 +23,7 @@ namespace gdk
         // waits for mutex. adds a new task to the back of the queue.
         void push(T &&task)
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            //std::lock_guard<std::mutex> lock(m_mutex);
             
             m_queue.push(std::forward<T>(task));
         }

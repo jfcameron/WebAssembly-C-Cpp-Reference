@@ -2,8 +2,9 @@
 #include <gdkresources/buildinfo.h>
 
 #include <gdk/exception.h>
-#include <gdk/logger.h>
 #include <gdk/locking_queue.h>
+#include <gdk/logger.h>
+#include <gdk/resources.h>
 
 #include <stb/stb_image.h>
 
@@ -72,15 +73,26 @@ namespace gdk::resources
 
 namespace gdk::resources::local
 {
-    std::vector<unsigned char> loadBinaryFile(const std::string &aPath)
-    {        
-        std::ifstream input(aPath, std::ios::binary);
+    void loadBinaryFile(const std::string aPath, response_handler_type aResponse)
+    {
+        queued_fetches.push([=]()
+        {
+            std::ifstream input(aPath, std::ios::binary);
 
-        std::vector<char> buffer(
-            (std::istreambuf_iterator<char>(input)), 
-            (std::istreambuf_iterator<char>()));
-        
-        return {buffer.begin(), buffer.end()};
+            std::vector<char> buffer(
+                (std::istreambuf_iterator<char>(input)), 
+                (std::istreambuf_iterator<char>()));
+            
+            queued_responses.push([=]()
+            {
+                //return {buffer.begin(), buffer.end()};
+                
+                auto output = (std::vector<unsigned char>) // This will have to change when i go async
+                {buffer.begin(), buffer.end()};
+                
+                aResponse(true, output);
+            });
+        });
     }
 }
 
@@ -121,7 +133,7 @@ static size_t WriteMemoryCallback(void *const contentPointer, const size_t conte
 
 namespace gdk::resources::remote
 {    
-    void fetchBinaryFile(const std::string aURL, std::function<void(const bool, std::vector<unsigned char>)> aResponseHandler)
+    void fetchBinaryFile(const std::string aURL, response_handler_type aResponseHandler)
     {
 #if defined JFC_TARGET_PLATFORM_Emscripten
 

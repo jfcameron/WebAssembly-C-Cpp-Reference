@@ -11,6 +11,8 @@
 
 namespace gdk::resources
 {
+    using response_handler_type = std::function<void(const bool, std::vector<unsigned char>)>;
+
     /*namespace local database?? 
     {
         readstring(key)
@@ -23,7 +25,7 @@ namespace gdk::resources
         /// \note this function is synchronous        
         /// \exception if file does not exist
         /// \exception if file is not a PNG of form RGBA32
-        std::vector<unsigned char> loadBinaryFile(const std::string &aPath);
+        void loadBinaryFile(const std::string aPath, response_handler_type aResponse);
     }
 
     namespace remote
@@ -31,7 +33,7 @@ namespace gdk::resources
         //! fetch a file at the URL
         /// \note this function is asynchronous
         /// \warn this is not thread safe
-        void fetchBinaryFile(const std::string aURL, std::function<void(const bool, std::vector<unsigned char>)> aResponseHandler);
+        void fetchBinaryFile(const std::string aURL, response_handler_type aResponse);
     }
 
     // ========================================================
