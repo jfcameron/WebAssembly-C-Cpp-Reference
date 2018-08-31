@@ -54,12 +54,12 @@ namespace
     
     void draw() //Main thread draw (gl is not threadsafe, stuck here)
     {        
-        static Vector3 pos({0.,0.,-10.f});
-        static Vector3 sca({1.,0.5,1.});
+        static Vector3 pos({0., 0., -10.f});
+        static Vector3 sca({1., 0.5, 1.});
         static Quaternion rot;
 
         sca.z = sin(time::sinceStart() / 2.f) * 1.f;
-        rot.setFromEuler({time::sinceStart()/2.f, time::sinceStart(), 0});
+        rot.setFromEuler({time::sinceStart() / 2.f, time::sinceStart(), 0});
 
         if (keyboard::getKeyDown(keyboard::Key::W)) pos.z -= 0.5;
         if (keyboard::getKeyDown(keyboard::Key::S)) pos.z += 0.5;
