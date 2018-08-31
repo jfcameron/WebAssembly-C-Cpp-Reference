@@ -46,12 +46,7 @@ namespace gdk::resources
     {
         std::function<void()> fetchTask;
         
-        if (queued_fetches.pop(fetchTask))
-        {
-            gdk::log(TAG,"Doing a task");
-            
-            fetchTask();
-        }
+        if (queued_fetches.pop(fetchTask)) fetchTask();
     }
 
     void updateResponseQueue()
@@ -77,6 +72,8 @@ namespace gdk::resources::local
     {
         queued_fetches.push([=]()
         {
+            gdk::log(TAG, "worker fetching ", aPath);
+            
             std::ifstream input(aPath, std::ios::binary);
 
             std::vector<char> buffer(
@@ -85,7 +82,7 @@ namespace gdk::resources::local
             
             queued_responses.push([=]()
             {
-                //return {buffer.begin(), buffer.end()};
+                gdk::log(TAG, "main is responding to ", aPath);
                 
                 auto output = (std::vector<unsigned char>) // This will have to change when i go async
                 {buffer.begin(), buffer.end()};
@@ -188,6 +185,8 @@ namespace gdk::resources::remote
 
         queued_fetches.push([=]()
         {
+            gdk::log(TAG, "worker fetching ", aURL);
+            
             curl_global_init(CURL_GLOBAL_ALL); // MOVE TO A CURL WRAPPER
 
             if (CURL * curl_handle = curl_easy_init())
@@ -226,6 +225,8 @@ namespace gdk::resources::remote
 
                     queued_responses.push([=]()
                     {
+                        gdk::log(TAG, "main is responding to ", aURL);
+                        
                         aResponseHandler(true, output);
                     });
                 }
