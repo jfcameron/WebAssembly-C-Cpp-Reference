@@ -26,7 +26,9 @@ namespace gdk
         std::string toString(std::ostringstream &sstream, First &&first, Rest &&...rest)
         {
             sstream << first;
+
             toString(sstream, std::forward<Rest>(rest)...);
+
             return sstream.str();
         }
         
@@ -34,7 +36,9 @@ namespace gdk
         std::string toString(std::ostringstream &&sstream, First &&first, Rest &&...rest)
         {
             sstream << first;
+
             toString(sstream, std::forward<Rest>(rest)...);
+
             return sstream.str();
         }
         
@@ -50,7 +54,9 @@ namespace gdk
         : std::runtime_error(std::string(aTag).append(": ").append([&first]()
         {
             std::ostringstream sstream;
+
             sstream << first;
+
             return sstream.str();
         }())
         .append(toString(std::ostringstream(), std::forward<Rest>(rest)...)))

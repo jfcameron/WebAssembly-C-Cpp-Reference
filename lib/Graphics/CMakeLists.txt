@@ -20,7 +20,7 @@ jfc_project(library
         ${gdkdebug_INCLUDE_DIRECTORIES}
         ${gdkmemory_INCLUDE_DIRECTORIES}
         ${gdktime_INCLUDE_DIRECTORIES}
-        ${gdkglfwwrapper_INCLUDE_DIRECTORIES}
+        #${gdkglfwwrapper_INCLUDE_DIRECTORIES} # This is required for Windows because glew is hidden in glfw. These must be separated.
         
         ${stb_INCLUDE_DIR}
         ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
@@ -29,6 +29,7 @@ jfc_project(library
         ${gdkmath_LIBRARIES}
         
         ${stb_LIBRARIES}
+        #${glfw_INCLUDE_DIR} # required access to glew. give me glew
 
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
@@ -37,7 +38,6 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/glh.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4uniformcollection.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/model.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl.cpp        
         ${CMAKE_CURRENT_SOURCE_DIR}/src/shaderprogram.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/textureuniformcollection.cpp

@@ -60,7 +60,7 @@ namespace gdk
         void setModelMatrix(const Vector3 &aWorldPos, const Quaternion &aRotation, const Vector3 &aScale = Vector3::One);
         const Mat4x4 &getModelMatrix() const;
             
-        void draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix);
+        void draw(const double &aDeltaTime, const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix);
             
         Model &operator=(const Model &) = delete;
         Model &operator=(Model &&) = delete;

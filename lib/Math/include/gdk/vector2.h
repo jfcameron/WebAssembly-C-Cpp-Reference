@@ -4,6 +4,7 @@
 #define GDK_MATH_VECTOR2_H
 
 #include <iosfwd>
+#include <type_traits>
 
 namespace gdk
 {
@@ -14,8 +15,11 @@ namespace gdk
     /// \note in reference to the static members: 
     /// X is considered the lateral component, pointing right, 
     /// Y the vertical, pointing up
+    //template<typename T = float>
     struct Vector2 final
     {
+        //static_assert(std::is_floating_point<T>::value, "MemoryStruct must be C compatible");
+
         float x = {0.}, y = {0.};
         
         float length() const;         //!< squareroot of the sum of the 2nd power of the components

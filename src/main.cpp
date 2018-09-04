@@ -18,6 +18,7 @@
 #include <gdk/shaderprogram.h>
 #include <gdk/texture.h>
 #include <gdk/time.h>
+#include <gdk/time_private.h>
 #include <gdk/vector3.h>
 #include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
@@ -48,12 +49,12 @@ namespace
         resources::hidden::updateFetchQueue();
     }
     
-    void update() // thread unsafe work goes here
+    void update(const double &aDeltaTime) // thread unsafe work goes here
     {
         resources::hidden::updateResponseQueue();
     }
     
-    void draw() //Main thread draw (gl is not threadsafe, stuck here)
+    void draw(const double &aDelta) //Main thread draw (gl is not threadsafe, stuck here)
     {        
         static Vector3 pos({0., 0., -10.});
         static Vector3 sca({1., 0.5, 1.});
@@ -73,7 +74,7 @@ namespace
         {
             camera->draw(glfw::GetWindowSize());
 
-            pModel->draw(Mat4x4::Identity, pCamera->getProjectionMatrix());            
+            pModel->draw(aDelta, Mat4x4::Identity, pCamera->getProjectionMatrix());
         }
     }
 
@@ -178,16 +179,16 @@ int main()
     
     init();
 
-    gdk::time::addRenderCallback([](const double &deltaTime)
+    gdk::time::addRenderCallback([](const double &aDeltaTime)
     {
-        update();
+        update(aDeltaTime);
         
 #if defined JFC_TARGET_PLATFORM_Emscripten
         workerupdate();
 #endif
         
-        draw();
+        draw(aDeltaTime);
     });
 
-    return gdk::main();
+    return gdk::time::hidden::mainLoop();
 }

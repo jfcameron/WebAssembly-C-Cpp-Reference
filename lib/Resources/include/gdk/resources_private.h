@@ -1,5 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#ifndef GDK_RESOURCES_PRIVATE_H
+#define GDK_RESOURCES_PRIVATE_H
+
 /// \brief These APIs must be used in order for resources.h to perform correctly.
 ///
 /// \detailed this file should be used and hidden behind a wrapper or intermediary library.
@@ -15,3 +18,5 @@ namespace gdk::resources::hidden
     /// \note not thread safe; only call from mainthread
     void updateResponseQueue();
 }
+
+#endif

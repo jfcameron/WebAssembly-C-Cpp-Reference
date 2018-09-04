@@ -2,20 +2,20 @@
 
 #include <gdkglfwwrapper/buildinfo.h>
 
-#ifdef JFC_TARGET_PLATFORM_Emscripten
-    #include <emscripten/bind.h>
-    #include <emscripten/emscripten.h>
-#elif defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
-    #define GLEW_STATIC
-    #include <GL/glew.h>
-#endif
-
-#include <GLFW/glfw3.h>
-
 #include <gdk/exception.h>
 #include <gdk/glfw_wrapper.h>
 #include <gdk/intvector2.h>
 #include <gdk/logger.h>
+
+#ifdef JFC_TARGET_PLATFORM_Emscripten
+#include <emscripten/bind.h>
+#include <emscripten/emscripten.h>
+#elif defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
+#define GLEW_STATIC
+#include <GL/glew.h>
+#endif
+
+#include <GLFW/glfw3.h>
 
 #include <exception>
 #include <functional>
@@ -128,4 +128,11 @@ namespace glfw
     {
         glfwPollEvents();
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+namespace gdk
+{
+    
 }

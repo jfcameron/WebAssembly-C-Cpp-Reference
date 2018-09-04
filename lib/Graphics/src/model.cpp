@@ -45,7 +45,7 @@ Model::Model()
             gdk::default_ptr<gdk::ShaderProgram>(static_cast<std::shared_ptr<gdk::ShaderProgram>>(ShaderProgram::AlphaCutOff)))
 {}
 
-void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
+void Model::draw(const double &aDeltaTime, const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
 {
     //gdk::log(TAG, *this);
 
@@ -65,7 +65,7 @@ void Model::draw(const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
     
             //bind standard uniforms
             const float time      = time::sinceStart();
-            const float deltaTime = time::getDeltaTime();
+            const float deltaTime = aDeltaTime; //time::getDeltaTime();
         
             const Mat4x4 p = aProjectionMatrix;
             const Mat4x4 v = aViewMatrix;

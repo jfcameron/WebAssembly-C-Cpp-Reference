@@ -10,6 +10,7 @@ namespace gdk
     /// \detailed [Entirely Optional] class that intializes all GDK libs and makes them available in a conveninet way
     class Game
     {
+        
     };
 }
 
