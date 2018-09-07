@@ -7,23 +7,24 @@
 
 using namespace gdk;
 
-const Vector3 Vector3::Up       = Vector3( 0.f, 1.f, 0.f);
-const Vector3 Vector3::Down     = Vector3( 0.f,-1.f, 0.f);
-const Vector3 Vector3::Left     = Vector3(-1.f, 0.f, 0.f);
-const Vector3 Vector3::Right    = Vector3( 1.f, 0.f, 0.f);
-const Vector3 Vector3::Forward  = Vector3( 0.f, 0.f, 1.f);
-const Vector3 Vector3::Backward = Vector3( 0.f, 0.f,-1.f);
-const Vector3 Vector3::Zero     = Vector3( 0.f, 0.f, 0.f);
-const Vector3 Vector3::One      = Vector3( 1.f, 1.f, 1.f);
+const Vector3 Vector3::Up       = { 0.f, 1.f, 0.f};
+const Vector3 Vector3::Down     = { 0.f,-1.f, 0.f};
+const Vector3 Vector3::Left     = {-1.f, 0.f, 0.f};
+const Vector3 Vector3::Right    = { 1.f, 0.f, 0.f};
+const Vector3 Vector3::Forward  = { 0.f, 0.f, 1.f};
+const Vector3 Vector3::Backward = { 0.f, 0.f,-1.f};
+const Vector3 Vector3::Zero     = { 0.f, 0.f, 0.f};
+const Vector3 Vector3::One      = { 1.f, 1.f, 1.f};
 
-std::ostream& gdk::operator<<(std::ostream& s,const gdk::Vector3& a)
+std::ostream &gdk::operator<<(std::ostream &s,const gdk::Vector3 &a)
 {
-    s.clear();
+    s.clear(); s 
 
-    s << "{"
-      << "x: " << a.x << ", "
-      << "y: " << a.y << ", "
-      << "z: " << a.z << "}";
+    << "{"
+    << "x: " << a.x << ", "
+    << "y: " << a.y << ", "
+    << "z: " << a.z 
+    << "}";
 
     return s;
 }

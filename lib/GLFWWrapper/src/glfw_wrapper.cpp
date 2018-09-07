@@ -60,12 +60,12 @@ namespace
             glfwMakeContextCurrent(pGLFWWindow);
                 
             glfwSetWindowSizeCallback(pGLFWWindow, [](GLFWwindow *const aWindow, int aX, int aY)
-                                      {
-                                          windowSize.x = aX;
-                                          windowSize.y = aY;
+            {
+                windowSize.x = aX;
+                windowSize.y = aY;
 
-                                          WindowSizeCallback(aX, aY);
-                                      });
+                if (WindowSizeCallback != nullptr) WindowSizeCallback(aX, aY);
+            });
 
 #if defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
             []()

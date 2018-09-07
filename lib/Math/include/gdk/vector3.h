@@ -20,16 +20,16 @@ namespace gdk
         //! Sets length of vector to 1
         void normalize(void);
             
-        bool operator==(const Vector3&) const;
-        bool operator!=(const Vector3&) const;
-        Vector3 operator+(const Vector3&) const;
-        Vector3 operator-(const Vector3&) const;
-        Vector3 operator*(const float&) const;
+        bool operator==(const Vector3 &) const;
+        bool operator!=(const Vector3 &) const;
+        Vector3 operator+(const Vector3 &) const;
+        Vector3 operator-(const Vector3 &) const;
+        Vector3 operator*(const float &) const;
             
-        Vector3& operator+=(const Vector3&);
-        Vector3& operator-=(const Vector3&);
-        Vector3& operator*=(const float&);
-        Vector3& operator=(const Vector3&) = default;
+        Vector3& operator+=(const Vector3 &);
+        Vector3& operator-=(const Vector3 &);
+        Vector3& operator*=(const float &);
+        Vector3& operator=(const Vector3 &) = default;
             
         Vector3(const float &aX, const float &aY, const float &aZ);
         Vector3() = default;
@@ -47,7 +47,7 @@ namespace gdk
         static const Vector3 One;
     };
         
-    std::ostream& operator<< (std::ostream&, const gdk::Vector3&);    
+    std::ostream &operator<< (std::ostream &, const gdk::Vector3 &);
 }
 
 #endif

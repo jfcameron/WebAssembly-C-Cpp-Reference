@@ -30,21 +30,6 @@ namespace
     std::vector<gdk::time::UpdateFunctionSignature> drawFunctions;
 }
 
-namespace
-{
-    void gameloop() //probably refactor
-    {
-        const double deltaTime = updateDeltaTime();
-
-        //for (const auto &item : updateFunctions) item(deltaTime);
-
-        for (const auto &item : drawFunctions) item(deltaTime);
-        
-        glfw::PollEvents();
-        glfw::SwapBuffer(); // This is not required on emscriptn for whatever reason. That worries me a bit. 
-    }
-}
-
 namespace gdk::time
 {
     void addUpdateCallback(const UpdateFunctionSignature aUpdateFunction)
@@ -70,6 +55,18 @@ namespace gdk::time
 
 namespace gdk::time::hidden
 {
+    void gameloop() //probably refactor
+    {
+        const double deltaTime = updateDeltaTime();
+
+        //for (const auto &item : updateFunctions) item(deltaTime);
+
+        for (const auto &item : drawFunctions) item(deltaTime);
+        
+        glfw::PollEvents();
+        glfw::SwapBuffer(); // This is not required on emscriptn for whatever reason. That worries me a bit. 
+    }
+
     int mainLoop()
     {
 #if defined JFC_TARGET_PLATFORM_Emscripten

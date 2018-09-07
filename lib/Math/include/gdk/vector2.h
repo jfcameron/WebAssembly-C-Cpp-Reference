@@ -4,7 +4,7 @@
 #define GDK_MATH_VECTOR2_H
 
 #include <iosfwd>
-#include <type_traits>
+//#include <type_traits>
 
 namespace gdk
 {
@@ -24,7 +24,7 @@ namespace gdk
         
         float length() const;         //!< squareroot of the sum of the 2nd power of the components
         float getAspectRatio() const; //!< division of the x component by the y component
-        void normalize();             //!< Reduce length of the vector to 1 while maintaning its direction
+        void  normalize();            //!< Reduce length of the vector to 1 while maintaning its direction
             
         bool operator==(const Vector2 &) const;
         bool operator!=(const Vector2 &) const;

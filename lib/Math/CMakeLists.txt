@@ -15,8 +15,6 @@ jfc_project(library
         
     PRIVATE_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
- 
-        ${gdkdebug_INCLUDE_DIRECTORIES}
 
         ${glm_INCLUDE_DIR}
 
@@ -24,7 +22,6 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/intvector2.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/quaternion.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/trigonometry.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vector2.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vector3.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vector4.cpp

@@ -1,7 +1,6 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/quaternion.h>
-#include <gdk/trigonometry.h>
 #include <gdk/vector3.h>
 
 #include <glm/gtc/quaternion.hpp>

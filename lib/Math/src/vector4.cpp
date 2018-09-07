@@ -7,9 +7,9 @@
 
 using namespace gdk;
 
-const Vector4 Vector4::Zero = Vector4(0., 0., 0., 0.);
+const Vector4 Vector4::Zero = {0., 0., 0., 0.};
 
-std::ostream& gdk::operator<<(std::ostream& s, const Vector4& a)
+std::ostream &gdk::operator<<(std::ostream &s, const Vector4 &a)
 {
     s.clear(); s 
     

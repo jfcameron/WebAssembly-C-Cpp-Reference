@@ -1,25 +1,23 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/exception.h>
-#include <gdk/logger.h>
 #include <gdk/mat4x4.h>
 #include <gdk/quaternion.h>
-#include <gdk/trigonometry.h>
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
 
+#include <cmath>
 #include <iostream>
-#include <math.h>
+#include <stdexcept>
 
 using namespace gdk;
 
 static constexpr char TAG[] = "Mat4x4";
 
-const Mat4x4 Mat4x4::Identity = Mat4x4(); //This is reversed...
+const Mat4x4 Mat4x4::Identity = Mat4x4(); //This seems reversed...
 
-std::ostream& gdk::operator<< (std::ostream &s, const gdk::Mat4x4& aMat)
+std::ostream &gdk::operator<< (std::ostream &s, const gdk::Mat4x4 &aMat)
 {
-    s.clear();s
+    s.clear(); s
 
     << "[" 
     << "[" << aMat.m[0][0] << ", " << aMat.m[1][0] << ", " << aMat.m[2][0] << ", " << aMat.m[3][0] << "],\n"
@@ -31,8 +29,7 @@ std::ostream& gdk::operator<< (std::ostream &s, const gdk::Mat4x4& aMat)
     return s;
 }
 
-Mat4x4::Mat4x4()
-    : m
+Mat4x4::Mat4x4() : m
 {
     {1.,0.,0.,0.},
     {0.,1.,0.,0.},
@@ -51,12 +48,7 @@ void Mat4x4::setToIdentity()
 
 void Mat4x4::setToOrthographic(const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)
 {
-    (void)aOrthoSize;
-    (void)aNearClippingPlane;
-    (void)aFarClippingPlane;
-    (void)aViewportAspectRatio;
-    
-    throw gdk::Exception(TAG, "Mat4x4::setToOrthographic not implemented!");
+    throw std::runtime_error("Mat4x4::setToOrthographic not implemented!");
 }
 
 void Mat4x4::setToPerspective(const float aFieldOfView, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio)

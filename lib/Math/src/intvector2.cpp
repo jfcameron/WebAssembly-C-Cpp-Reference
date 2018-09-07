@@ -7,15 +7,16 @@
 
 using namespace gdk;
 
-const IntVector2 IntVector2::Up    = IntVector2( 0, 1);
-const IntVector2 IntVector2::Down  = IntVector2( 0,-1);
-const IntVector2 IntVector2::Left  = IntVector2(-1, 0);
-const IntVector2 IntVector2::Right = IntVector2( 1, 0);
-const IntVector2 IntVector2::Zero  = IntVector2( 0, 0);
+const IntVector2 IntVector2::Up    = { 0, 1};
+const IntVector2 IntVector2::Down  = { 0,-1};
+const IntVector2 IntVector2::Left  = {-1, 0};
+const IntVector2 IntVector2::Right = { 1, 0};
+const IntVector2 IntVector2::Zero  = { 0, 0};
 
 std::ostream &gdk::operator<<(std::ostream &s, const gdk::IntVector2 &a)
 {
     s.clear(); s
+    
     << "{"
     << "x: " << a.x << ", "
     << "y: " << a.y

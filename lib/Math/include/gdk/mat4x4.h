@@ -23,7 +23,7 @@ namespace gdk
         //! Sets matrix to an identity matrix
         void setToIdentity();
 
-        //! Sets matrix to an orthographic projection matrix, typically used to render a 2D scene or to render orthographic [depth] maps of a 3D scene
+        //! Sets matrix to an orthographic projection matrix, typically used to render a 2D scene or to render maps (lighting, depth) of a 3D scene
         void setToOrthographic(const gdk::Vector2 &aOrthoSize, const float aNearClippingPlane, const float aFarClippingPlane, const float aViewportAspectRatio);
 
         //! Sets matrix to a perspective projection matrix, typically used to render a 3D scene
@@ -45,7 +45,7 @@ namespace gdk
         Mat4x4 set(
             const float m00, const float m01, const float m02, const float m03, const float m10, const float m11, const float m12, const float m13,
             const float m20, const float m21, const float m22, const float m23, const float m30, const float m31, const float m32, const float m33
-            );
+        );
 
         //! multiply the matrix against another
         Mat4x4 multiply(const Mat4x4 &right);
