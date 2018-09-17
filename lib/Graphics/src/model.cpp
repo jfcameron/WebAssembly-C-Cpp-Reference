@@ -8,6 +8,8 @@
 #include <gdk/model.h>
 #include <gdk/opengl.h>
 #include <gdk/time.h>
+#include <gdk/vertexdata.h>
+#include <gdk/shaderprogram.h>
 
 #include <iostream>
 
@@ -47,8 +49,6 @@ Model::Model()
 
 void Model::draw(const double &aDeltaTime, const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
 {
-    //gdk::log(TAG, *this);
-
     if (const auto pShader = m_ShaderProgram.lock())
     {
         if (const auto pVertexData = m_VertexData.lock())

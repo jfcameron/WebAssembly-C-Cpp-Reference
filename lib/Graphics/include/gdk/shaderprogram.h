@@ -12,6 +12,8 @@
 namespace gdk
 {
     /// \brief Specifies drawing behaviours at [at least 2] of the programmable stages in the OpenGL programmable pipeline.
+    ///
+    /// \detailed none.
     class ShaderProgram final
     {
         friend std::ostream &operator<< (std::ostream &, const ShaderProgram &);

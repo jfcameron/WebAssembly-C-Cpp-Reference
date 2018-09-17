@@ -5,8 +5,8 @@
 
 /// \brief These APIs must be used in order for resources.h to perform correctly.
 ///
-/// \detailed this file should be used and hidden behind a wrapper or intermediary library.
-/// this file should be hidden from the end user (the user of your library); it is irrelevant to them.
+/// \detailed this file should be hidden from the end user (the user of your library); it is irrelevant to them.
+/// this file should be used and hidden behind a wrapper or intermediary library.
 namespace gdk::resources::hidden
 {
     //! as fetches are made, fetch tasks are put in the fetch queue.

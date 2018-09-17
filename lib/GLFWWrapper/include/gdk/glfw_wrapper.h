@@ -1,5 +1,8 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
+#ifndef GDK_GLFW_WRAPPER_H
+#define GDK_GLFW_WRAPPER_H
+
 #include <gdk/intvector2.h>
 #include <gdk/vector2.h>
 
@@ -96,3 +99,5 @@ namespace gdk
     };
 }
 */
+
+#endif

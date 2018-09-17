@@ -7,6 +7,7 @@
 #include <gdk/intvector2.h>
 #include <gdk/logger.h>
 #include <gdk/mat4x4.h>
+#include <gdk/model.h>
 #include <gdk/opengl.h>
 #include <gdk/quaternion.h>
 #include <gdk/vector2.h>
@@ -58,7 +59,7 @@ static inline void calculatePerspectiveProjection(gdk::Mat4x4& aProjectionMatrix
     aProjectionMatrix.setToPerspective(aFieldOfView, aNearClippingPlane, aFarClippingPlane, aViewportAspectRatio);
 }
 
-void Camera::draw(const gdk::IntVector2 &aFrameBufferSize)
+void Camera::draw(const double &aDeltaTime, const gdk::IntVector2 &aFrameBufferSize, const std::vector<std::shared_ptr<gdk::Model>> &aModels)
 {
     gdk::IntVector2 viewportPixelPosition(aFrameBufferSize * m_ViewportPosition);
     gdk::IntVector2 viewportPixelSize    (aFrameBufferSize * m_ViewportSize);
@@ -93,6 +94,10 @@ void Camera::draw(const gdk::IntVector2 &aFrameBufferSize)
             case ClearMode::Nothing:
             break;
     }
+
+    //
+    //
+    for (auto model : aModels) model->draw(aDeltaTime, m_ViewMatrix, getProjectionMatrix());
 }
 
 void Camera::setViewMatrix(const gdk::Vector3 &aWorldPos, const gdk::Quaternion &aRotation)

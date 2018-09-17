@@ -55,29 +55,32 @@ namespace gdk::time
 
 namespace gdk::time::hidden
 {
-    void gameloop() //probably refactor
+    void updateLoopImplementation()
     {
         const double deltaTime = updateDeltaTime();
 
-        //for (const auto &item : updateFunctions) item(deltaTime);
+        for (const auto &item : updateFunctions) item(deltaTime);
 
         for (const auto &item : drawFunctions) item(deltaTime);
         
         glfw::PollEvents();
-        glfw::SwapBuffer(); // This is not required on emscriptn for whatever reason. That worries me a bit. 
+        glfw::SwapBuffer();
     }
 
     int mainLoop()
     {
 #if defined JFC_TARGET_PLATFORM_Emscripten
 
-        emscripten_set_main_loop(gameloop, -1, 0); // Negative fps will force requestAnimationFrame usage
+        emscripten_set_main_loop(updateLoopImplementation, -1, 0); // Negative fps will force requestAnimationFrame usage
         
         //emscripten_set_main_loop(update, 60, 0); // must manually call out to requestAnimationFrame and the other timing api to separate gl and logic
 
 #elif defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Linux || defined JFC_TARGET_PLATFORM_Windows
 
-        while(true) gameloop();
+        while(true) 
+        {
+            updateLoopImplementation();
+        }
 
 #endif
         return EXIT_SUCCESS;

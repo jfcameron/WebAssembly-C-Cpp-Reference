@@ -8,6 +8,7 @@
 #include <gdk/mat4x4.h>
 
 #include <iosfwd>
+#include <memory>
 
 namespace gdk
 {
@@ -15,7 +16,10 @@ namespace gdk
     struct Vector3;   
     struct Quaternion;
     
+    class Model;
+    
     /// \brief Position, orientation and perspective from which Model(s) are drawn
+    /// \todo separate ortho and persepective into subclasses
     class Camera final
     {
         friend std::ostream &operator<< (std::ostream &, const Camera &);
@@ -35,11 +39,13 @@ namespace gdk
         gdk::Vector2 m_ViewportSize =     gdk::Vector2(1., 1.); //!< size of camera viewport within the device viewport
 
         //This is a bit logically messy. I dont know if this approach for generating the projection matrix is as legible as possible. This is a modal class. Shouldnt this be two subclasses?
-        ProjectionMode m_ProjectionMode =    ProjectionMode::Perspective;
-        gdk::Vector2   m_OrthoSize =         {10, 10};
-        float          m_FieldOfView =       {90.};
-        float          m_NearClippingPlane = {0.001};
-        float          m_FarClippingPlane  = {20.};
+        ProjectionMode m_ProjectionMode =    ProjectionMode::Perspective; //this will be removed when subclassing
+        
+        gdk::Vector2 m_OrthoSize = {10, 10}; // this belongs to ortho
+        float m_FieldOfView =      {90.}; // this belongs to perspective
+
+        float m_NearClippingPlane = {0.001};
+        float m_FarClippingPlane =  {20.};
             
         //RenderTexture m_RenderTexture;
             
@@ -61,8 +67,8 @@ namespace gdk
 
         void setClearColor(const gdk::Color &aColor);
             
-        //! \Warn "draw" is misleading. It sets up the viewport and calculates view & projection mats. It preps for draw.
-        void draw(const gdk::IntVector2 &aFrameBufferSize);
+        //! Draws a list of models to the framebuffer
+        void draw(const double &aDeltaTime, const gdk::IntVector2 &aFrameBufferSize, const std::vector<std::shared_ptr<gdk::Model>> &aModels);
             
         Camera& operator=(const Camera &) = delete;
         Camera& operator=(Camera &&) = delete;

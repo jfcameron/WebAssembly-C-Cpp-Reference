@@ -44,7 +44,7 @@ namespace
             
         return []()
         {
-            const gdk::IntVector2 aScreenSize(800,600);
+            const gdk::IntVector2 aScreenSize(400,300);
             const std::string aName("GDK Window");
         
             windowSize = aScreenSize;
@@ -58,6 +58,8 @@ namespace
             if (!pGLFWWindow) throw gdk::Exception(TAG, "glfwCreateWindow failed. Can the environment provide a GLES2.0/WebGL1.0 context?");
 
             glfwMakeContextCurrent(pGLFWWindow);
+
+            //glfwSwapInterval(0); // Unlocks the framerate. Is this what I want? who knows.
                 
             glfwSetWindowSizeCallback(pGLFWWindow, [](GLFWwindow *const aWindow, int aX, int aY)
             {

@@ -14,6 +14,7 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 
         ${gdkglfwwrapper_INCLUDE_DIR}
+        ${gdkmath_INCLUDE_DIRECTORIES}
 
         ${glfw_INCLUDE_DIR}
 
@@ -21,7 +22,6 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 
         ${gdkdebug_INCLUDE_DIRECTORIES}
-        ${gdkmath_INCLUDE_DIRECTORIES}
 
     SOURCE_LIST 
         ${CMAKE_CURRENT_SOURCE_DIR}/src/glfw_wrapper.cpp

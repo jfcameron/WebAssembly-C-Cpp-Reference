@@ -17,7 +17,7 @@ namespace gdk
     template <typename T>
     class locking_queue
     {
-        mutable std::mutex m_mutex;
+        std::mutex m_mutex;
         
         std::queue<T> m_queue;
         

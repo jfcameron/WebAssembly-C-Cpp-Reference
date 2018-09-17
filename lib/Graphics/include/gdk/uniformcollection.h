@@ -15,6 +15,8 @@ namespace gdk
     ///
     /// \detailed It is a baseclass that manages, binds and unbinds a collection of T to a
     /// shaderprogram
+    ///
+    /// \todo Cache uniform locations. currently uniform locations are resolved at every bind
     template<typename T> class UniformCollection
     {
     protected:

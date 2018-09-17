@@ -17,8 +17,9 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 
         ${gdkglfwwrapper_INCLUDE_DIRECTORIES}
-        ${gdkmath_INCLUDE_DIRECTORIES}
 
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/time.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/timer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gameloop.cpp
 )

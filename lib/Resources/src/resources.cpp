@@ -6,8 +6,6 @@
 #include <gdk/resources.h>
 #include <gdkresources/buildinfo.h>
 
-#include <stb/stb_image.h>
-
 #if defined JFC_TARGET_PLATFORM_Emscripten
 #include <emscripten.h>
 #include <emscripten/fetch.h>

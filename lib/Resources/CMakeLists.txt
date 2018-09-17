@@ -28,7 +28,6 @@ jfc_project(library
         ${gdkmemory_INCLUDE_DIRECTORIES}
         
         ${curl_INCLUDE_DIR}
-        ${stb_INCLUDE_DIR}
 
     LIBRARIES
         ${gdkdebug_LIBRARIES}

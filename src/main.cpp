@@ -5,8 +5,9 @@
 #include <gdk/camera.h>
 #include <gdk/color.h>
 #include <gdk/exception.h>
-#include <gdk/input_private.h>
+#include <gdk/gameloop.h>
 #include <gdk/glfw_wrapper.h>
+#include <gdk/input_private.h>
 #include <gdk/intvector2.h>
 #include <gdk/keyboard.h>
 #include <gdk/logger.h>
@@ -30,8 +31,8 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
-#include <vector>
 #include <thread>
+#include <vector>
 
 static constexpr auto TAG = "main";
 
@@ -39,156 +40,114 @@ using namespace gdk;
 
 namespace
 {
-    std::shared_ptr<gdk::Camera> pCamera, pCamera2;
     std::vector<std::shared_ptr<gdk::Camera>> cameras;
     
-    std::shared_ptr<gdk::Model> pModel;
-
-    void workerupdate() //Thread safe work goes here
-    {
-        resources::hidden::updateFetchQueue();
-    }
-    
-    void update(const double &aDeltaTime) // thread unsafe work goes here
-    {
-        resources::hidden::updateResponseQueue();
-    }
-    
-    void draw(const double &aDelta) //Main thread draw (gl is not threadsafe, stuck here)
-    {        
-        static Vector3 pos({0., 0., -10.});
-        static Vector3 sca({1., 0.5, 1.});
-        static Quaternion rot;
-
-        sca.z = sin(time::sinceStart() / 2.f) * 1.f;
-        rot.setFromEuler({time::sinceStart() / 2.f, time::sinceStart(), 0});
-
-        if (keyboard::getKeyDown(keyboard::Key::W)) pos.z -= 0.5;
-        if (keyboard::getKeyDown(keyboard::Key::S)) pos.z += 0.5;
-        if (keyboard::getKeyDown(keyboard::Key::A)) pos.x -= 0.5;
-        if (keyboard::getKeyDown(keyboard::Key::D)) pos.x += 0.5;
-        
-        pModel->setModelMatrix(pos, rot, sca);
-
-        for (std::shared_ptr<gdk::Camera> &camera : cameras)
-        {
-            camera->draw(glfw::GetWindowSize());
-
-            pModel->draw(aDelta, Mat4x4::Identity, pCamera->getProjectionMatrix());
-        }
-    }
-
-    void init()
-    {
-        pCamera = std::make_shared<Camera>([]()
-        {
-            Camera camera;
-
-            camera.setViewportSize(0.5, 1.0);
-              
-            return camera;
-        }());
-
-        pCamera2 = std::make_shared<Camera>([]()
-        {
-            Camera camera;
-
-            camera.setViewportSize(0.5, 1.0);
-            camera.setViewportPosition(0.5, 0.0);
-            camera.setClearColor(Color::Blue);
-              
-            return camera;
-        }());
-
-        cameras.push_back(pCamera);
-        cameras.push_back(pCamera2);
-
-        pModel = std::make_shared<Model>([]()
-        {
-            Model model("MySuperCoolModel",
-                default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
-                default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
-                
-            gdk::resources::local::fetchFile("resource/awesome.png",
-            [](const bool aSucceeded, std::vector<unsigned char> aData)
-            {
-                if (aSucceeded)
-                {
-                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", aData));
-                    
-                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-                }
-                else gdk::log(TAG, "the fetch failed");
-            });
-            
-            gdk::resources::local::fetchFile("resource/BG.png",
-            [](const bool aSucceeded, std::vector<unsigned char> aData)
-            {
-                if (aSucceeded)
-                {
-                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", aData));
-                
-                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-                }
-                else gdk::log(TAG, "the fetch failed");
-            });
-        
-            resources::remote::fetchFile("https://jfcameron.updog.co/Public/mia.png",
-            [](const bool aSucceeded, std::vector<unsigned char> aData)
-            {
-                if (aSucceeded)
-                {
-                    auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
-
-                    pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
-                }
-                else gdk::log(TAG, "the fetch failed");
-            });
-
-            model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
-
-            return model;
-        }());
-    }
+    std::vector<std::shared_ptr<gdk::Model>> models;
 }
 
 int main()
 {
-    std::cout << gdk_BuildInfo_TargetPlatform << std::endl << "Greetings from C++\n";
-
-#if !defined JFC_TARGET_PLATFORM_Emscripten // Webassm does not support threading
-    
-    // Worker pool
-    std::vector<std::thread> workers;
-    
-    if (std::thread::hardware_concurrency() > 1)
+    std::shared_ptr<gdk::Camera> pCamera = std::make_shared<Camera>([&]()
     {
-        std::atomic<bool> isAlive = true;
-        
-        for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; ++i)
+        Camera camera;
+
+        camera.setViewportSize(0.5, 1.0);
+            
+        return camera;
+    }());
+
+    std::shared_ptr<gdk::Camera> pCamera2 = std::make_shared<Camera>([&]()
+    {
+        Camera camera;
+
+        camera.setViewportSize(0.5, 1.0);
+        camera.setViewportPosition(0.5, 0.0);
+        camera.setClearColor(Color::Blue);
+            
+        return camera;
+    }());
+
+    cameras.push_back(pCamera);
+    cameras.push_back(pCamera2);
+
+    std::shared_ptr<gdk::Model> pModel = std::make_shared<Model>([&]()
+    {
+        Model model("MySuperCoolModel",
+            default_ptr<VertexData>(static_cast<std::shared_ptr<VertexData>>(VertexData::Cube)),
+            default_ptr<ShaderProgram>(static_cast<std::shared_ptr<ShaderProgram>>(ShaderProgram::AlphaCutOff)));
+            
+        gdk::resources::local::fetchFile("resource/awesome.png",
+        [&](const bool aSucceeded, std::vector<unsigned char> aData)
         {
-            workers.push_back(std::thread([&]()
+            if (aSucceeded)
             {
-                while(isAlive) workerupdate();
+                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", aData));
                 
-                //for (auto &worker : workers) worker.join();
-            }));
-        }
-    }
-#endif
+                pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+            }
+            else gdk::log(TAG, "the fetch failed");
+        });
+        
+        gdk::resources::local::fetchFile("resource/BG.png",
+        [&](const bool aSucceeded, std::vector<unsigned char> aData)
+        {
+            if (aSucceeded)
+            {
+                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", aData));
+            
+                pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+            }
+            else gdk::log(TAG, "the fetch failed");
+        });
     
-    init();
+        resources::remote::fetchFile("https://jfcameron.updog.co/Public/mia.png",
+        [&](const bool aSucceeded, std::vector<unsigned char> aData)
+        {
+            if (aSucceeded)
+            {
+                auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("remote and not awesome", aData));
 
-    gdk::time::addRenderCallback([](const double &aDeltaTime)
-    {
-        update(aDeltaTime);
-        
-#if defined JFC_TARGET_PLATFORM_Emscripten
-        workerupdate();
-#endif
-        
-        draw(aDeltaTime);
-    });
+                pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
+            }
+            else gdk::log(TAG, "the fetch failed");
+        });
 
-    return gdk::time::hidden::mainLoop();
+        model.setModelMatrix((Vector3){0., 0., 0.}, (Quaternion){});
+
+        return model;
+    }());
+
+    models.push_back(pModel);
+
+    gdk::GameLoop::Create(
+        // Main Update
+        [&](const double &aDeltaTime)
+        {
+            resources::hidden::updateResponseQueue();
+
+            static Vector3 pos({0., 0. , -10.});
+            static Vector3 sca({1., 0.5,   1.});
+            static Quaternion rot;
+
+            sca.z = sin(time::sinceStart() / 2.f) * 1.f;
+            rot.setFromEuler({time::sinceStart() / 2.f, time::sinceStart(), 0});
+
+            if (keyboard::getKeyDown(keyboard::Key::W)) pos.z -= 0.5;
+            if (keyboard::getKeyDown(keyboard::Key::S)) pos.z += 0.5;
+            if (keyboard::getKeyDown(keyboard::Key::A)) pos.x -= 0.5;
+            if (keyboard::getKeyDown(keyboard::Key::D)) pos.x += 0.5;
+            
+            pModel->setModelMatrix(pos, rot, sca);
+        },
+        // Main Draw
+        [&](const double &aDeltaTime)
+        {
+            for (std::shared_ptr<gdk::Camera> &camera : cameras) camera->draw(aDeltaTime, glfw::GetWindowSize(), models);
+        },
+        // Worker Update
+        [&]()
+        {
+            resources::hidden::updateFetchQueue();
+        }
+    );
 }
