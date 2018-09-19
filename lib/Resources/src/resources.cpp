@@ -191,11 +191,7 @@ namespace gdk::resources::remote
             
                 const CURLcode curlResult = curl_easy_perform(curl_handle);
             
-                if (curlResult != CURLE_OK) // on macos/xcode saw an issue where this passsed although it was not CURLE_OK
-                {
-                    gdk::Exception(TAG, "curl_easy_perform failed: ", curl_easy_strerror(curlResult));
-                }
-                else
+                if (curlResult == CURLE_OK) // on macos/xcode saw an issue where this passsed although it was not CURLE_OK
                 {
                     //printf("%lu bytes retrieved\n", static_cast<unsigned long>(chunk.size));
 
@@ -217,6 +213,7 @@ namespace gdk::resources::remote
                         aResponseHandler(true, output);
                     });
                 }
+                else throw gdk::Exception(TAG, "curl_easy_perform failed: ", curl_easy_strerror(curlResult));
                 
                 curl_easy_cleanup(curl_handle);
 

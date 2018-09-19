@@ -28,15 +28,18 @@ jfc_project(library
         ${gdkmemory_INCLUDE_DIRECTORIES}
         
         ${curl_INCLUDE_DIR}
+        ${sqlite_INCLUDE_DIR}
 
     LIBRARIES
         ${gdkdebug_LIBRARIES}
         
         ${curl_LIBRARIES}
+        ${sqlite_LIBRARIES}
 
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
-        ${PLATFORM_SPECIFIC_SOURCE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/database.cpp
+        ${PLATFORM_SPECIFIC_SOURCE} #????
 )
 
 #[[if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")

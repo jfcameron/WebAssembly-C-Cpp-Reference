@@ -4,6 +4,7 @@
 
 #include <gdk/camera.h>
 #include <gdk/color.h>
+#include <gdk/database.h>
 #include <gdk/exception.h>
 #include <gdk/gameloop.h>
 #include <gdk/glfw_wrapper.h>
@@ -118,6 +119,12 @@ int main()
     }());
 
     models.push_back(pModel);
+
+    ///////////////////////////
+
+    gdk::Database db(gdk::Database::ConstructionMode::OPEN_OR_CREATE, gdk::Database::ReadMode::READWRITE, "blar.db");
+
+    //////////////////////////////
 
     gdk::GameLoop::Create(
         // Main Update

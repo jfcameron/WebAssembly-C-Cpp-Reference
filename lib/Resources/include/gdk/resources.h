@@ -14,17 +14,6 @@ namespace gdk::resources
     /// signature for resource aquisition callbacks. bool indicates success or failure. vector of bytes contains data.
     using response_handler_type = std::function<void(const bool, std::vector<unsigned char>)>;
 
-    /*namespace local database?? 
-    //! RAII wrapper for local database
-    class DataBase [final? abstract? is this tied to sqlite or is it an interface?]
-    {
-        readstring(key)
-        writestring(key,value)
-
-    public:
-        DataBase(const std::string aPathToDatabase);
-    }*/
-
     //! fetch data from the local filesystem
     namespace local
     {

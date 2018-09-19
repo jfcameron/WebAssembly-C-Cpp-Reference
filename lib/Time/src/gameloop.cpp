@@ -90,8 +90,7 @@ namespace gdk
             auto *const me = static_cast<GameLoop *const>(vpMe);
 
             const double deltaTime = me->updateLoopTimer.getAndReset();
-
-            std::cout << "miliseconds: " <<  CalcAverageTick(static_cast<int>(deltaTime * 1000)) << std::endl;
+            //std::cout << "miliseconds: " <<  CalcAverageTick(static_cast<int>(deltaTime * 1000)) << std::endl;
 
             // Update work \todo lock me at UPDATE RATE
             {

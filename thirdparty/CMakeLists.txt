@@ -4,6 +4,9 @@ set(dependencies
     "glm"
     "nlohmann"
     "stb"
+
+    # W I P
+    "sqlite"
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Emscripten")
