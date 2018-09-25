@@ -124,6 +124,16 @@ int main()
 
     gdk::Database db(gdk::Database::ConstructionMode::OPEN_OR_CREATE, gdk::Database::ReadMode::READWRITE, "blar.db");
 
+    using cool_table_type = std::tuple<
+        Database::integer_type, // ID
+        Database::text_type,    // Company name
+        Database::integer_type  // Value (USD)
+    >;
+
+    db.createTable<int, std::string>("VeryCoolCarTable");
+
+    db.writeToTable("VeryCoolCarTable", (cool_table_type){1, "Audi", 52642});
+
     //////////////////////////////
 
     gdk::GameLoop::Create(

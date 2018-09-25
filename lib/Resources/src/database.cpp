@@ -29,5 +29,16 @@ namespace gdk
     }())
     {
         gdk::log(TAG, "sqlite version: ", sqlite3_libversion());
+
+        
+        ///
+
+        auto coolbeans = (std::tuple<int, double, char, std::string>){
+            123,
+            1.245,
+            'a',
+            "narfnarf"
+        };
+
     }
 }
