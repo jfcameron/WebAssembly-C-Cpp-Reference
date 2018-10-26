@@ -11,10 +11,12 @@ namespace gdk::resources::hidden
 {
     //! as fetches are made, fetch tasks are put in the fetch queue.
     /// this function processes the fetch queue, performing the fetches.
+    /// \note this function must be called by (at least one) thread for Resources to behave correctly
     /// \note thread safe
     void updateFetchQueue();
 
     //! runs the response handlers for completed fetches.
+    /// \note this function must be called by the main thread (not thread safe) for Resources to behave correctly
     /// \note not thread safe; only call from mainthread
     void updateResponseQueue();
 }

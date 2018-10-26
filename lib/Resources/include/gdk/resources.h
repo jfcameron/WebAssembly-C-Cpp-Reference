@@ -27,7 +27,7 @@ namespace gdk::resources
     {
         //! loads a file at aURL to an array of bytes
         /// \note this function is asynchronous
-        void fetchFile(const std::string aURL, response_handler_type aResponse /*, aTimeoutMS*/ /*, aAuthToken? etc.*/);
+        void fetchFile(const std::string aURL, response_handler_type aResponse /*, aTimeoutMS, aAuthToken?, etc...*/);
     }
 }
 

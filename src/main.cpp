@@ -122,17 +122,94 @@ int main()
 
     ///////////////////////////
 
-    gdk::Database db(gdk::Database::ConstructionMode::OPEN_OR_CREATE, gdk::Database::ReadMode::READWRITE, "blar.db");
+    gdk::Database db(gdk::Database::ConstructionMode::OPEN_OR_CREATE, gdk::Database::ReadMode::READWRITE, "very_cool_scene.db");
 
-    using cool_table_type = std::tuple<
-        Database::integer_type, // ID
-        Database::text_type,    // Company name
-        Database::integer_type  // Value (USD)
-    >;
+    std::string tableName = "Entities";
+    
+    Database::row_format_type tableFormat = {
+        {"name", Database::Data::Type::Text},
 
-    db.createTable<int, std::string>("VeryCoolCarTable");
+        {"transform_position_x", Database::Data::Type::Real},
+        {"transform_position_y", Database::Data::Type::Real},
+        {"transform_position_z", Database::Data::Type::Real},
 
-    db.writeToTable("VeryCoolCarTable", (cool_table_type){1, "Audi", 52642});
+        {"transform_rotation_x", Database::Data::Type::Real},
+        {"transform_rotation_y", Database::Data::Type::Real},
+        {"transform_rotation_z", Database::Data::Type::Real},
+    };
+
+    db.createTable(tableName, tableFormat);
+
+    db.writeToTable(tableName, (std::vector<Database::Data>){
+        {Database::Data::text_type("Stevie")},
+        
+        {Database::Data::real_type(10.0)},
+        {Database::Data::real_type(13.333)},
+        {Database::Data::real_type(25.9541)},
+
+        {Database::Data::real_type(35)},
+        {Database::Data::real_type(42.5)},
+        {Database::Data::real_type(16.66)},
+    });
+
+    auto table = db.getTableContents(tableName);
+
+    class Entity
+    {
+    public:
+        std::string m_Name = "Unknown";
+
+        struct
+        {
+            struct
+            {
+                float x = 0, y = 0, z = 0;
+            } m_Position;
+
+            struct
+            {
+                float x = 0, y = 0, z = 0;
+            } m_Rotation;
+        } m_Transform;
+    };
+
+    struct : public Entity
+    {
+
+    } MyEntity = {};
+    {
+        const auto &firstRow = table[0];
+
+        size_t i = 0;
+
+        MyEntity.m_Name = firstRow[i++].getText();
+
+        MyEntity.m_Transform.m_Position.x = firstRow[i++].getReal();
+        MyEntity.m_Transform.m_Position.y = firstRow[i++].getReal();
+        MyEntity.m_Transform.m_Position.z = firstRow[i++].getReal();
+        
+        MyEntity.m_Transform.m_Rotation.x = firstRow[i++].getReal();
+        MyEntity.m_Transform.m_Rotation.y = firstRow[i++].getReal();
+        MyEntity.m_Transform.m_Rotation.z = firstRow[i++].getReal();
+    }
+
+    std::cout << MyEntity.m_Name << std::endl;
+
+    std::cout << "number of tables in database: " << db.getNumberOfTables() << std::endl;
+
+    const auto tableNames = db.getTableNames();
+
+    for (const auto &item : tableNames) std::cout << item << std::endl;
+
+    const auto printTableExists = [&](const std::string &aTableName)
+    {
+        db.doesTableExist(aTableName) 
+            ? std::cout << aTableName << " exists" << std::endl 
+            : std::cout << aTableName << " does not exist!" << std::endl;
+    };
+
+    printTableExists(tableName);
+    printTableExists("blimblam");
 
     //////////////////////////////
 

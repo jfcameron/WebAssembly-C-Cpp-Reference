@@ -80,7 +80,7 @@ namespace gdk::resources::local
     }
 }
 
-#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux
+#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux // TODO: refactor this junk
 
 // Buffer in system memory, used to store binary data fetched from remote server
 struct MemoryStruct 
@@ -91,7 +91,7 @@ struct MemoryStruct
 
 static_assert(std::is_trivial<MemoryStruct>::value,         "MemoryStruct must be C compatible");
 static_assert(std::is_standard_layout<MemoryStruct>::value, "MemoryStruct must be C compatible");
- 
+
 static size_t WriteMemoryCallback(void *const contentPointer, const size_t contentItemSize, const size_t contentItemCount, void *const userPointer)
 {
     const size_t contentByteCount = contentItemSize * contentItemCount;
@@ -186,6 +186,7 @@ namespace gdk::resources::remote
 
                 curl_easy_setopt(curl_handle, CURLOPT_URL, aURL.c_str());                  /* specify URL to get */
                 curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback); /* send all data to this function  */
+                
                 curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);          /* we pass our 'chunk' struct to the callback function */
                 curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");     /* some servers don't like requests that are made without a user-agent field, so we provide one */
             

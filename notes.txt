@@ -1,0 +1,9 @@
+This should be deleted, notes should be refactored as tickets.
+
+- Model loaders and format "research spike":
+model formats to support: COLLADA and FBX ?
+https://www.khronos.org/gltf/
+https://github.com/assimp/assimp
+Quake bsp? does a generalized bsp loader with engine specific plugins exist?
+https://stackoverflow.com/questions/22412044/cant-render-quake-3-bsp-format#27080190
+https://archive.codeplex.com/?p=q3libxna
