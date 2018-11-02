@@ -2,8 +2,9 @@
 
 #include <gdk/exception.h>
 #include <gdk/locking_queue.h>
-#include <gdk/logger.h>
 #include <gdk/resources.h>
+#include <gdk/resources_protected.h>
+#include <gdk/resources_private.h>
 #include <gdkresources/buildinfo.h>
 
 #if defined JFC_TARGET_PLATFORM_Emscripten
@@ -29,50 +30,23 @@
 
 static constexpr char TAG[] = "Resources";
 
-namespace gdk::resources::hidden
-{
-    locking_queue<std::function<void()>> queued_fetches;
-
-    std::queue<std::function<void()>> queued_responses;
-
-    void updateFetchQueue()
-    {
-        std::function<void()> fetchTask;
-        
-        if (queued_fetches.pop(fetchTask)) fetchTask();
-    }
-
-    void updateResponseQueue()
-    {
-        if (queued_responses.size() > 0)
-        {
-            queued_responses.front()();
-
-            queued_responses.pop();
-        }
-    }
-}
-
 namespace gdk::resources::local
 {
     void fetchFile(const std::string aPath, response_handler_type aResponse)
     {
-        hidden::queued_fetches.push([=]()
+        PRIVATE::queued_fetches.push([=]()
         {
-            gdk::log(TAG, "worker fetching ", aPath);
+            PROTECTED::logging_interface::log(TAG, std::string("worker fetching ") + aPath);
             
             std::ifstream input(aPath, std::ios::binary);
 
-            std::vector<char> buffer(
-                (std::istreambuf_iterator<char>(input)), 
-                (std::istreambuf_iterator<char>()));
+            std::vector<char> buffer(std::istreambuf_iterator<char>(input), (std::istreambuf_iterator<char>()));
             
-            hidden::queued_responses.push([=]()
+            PRIVATE::queued_responses.push([=]()
             {
-                gdk::log(TAG, "main is responding to ", aPath);
+                PROTECTED::logging_interface::log(TAG, std::string("main is responding to ") + aPath); 
                 
-                auto output = (std::vector<unsigned char>) // This will have to change when i go async
-                {buffer.begin(), buffer.end()};
+                auto output = (std::vector<unsigned char>){buffer.begin(), buffer.end()};
                 
                 aResponse(true, output);
             });
@@ -80,7 +54,7 @@ namespace gdk::resources::local
     }
 }
 
-#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux // TODO: refactor this junk
+#if defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux 
 
 // Buffer in system memory, used to store binary data fetched from remote server
 struct MemoryStruct 
@@ -130,11 +104,11 @@ namespace gdk::resources::remote
 
         using callback_type = std::function<void(const bool, std::vector<unsigned char> *const)>;
 
-        gdk::log(TAG, "fetch has begun");
+        PROTECTED::logging_interface::log(TAG, "fetch has begun");
                 
         attr.onsuccess = [](emscripten_fetch_t *const fetch)
             {
-                gdk::log(TAG, "fetch has succeeded");
+                PROTECTED::logging_interface::log(TAG, "fetch has succeeded");
 
                 std::vector<unsigned char> binaryData = std::vector<unsigned char>(&(fetch->data[0]), &(fetch->data[fetch->numBytes]));
 
@@ -148,9 +122,7 @@ namespace gdk::resources::remote
         
         attr.onerror = [](emscripten_fetch_t *const fetch)
             {
-                gdk::log(TAG, "fetch has failed");
-
-                printf("Downloading %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+                PROTECTED::logging_interface::log(TAG, std::string("fetch has failed. url: ") + std::string(fetch->url) + std::string(", status: ") + std::string(fetch->status));
 
                 auto pCallback = static_cast<callback_type *>(fetch->userData);
 
@@ -170,9 +142,9 @@ namespace gdk::resources::remote
 
 #elif defined JFC_TARGET_PLATFORM_Darwin || defined JFC_TARGET_PLATFORM_Windows || defined JFC_TARGET_PLATFORM_Linux
 
-        hidden::queued_fetches.push([=]()
+        PRIVATE::queued_fetches.push([=]()
         {
-            gdk::log(TAG, "worker fetching ", aURL);
+            PROTECTED::logging_interface::log(TAG, std::string("worker fetching ") + aURL);
             
             curl_global_init(CURL_GLOBAL_ALL); // MOVE TO A CURL WRAPPER
 
@@ -180,36 +152,35 @@ namespace gdk::resources::remote
             {
                 struct MemoryStruct chunk = (MemoryStruct)
                 {
-                    .memory = static_cast<char *>(malloc(1)),
+                    .memory = [](){
+                        if (auto pHeap = static_cast<char *>(malloc(1))) return pHeap;
+                        else throw gdk::Exception(TAG, "could not allocate space on the heap");
+                    }(),
                     .size =   0
                 };
 
-                curl_easy_setopt(curl_handle, CURLOPT_URL, aURL.c_str());                  /* specify URL to get */
-                curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback); /* send all data to this function  */
-                
-                curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);          /* we pass our 'chunk' struct to the callback function */
-                curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");     /* some servers don't like requests that are made without a user-agent field, so we provide one */
-            
+                curl_easy_setopt(curl_handle, CURLOPT_URL, aURL.c_str());                  // specify URL to get
+                curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");     // some servers don't like requests that are made without a user-agent field, so we provide one
+
+                curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback); // send all data to this function
+                curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);          // we pass our 'chunk' struct to the callback function
+                           
                 const CURLcode curlResult = curl_easy_perform(curl_handle);
             
                 if (curlResult == CURLE_OK) // on macos/xcode saw an issue where this passsed although it was not CURLE_OK
                 {
                     //printf("%lu bytes retrieved\n", static_cast<unsigned long>(chunk.size));
-
                     // This writes to a file then loads it from file
                     //FILE *fp = fopen(std::string("resource/mia.png").c_str(), "wb");
                     //fwrite(chunk.memory, 1, chunk.size, fp); //This works! the file looks good.
                     //fclose(fp);
                     //auto output = gdk::resources::local::fetchFile("resource/mia.png");
                 
-                    auto output = (std::vector<unsigned char>) // This will have to change when i go async
-                    {
-                        chunk.memory, chunk.memory + (chunk.size)
-                    };
+                    std::vector<unsigned char> output(chunk.memory, chunk.memory + chunk.size);
 
-                    hidden::queued_responses.push([=]()
+                    PRIVATE::queued_responses.push([=]()
                     {
-                        gdk::log(TAG, "main is responding to ", aURL);
+                        PROTECTED::logging_interface::log(TAG, std::string("main is responding to ") + aURL);
                         
                         aResponseHandler(true, output);
                     });

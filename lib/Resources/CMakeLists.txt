@@ -2,12 +2,6 @@
 
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-#[[if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten") # very much a hack
-    set(PLATFORM_SPECIFIC_SOURCE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/httprequest.cpp
-    )
-endif()]]
-
 jfc_project(library
     NAME "gdkresources"
     VERSION 0.0
@@ -36,10 +30,16 @@ jfc_project(library
         ${curl_LIBRARIES}
         ${sqlite_LIBRARIES}
 
+    DEPENDENCIES
+        "sqlite"
+
     SOURCE_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/database.cpp
-        ${PLATFORM_SPECIFIC_SOURCE} #????
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/resources_private.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/resources_protected.cpp
+
+        #${PLATFORM_SPECIFIC_SOURCE}
 )
 
 #[[if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
@@ -48,8 +48,18 @@ jfc_project(library
         C_STANDARD 90
 
         TEST_SOURCE_FILES
-            ${CMAKE_CURRENT_LIST_DIR}/test/example_test.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/test/resources_test.cpp
+
+        INCLUDE_DIRECTORIES
+            ${gdkresources_INCLUDE_DIRECTORIES}
+
+        LIBRARIES
+            ${gdkresources_LIBRARIES}
+
+        DEPENDENCIES
+            "gdkresources"
     )
 else()
     jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
-endif()]]
+endif()
+]]

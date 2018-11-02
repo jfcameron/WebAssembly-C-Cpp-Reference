@@ -2,8 +2,8 @@
 
 #include <gdk/database.h>
 #include <gdk/exception.h>
-#include <gdk/logger.h>
 #include <gdkresources/buildinfo.h>
+#include <gdk/resources_protected.h>
 
 #include <sqlite/sqlite3.h>
 
@@ -23,7 +23,7 @@ namespace
     }
 }
 
-namespace gdk
+namespace gdk::resources
 {
     Database::Data::Data(const Database::Data::integer_type &value)
     : m_Type(Type::Integer)
@@ -100,14 +100,13 @@ namespace gdk
     }
 }
 
-namespace gdk
+namespace gdk::resources
 {
     Database::Database(const ConstructionMode &aConstructionMode, const ReadMode &aReadMode, const std::string &aPathToDatabase)
     : m_pDatabase([&]()
     {
         //TODO: call "PRAGMA query_only = true;" if in readonly mode The query_only pragma prevents all changes to database files when enabled.
-
-        gdk::log(TAG, "aConstructionMode and aReadMode are currently ignored!!! a OPEN_OR_CREATE and READWRITE is forced!");
+        resources::PROTECTED::logging_interface::log(TAG, std::string("aConstructionMode and aReadMode are currently ignored!!! a OPEN_OR_CREATE and READWRITE is forced!"));
 
         sqlite3 *pDatabase;
 
@@ -121,7 +120,7 @@ namespace gdk
         else throw std::runtime_error(std::string("sqlite could not initialize the database: ").append(sqlite3_errmsg(pDatabase)));
     }())
     {
-        gdk::log(TAG, "sqlite version: ", sqlite3_libversion());
+        resources::PROTECTED::logging_interface::log(TAG, std::string("sqlite version: ") + sqlite3_libversion());
     }
 
     bool Database::formats_are_same(const Database::row_format_type &a, const Database::row_format_type &b)

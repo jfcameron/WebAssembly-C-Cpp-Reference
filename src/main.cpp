@@ -16,7 +16,7 @@
 #include <gdk/mouse.h>
 #include <gdk/quaternion.h>
 #include <gdk/resources.h>
-#include <gdk/resources_private.h>
+#include <gdk/resources_protected.h>
 #include <gdk/shaderprogram.h>
 #include <gdk/texture.h>
 #include <gdk/time.h>
@@ -120,36 +120,39 @@ int main()
 
     models.push_back(pModel);
 
-    ///////////////////////////
+    gdk::resources::PROTECTED::logging_interface::log = {[](std::string aTag, std::string aMessage)
+    {
+        gdk::log(aTag.c_str(), aMessage);
+    }};
 
-    gdk::Database db(gdk::Database::ConstructionMode::OPEN_OR_CREATE, gdk::Database::ReadMode::READWRITE, "very_cool_scene.db");
+    gdk::resources::Database db(gdk::resources::Database::ConstructionMode::OPEN_OR_CREATE, gdk::resources::Database::ReadMode::READWRITE, "very_cool_scene.db");
 
     std::string tableName = "Entities";
     
-    Database::row_format_type tableFormat = {
-        {"name", Database::Data::Type::Text},
+    gdk::resources::Database::row_format_type tableFormat = {
+        {"name", gdk::resources::Database::Data::Type::Text},
 
-        {"transform_position_x", Database::Data::Type::Real},
-        {"transform_position_y", Database::Data::Type::Real},
-        {"transform_position_z", Database::Data::Type::Real},
+        {"transform_position_x", gdk::resources::Database::Data::Type::Real},
+        {"transform_position_y", gdk::resources::Database::Data::Type::Real},
+        {"transform_position_z", gdk::resources::Database::Data::Type::Real},
 
-        {"transform_rotation_x", Database::Data::Type::Real},
-        {"transform_rotation_y", Database::Data::Type::Real},
-        {"transform_rotation_z", Database::Data::Type::Real},
+        {"transform_rotation_x", gdk::resources::Database::Data::Type::Real},
+        {"transform_rotation_y", gdk::resources::Database::Data::Type::Real},
+        {"transform_rotation_z", gdk::resources::Database::Data::Type::Real},
     };
 
     db.createTable(tableName, tableFormat);
 
-    db.writeToTable(tableName, (std::vector<Database::Data>){
-        {Database::Data::text_type("Stevie")},
+    db.writeToTable(tableName, (std::vector<gdk::resources::Database::Data>){
+        {gdk::resources::Database::Data::text_type("Stevie")},
         
-        {Database::Data::real_type(10.0)},
-        {Database::Data::real_type(13.333)},
-        {Database::Data::real_type(25.9541)},
+        {gdk::resources::Database::Data::real_type(10.0)},
+        {gdk::resources::Database::Data::real_type(13.333)},
+        {gdk::resources::Database::Data::real_type(25.9541)},
 
-        {Database::Data::real_type(35)},
-        {Database::Data::real_type(42.5)},
-        {Database::Data::real_type(16.66)},
+        {gdk::resources::Database::Data::real_type(35)},
+        {gdk::resources::Database::Data::real_type(42.5)},
+        {gdk::resources::Database::Data::real_type(16.66)},
     });
 
     auto table = db.getTableContents(tableName);
@@ -193,7 +196,7 @@ int main()
         MyEntity.m_Transform.m_Rotation.z = firstRow[i++].getReal();
     }
 
-    std::cout << MyEntity.m_Name << std::endl;
+    std::cout << MyEntity.m_Name << std::endl; 
 
     std::cout << "number of tables in database: " << db.getNumberOfTables() << std::endl;
 
@@ -217,7 +220,7 @@ int main()
         // Main Update
         [&](const double &aDeltaTime)
         {
-            resources::hidden::updateResponseQueue();
+            resources::PROTECTED::MainThreadUpdate();
 
             static Vector3 pos({0., 0. , -10.});
             static Vector3 sca({1., 0.5,   1.});
@@ -241,7 +244,7 @@ int main()
         // Worker Update
         [&]()
         {
-            resources::hidden::updateFetchQueue();
+            resources::PROTECTED::WorkerThreadUpdate();
         }
     );
 }

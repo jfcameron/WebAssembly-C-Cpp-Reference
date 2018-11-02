@@ -31,4 +31,7 @@ jfc_project(library
         ${gdkmath_LIBRARIES}
 
         ${glfw_LIBRARIES}
+
+    DEPENDENCIES
+        "glfw"
 )

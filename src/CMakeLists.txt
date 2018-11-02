@@ -15,6 +15,9 @@ jfc_project(executable
     
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+
+    DEPENDENCIES
+        "gdk"
 )
 
 # This copies resource dir to the executable dir. Should be abstracted
@@ -25,15 +28,9 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD #Pre because must be availal
     COMMAND 
         ${CMAKE_COMMAND} -E copy_directory "${_path_to_repo_root}/resource" $<TARGET_FILE_DIR:${PROJECT_NAME}>/resource)
 
-
-# Required for xcode, which likes to make main before gdkgraphics. This should be doen cleaner: add_dep(main gdk), and set up dependencies within gdk separately
-add_dependencies(${PROJECT_NAME} "gdkgraphics") 
-
-
 # Move this stuff to gdk_project.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${emscripten_INCLUDE_DIR})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${emscripten_INCLUDE_DIR})
 
     set(gdk_EMSCRIPTEN_LINK_FLAGS #c++1z is working draft of c++17
         "-std=c++1z  -s WASM=1 -s USE_GLFW=3 -s DISABLE_EXCEPTION_CATCHING=0 -s EXCEPTION_DEBUG=1 -s DEMANGLE_SUPPORT=1 -s FETCH=1 --preload-file resource/test.txt --preload-file resource/awesome.png --preload-file resource/BG.png" # Resources are inapropriate here

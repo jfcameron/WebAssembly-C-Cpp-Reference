@@ -40,9 +40,17 @@ jfc_project(library
         ${gdkmemory_INCLUDE_DIRECTORIES}
         ${gdkresources_LIBRARIES}
         ${gdktime_LIBRARIES}
-        
-        ${glfw_LIBRARIES}
-        ${stb_LIBRARIES}
+
+    DEPENDENCIES
+        "gdkdebug"
+        #"gdkentitycomponentsystem"
+        "gdkglfwwrapper"
+        "gdkgraphics"
+        "gdkinput"
+        "gdkmath"
+        "gdkmemory"
+        "gdkresources"
+        "gdktime"
 
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/game.cpp

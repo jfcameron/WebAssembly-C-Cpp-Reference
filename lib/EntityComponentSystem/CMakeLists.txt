@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 #if (JFC_BUILD_LIB)
-    project("gdk_ecs"
+    project("gdkentitycomponentsystem"
         VERSION "0.0"
         DESCRIPTION "GDK Entity Component System core library")
 

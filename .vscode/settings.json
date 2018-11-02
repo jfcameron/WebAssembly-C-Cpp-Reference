@@ -47,6 +47,11 @@
         "unordered_map": "cpp",
         "unordered_set": "cpp",
         "__split_buffer": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "complex": "cpp",
+        "valarray": "cpp",
+        "__hash_table": "cpp",
+        "__tree": "cpp",
+        "forward_list": "cpp"
     }
 }

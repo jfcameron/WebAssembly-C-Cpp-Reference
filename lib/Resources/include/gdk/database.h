@@ -14,7 +14,7 @@
 
 struct sqlite3;
 
-namespace gdk
+namespace gdk::resources
 {
     /// \brief extendable RAII wrapper for local sqlite database. Offers basic IO API.
     ///
@@ -33,8 +33,8 @@ namespace gdk
     /// \todo improve throw messages. currently cryptic.. refer to errors, bad args from the implementation's perspective (eg "row column count exceeds table column count in sqldb"). 
     /// should be reworded from the API's perspective (eg "writeData argument row format {...} does not match table "name"'s row format {...}")
     ///
-    /// \todo while individual db interaction is atomic, this atomicity does not stay 1 to 1 with api (eg writeToTable array override). This should be fixed. Additionally, API calls should be groupable so that an entire set of calls all become atomic, to prevent
-    /// the user from being able to write incomplete state information to the DB
+    /// \todo while individual db interaction is atomic, this atomicity does not stay 1 to 1 with api (eg writeToTable array override). This should be fixed. Additionally, API calls 
+    /// should be groupable so that an entire set of calls all become atomic, to prevent the user from being able to write incomplete state information to the DB
     /// 
     /// \todo Refactor s.t there is a Table class. std::weak_ptr<Database::Table> getTable()
     class Database
@@ -143,6 +143,7 @@ namespace gdk
         void createTable(const std::string &aTableName, row_format_type aRowFormat);
 
         /// \brief deletes a table
+        //void erase(aTableName);
 
         /// \brief checks if a table with the specified name exists.
         bool doesTableExist(const std::string &aTableName);

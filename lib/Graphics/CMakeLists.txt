@@ -31,6 +31,9 @@ jfc_project(library
         ${stb_LIBRARIES}
         #${glfw_INCLUDE_DIR} # required access to glew. give me glew
 
+    DEPENDENCIES
+        "stb"
+
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/color.cpp
