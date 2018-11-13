@@ -28,8 +28,8 @@ namespace gdk
         virtual void fixedUpdate() = 0;
         virtual void update()      = 0;
             
-        virtual void OnComponentAddedToAGameObject(const std::weak_ptr<ECS::Component> &) = 0;
-        virtual void OnComponentRemovedFromAGameObject(const std::weak_ptr<ECS::Component> &) = 0;
+        virtual void OnComponentAddedToAObject(const std::weak_ptr<ECS::Component> &) = 0;
+        virtual void OnComponentRemovedFromAObject(const std::weak_ptr<ECS::Component> &) = 0;
             
     public:
         SceneGraph &operator=(const SceneGraph &) = delete;

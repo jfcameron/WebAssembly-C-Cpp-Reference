@@ -1,7 +1,6 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/database.h>
-#include <gdk/exception.h>
 #include <gdkresources/buildinfo.h>
 #include <gdk/resources_protected.h>
 

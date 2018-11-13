@@ -19,6 +19,8 @@ namespace gdk
 
         //! Get a gamepad by device name
         std::weak_ptr<Gamepad> get(const std::string &aName);
+
+        // extern vector<gamepad> pads? maybe? expose iterators st for (gamepad : gamepads) can be done
     }
 }
 

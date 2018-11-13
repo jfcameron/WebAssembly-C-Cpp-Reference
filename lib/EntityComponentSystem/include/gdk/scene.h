@@ -12,15 +12,15 @@ namespace gdk
 {
     struct IntVector2;
  
-    class GameObject;
+    class Object;
     class SceneGraph;
     class Component; 
         
-    /// \brief A 3D space, contains GameObjects. The capabilities of the scene are defined by its SceneGraphs
+    /// \brief A 3D space, contains Objects. The capabilities of the scene are defined by its SceneGraphs
     class Scene final : public std::enable_shared_from_this<Scene>
     {
         friend std::ostream &operator<< (std::ostream &, const ECS::Scene &);
-        friend GameObject;
+        friend Object;
       
     public:
         enum class State { Active, Paused };
@@ -31,10 +31,10 @@ namespace gdk
         State m_SceneState = State::Active;
             
         std::vector<std::shared_ptr<SceneGraph>> m_SceneGraphs = {};
-        std::vector<std::shared_ptr<GameObject>> m_GameObjects = {};
+        std::vector<std::shared_ptr<Object>> m_Objects = {};
             
-        void OnComponentAddedToAGameObject(const std::weak_ptr<Component> &);
-        void OnComponentRemovedFromAGameObject(const std::weak_ptr<Component> &);
+        void OnComponentAddedToAObject(const std::weak_ptr<Component> &);
+        void OnComponentRemovedFromAObject(const std::weak_ptr<Component> &);
             
         void OnSceneGraphAdded(const std::weak_ptr<SceneGraph> &aSceneGraph);
         void OnSceneGraphRemoved(const std::weak_ptr<SceneGraph> &aSceneGraphRemoved);
@@ -42,7 +42,7 @@ namespace gdk
         void logError();
             
     public:
-        std::weak_ptr<GameObject> getGameObject(const std::string &) const;
+        std::weak_ptr<Object> getObject(const std::string &) const;
         std::string const &getName() const;
         State const &getSceneState() const;
             
@@ -81,7 +81,7 @@ namespace gdk
         void fixedUpdate();
         void draw(const Math::IntVector2 &aFrameBufferSize);
             
-        std::weak_ptr<GameObject> addGameObject();
+        std::weak_ptr<Object> addObject();
       
         Scene &operator=(const Scene &) = delete;
         Scene &operator=(Scene &&) = delete;

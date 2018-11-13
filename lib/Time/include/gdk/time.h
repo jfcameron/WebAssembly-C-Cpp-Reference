@@ -9,12 +9,6 @@ namespace gdk::time
 {
     using UpdateFunctionSignature = std::function<void(const double &)>;
 
-    //! 
-    void addUpdateCallback(const UpdateFunctionSignature aUpdateFunction);
-
-    //! 
-    void addRenderCallback(const UpdateFunctionSignature aUpdateFunction);
-
     //! Get time since program started
     double sinceStart() noexcept;
 }

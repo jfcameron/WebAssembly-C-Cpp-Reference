@@ -3,6 +3,7 @@
 #ifndef GDK_MATH_INTVECTOR2_H
 #define GDK_MATH_INTVECTOR2_H
 
+#include <utility>
 #include <iosfwd>
 
 namespace gdk
@@ -15,6 +16,8 @@ namespace gdk
     /// tilegrid position, window size, etc.
     struct IntVector2 final
     {
+        using std_pair_type = std::pair<int, int>;
+
         int x = {0}, y = {0};
 
         //! create a Vector2 (related floating-point struct) from an IntVector2 instance
@@ -37,8 +40,11 @@ namespace gdk
         IntVector2 &operator+=(const IntVector2 &);
         IntVector2 &operator-=(const IntVector2 &);
         IntVector2 &operator*=(const float);
-            
+
+        explicit operator std_pair_type() const;
+
         IntVector2(const int aX, const int aY);
+        IntVector2(const std_pair_type &aPair);
         IntVector2() = default;
         IntVector2(const IntVector2 &) = default;
         IntVector2(IntVector2 &&) = default;

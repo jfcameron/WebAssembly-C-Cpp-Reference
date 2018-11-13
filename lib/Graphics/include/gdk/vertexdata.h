@@ -19,6 +19,7 @@ namespace gdk
     public:
         
         /// \brief Hint to the graphics device about how the vertex data will be used.
+        ///
         /// \detailed Generally, dynamic data (data that is likely to be frequently rewritten) will be placed
         /// in video memory with fast read write speeds while static will be placed in slower (and more plentiful)
         /// video memory. Exact behaviours are implementation specific.        
@@ -35,11 +36,11 @@ namespace gdk
             
         GLuint m_VertexBufferHandle = {0}; //!< Handle to the vertex buffer in the context
         GLsizei m_VertexCount =       {0}; //!< total number of vertexes
-           
+
         VertexFormat m_VertexFormat = VertexFormat::Pos3uv2; //!< Format of the vertex data
-           
+        
         PrimitiveMode m_PrimitiveMode = PrimitiveMode::Triangles; //!< The primitive type to be generated using the vertex data
-           
+        
     public:
         std::string const &getName() const;
         GLuint getHandle() const;

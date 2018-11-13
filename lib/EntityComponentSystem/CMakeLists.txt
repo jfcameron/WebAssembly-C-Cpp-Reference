@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
     add_library(${PROJECT_NAME} STATIC
         # Core
     	${CMAKE_CURRENT_SOURCE_DIR}/src/component.cpp
-    	${CMAKE_CURRENT_SOURCE_DIR}/src/gameobject.cpp
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/object.cpp
     	${CMAKE_CURRENT_SOURCE_DIR}/src/scene.cpp
     	${CMAKE_CURRENT_SOURCE_DIR}/src/scenegraph.cpp
     	${CMAKE_CURRENT_SOURCE_DIR}/src/scenemanager.cpp

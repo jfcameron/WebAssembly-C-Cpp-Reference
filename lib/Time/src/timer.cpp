@@ -3,7 +3,8 @@
 #include <gdktime/buildinfo.h>
 
 #include <gdk/timer.h>
-#include <gdk/glfw_wrapper.h>
+
+#include <GLFW/glfw3.h>
 
 namespace gdk
 {
@@ -14,16 +15,16 @@ namespace gdk
 
     void Timer::reset()
     {
-        currentTime = glfw::GetTime() - lastTime;
-        lastTime =    glfw::GetTime();
+        currentTime = glfwGetTime() - lastTime;
+        lastTime =    glfwGetTime();
     }
 
     double Timer::getAndReset()
     {
         double time = currentTime;
     
-        currentTime = glfw::GetTime() - lastTime;
-        lastTime =    glfw::GetTime();
+        currentTime = glfwGetTime() - lastTime;
+        lastTime =    glfwGetTime();
 
         return time;
     }    

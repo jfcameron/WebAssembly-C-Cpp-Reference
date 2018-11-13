@@ -1,7 +1,7 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 
-#ifndef GDK_ECS_GAMEOBJECT_H
-#define GDK_ECS_GAMEOBJECT_H
+#ifndef GDK_ECS_OBJECT_H
+#define GDK_ECS_OBJECT_H
 
 #include <gdk/component.h>
 #include <gdk/scene.h>
@@ -15,10 +15,10 @@
 
 namespace gdk
 {
-    /// \brief GameObject has a list of components and belongs to a scene
-    class GameObject final : public std::enable_shared_from_this<GameObject>
+    /// \brief Object has a list of components and belongs to a scene
+    class Object final : public std::enable_shared_from_this<Object>
     {
-        friend std::ostream &operator<< (std::ostream &, const ECS::GameObject &);
+        friend std::ostream &operator<< (std::ostream &, const ECS::Object &);
         friend GDK::ECS::Scene;
             
         std::string m_Name = "Unnamed";
@@ -26,8 +26,8 @@ namespace gdk
         std::weak_ptr<Scene> m_MyScene = {};
         std::vector<std::shared_ptr<Component>> m_Components = {};
             
-        Math::Vector3    m_Position = Math::Vector3::Zero;
-        Math::Vector3    m_Scale    = {1.f,1.f,1.f};
+        Math::Vector3 m_Position = Math::Vector3::Zero;
+        Math::Vector3 m_Scale    = {1.f,1.f,1.f};
         Math::Quaternion m_Rotation = Math::Quaternion::Identity;
             
         void update() const;
@@ -54,21 +54,21 @@ namespace gdk
                 
             if (auto pScene = m_MyScene.lock())
             {
-                std::weak_ptr<GameObject> wpThis = std::weak_ptr<GameObject>(shared_from_this());
+                std::weak_ptr<Object> wpThis = std::weak_ptr<Object>(shared_from_this());
                     
                 std::shared_ptr<T> spNewT(new T());
                 std::weak_ptr<T>   wpNewT(spNewT);
                     
                 std::shared_ptr<Component> spNewComponent = std::static_pointer_cast<Component>(spNewT);
                     
-                spNewComponent->m_GameObject = wpThis;
-                spNewComponent->onAddedToGameObject(wpThis);
+                spNewComponent->m_Object = wpThis;
+                spNewComponent->onAddedToObject(wpThis);
                     
                 m_Components.push_back(std::static_pointer_cast<Component>(spNewT));
                     
-                pScene->OnComponentAddedToAGameObject(wpNewT);
+                pScene->OnComponentAddedToAObject(wpNewT);
                     
-                for (auto component : m_Components) component->onOtherComponentAddedToMyGameObject(wpNewT);
+                for (auto component : m_Components) component->onOtherComponentAddedToMyObject(wpNewT);
                     
                 return wpNewT;
             }
@@ -86,11 +86,11 @@ namespace gdk
                     {
                         std::weak_ptr<Component> removedComponent(m_Components[i]);
                             
-                        pScene->OnComponentRemovedFromAGameObject(removedComponent);
+                        pScene->OnComponentRemovedFromAObject(removedComponent);
                             
                         for(size_t j; j < m_Components.size(); j++)
                             if (j != i)
-                                m_Components[j]->onOtherComponentRemovedFromMyGameObject(removedComponent);
+                                m_Components[j]->onOtherComponentRemovedFromMyObject(removedComponent);
                             
                         m_Components.erase(m_Components.begin()+i);
                     }
@@ -116,19 +116,19 @@ namespace gdk
             return components;
         }
             
-        GameObject &operator=(const GameObject &) = delete;
-        GameObject &operator=(GameObject &&) = delete;
+        Object &operator=(const Object &) = delete;
+        Object &operator=(Object &&) = delete;
             
     private:
-        GameObject(const std::weak_ptr<Scene> &aScene);
-        GameObject() = delete;
-        GameObject(const GameObject &) = delete;
-        GameObject(GameObject &&) = delete;
+        Object(const std::weak_ptr<Scene> &aScene);
+        Object() = delete;
+        Object(const Object &) = delete;
+        Object(Object &&) = delete;
     public:
-        ~GameObject() = default;
+        ~Object() = default;
     };
 
-    std::ostream &operator<< (std::ostream &, const ECS::GameObject &);
+    std::ostream &operator<< (std::ostream &, const ECS::Object &);
 }
 
 #endif

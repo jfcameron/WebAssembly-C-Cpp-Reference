@@ -9,6 +9,8 @@
 #include <gdk/vector3.h>
 #include <gdk/vector4.h>
 
+#include <nlohmann/json.hpp>
+
 #include <vector>
 
 namespace glh

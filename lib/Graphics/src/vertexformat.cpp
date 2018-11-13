@@ -4,10 +4,11 @@
 #include <gdk/opengl.h>
 #include <gdk/vertexformat.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 
 using namespace gdk;
-
 
 static constexpr char TAG[] = "VertexFormat";
 
@@ -47,11 +48,9 @@ VertexFormat::VertexFormat(const std::vector<VertexAttribute> &aAttributes)
 {
     int buf = 0;
     
-    for (auto attribute : aAttributes)
-        buf += attribute.size;
+    for (auto attribute : aAttributes) buf += attribute.size;
     
     return buf;
-    
 })())
 {}
 

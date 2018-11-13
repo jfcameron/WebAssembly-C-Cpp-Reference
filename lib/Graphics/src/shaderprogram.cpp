@@ -7,6 +7,8 @@
 #include <gdk/shaderprogram.h>
 #include <gdk/logger.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 #include <sstream>
 
@@ -54,14 +56,13 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::PinkShaderOfDeath([]()
 const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
 {
     const std::string vertexShaderSource = R"V0G0N(
-    //hack?
-    uniform mat4  _Model;
-    uniform mat4  _View;
-    uniform mat4  _Projection;
-
     //Uniforms
     uniform mat4 _MVP;
+    uniform mat4 _Model; //separate mats arent used. should probably delete. they are useful though
+    uniform mat4 _View;
+    uniform mat4 _Projection;
     
+    // Programmable stage input formats. Consider how to clean this up.. the webgl requirement of precison prefixes.
 #if defined Emscripten
     //VertIn
     attribute highp   vec3 a_Position;

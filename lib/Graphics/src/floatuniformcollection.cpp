@@ -2,6 +2,9 @@
 
 #include <gdk/floatuniformcollection.h>
 #include <gdk/glh.h>
+#include <gdk/nlohmann_json_util.h>
+
+#include <nlohmann/json.hpp>
 
 #include <iostream>
 
@@ -9,17 +12,11 @@ namespace gdk
 {
 std::ostream &operator<<(std::ostream &s, const FloatUniformCollection &a)
 {
-    s.clear(); s
-    << "{";
-    
-    size_t i = 0;
-    
-    for (auto &pair : a.m_Map)
-        s << i << ": " << "{Name: " << pair.first << ", " << "Float: " << *pair.second.get() << "}";
-    
-    s << "}";
-    
-    return s;
+    nlohmann::json root;
+
+    for (auto &pair : a.m_Map) root[pair.first] = *pair.second.get();
+
+    return s << root.dump();
 }
 
 void FloatUniformCollection::bind(const GLuint aProgramHandle) const

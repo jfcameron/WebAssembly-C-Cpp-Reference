@@ -1,7 +1,7 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 
 #include <gdk/component.h>
-#include <gdk/gameobject.h>
+#include <gdk/object.h>
 
 #include <iostream>
 
@@ -22,8 +22,8 @@ namespace gdk
         return s;
     }
 
-    std::weak_ptr<GameObject> Component::getGameObject() const
+    std::weak_ptr<Object> Component::getObject() const
     {
-        return m_GameObject;
+        return m_Object;
     }
 }

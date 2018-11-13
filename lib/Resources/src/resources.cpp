@@ -1,6 +1,5 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/exception.h>
 #include <gdk/locking_queue.h>
 #include <gdk/resources.h>
 #include <gdk/resources_protected.h>
@@ -75,7 +74,7 @@ static size_t WriteMemoryCallback(void *const contentPointer, const size_t conte
     return [&contentPointer, &contentByteCount, &pResponseBuffer]()
     {
         if ((pResponseBuffer->memory = static_cast<char *>(realloc(pResponseBuffer->memory, pResponseBuffer->size + contentByteCount + 1))) == nullptr)
-            throw gdk::Exception(TAG, "gdk::resources::remote fetch failed: could not allocate system memory to store fetched content!");
+            throw std::runtime_error(std::string(TAG).append("gdk::resources::remote fetch failed: could not allocate system memory to store fetched content!"));
  
         memcpy(&(pResponseBuffer->memory[pResponseBuffer->size]), contentPointer, contentByteCount);
 
@@ -154,7 +153,7 @@ namespace gdk::resources::remote
                 {
                     .memory = [](){
                         if (auto pHeap = static_cast<char *>(malloc(1))) return pHeap;
-                        else throw gdk::Exception(TAG, "could not allocate space on the heap");
+                        else throw std::runtime_error(std::string(TAG).append("could not allocate space on the heap"));
                     }(),
                     .size =   0
                 };
@@ -185,13 +184,13 @@ namespace gdk::resources::remote
                         aResponseHandler(true, output);
                     });
                 }
-                else throw gdk::Exception(TAG, "curl_easy_perform failed: ", curl_easy_strerror(curlResult));
+                else throw std::runtime_error(std::string(TAG).append("curl_easy_perform failed: ").append(curl_easy_strerror(curlResult)));
                 
                 curl_easy_cleanup(curl_handle);
 
                 free(chunk.memory);
             }
-            else throw gdk::Exception(TAG, "Failed to initialize a curl session.");
+            else throw std::runtime_error(std::string(TAG).append("Failed to initialize a curl session."));
             
             curl_global_cleanup();  // MOVE TO A CURL WRAPPER
         });

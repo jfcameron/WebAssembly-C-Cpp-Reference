@@ -2,6 +2,8 @@
 
 #include <gdk/color.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 
 namespace gdk
@@ -22,15 +24,14 @@ namespace gdk
 
     std::ostream &operator<< (std::ostream &s, const Color &a)
     {
-        s.clear();
-        
-        s << "{"
-          << "r: " << a.r << ", "
-          << "g: " << a.g << ", "
-          << "b: " << a.b << ", "
-          << "a: " << a.a << "}";
-    
-        return s;
+        return s << nlohmann::json
+        {
+            {"r", a.r},
+            {"g", a.g},
+            {"b", a.b},
+            {"a", a.a},
+        }
+        .dump();
     }
 
     bool Color::operator==(const Color &aOther) const

@@ -21,15 +21,15 @@ jfc_project(library
         ${gdkmemory_INCLUDE_DIRECTORIES}
         ${gdktime_INCLUDE_DIRECTORIES}
         #${gdkglfwwrapper_INCLUDE_DIRECTORIES} # This is required for Windows because glew is hidden in glfw. These must be separated.
-        
+
         ${stb_INCLUDE_DIR}
         ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
+        ${nlohmann_INCLUDE_DIR}
 
     LIBRARIES
         ${gdkmath_LIBRARIES}
         
         ${stb_LIBRARIES}
-        #${glfw_INCLUDE_DIR} # required access to glew. give me glew
 
     DEPENDENCIES
         "stb"

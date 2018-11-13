@@ -17,11 +17,18 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 
         ${gdkmath_INCLUDE_DIRECTORIES}
-        ${gdkdebug_INCLUDE_DIRECTORIES}
-        ${gdkglfwwrapper_INCLUDE_DIRECTORIES}
+
+        ${glfw_INCLUDE_DIR}
 
     SOURCE_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/gamepads.cpp
+        #${CMAKE_CURRENT_SOURCE_DIR}/src/gamepads.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/keyboard.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/mouse.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/input_protected.cpp
+
+    LIBRARIES
+        ${glfw_LIBRARIES}
+
+    DEPENDENCIES
+        "glfw"
 )

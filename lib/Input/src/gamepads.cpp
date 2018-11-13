@@ -2,7 +2,7 @@
 
 #include <gdk/exception.h>
 #include <gdk/gamepads.h>
-#include <gdk/input_private.h>
+#include <gdk/input_protected.h>
 #include <gdk/glfw_wrapper.h>
 
 #include <GLFW/glfw3.h>

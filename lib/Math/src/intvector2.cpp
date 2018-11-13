@@ -3,6 +3,8 @@
 #include <gdk/intvector2.h>
 #include <gdk/vector2.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 
 using namespace gdk;
@@ -15,19 +17,21 @@ const IntVector2 IntVector2::Zero  = { 0, 0};
 
 std::ostream &gdk::operator<<(std::ostream &s, const gdk::IntVector2 &a)
 {
-    s.clear(); s
-    
-    << "{"
-    << "x: " << a.x << ", "
-    << "y: " << a.y
-    << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"x", a.x},
+        {"y", a.y},
+    }
+    .dump();
 }
 
 IntVector2::IntVector2(const int aX, const int aY)
 : x(aX)
 , y(aY)
+{}
+
+IntVector2::IntVector2(const std_pair_type &aPair) 
+: IntVector2::IntVector2(aPair.first, aPair.second)
 {}
 
 Vector2 IntVector2::toVector2() const
@@ -92,4 +96,9 @@ IntVector2& IntVector2::operator*=(const float aScalar)
     y *= aScalar;
     
     return *this;
+}
+
+IntVector2::operator std_pair_type() const
+{            
+    return std::pair<int, int>(x, y);
 }

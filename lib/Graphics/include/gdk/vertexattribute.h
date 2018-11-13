@@ -14,8 +14,8 @@ namespace gdk
     /// In the context of OpenGL, a component is a floating-point value.
     struct VertexAttribute final
     {
-        std::string name =    "attribute"; //!< name of the attribute
-        unsigned short size = {0};         //!< number of components in the attribute
+        std::string name = "attribute"; //!< name of the attribute
+        unsigned short size = {0};      //!< number of components in the attribute
             
         VertexAttribute &operator=(const VertexAttribute &) = default;
         VertexAttribute &operator=(VertexAttribute &&) = default;

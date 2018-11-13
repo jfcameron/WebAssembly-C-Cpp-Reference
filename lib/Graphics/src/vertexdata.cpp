@@ -6,6 +6,8 @@
 #include <gdk/opengl.h>
 #include <gdk/vertexdata.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 
 using namespace gdk;

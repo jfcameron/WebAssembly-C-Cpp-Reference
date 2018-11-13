@@ -3,23 +3,24 @@
 #include <gdktime/buildinfo.h>
 
 #include <gdk/gameloop.h>
-#include <gdk/glfw_wrapper.h>
+#include <gdk/time_private.h>
 
 #ifdef JFC_TARGET_PLATFORM_Emscripten
 #include <emscripten.h>
 #endif
+
+#include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <memory>
 #include <thread>
 #include <vector>
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define MAXSAMPLES 100
 int tickindex=0;
 int ticksum=0;
 int ticklist[MAXSAMPLES];
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* need to zero out the ticklist array before starting */
 /* average will ramp up until the buffer is full */
 /* returns average ticks per frame over the MAXSAMPLES last frames */
@@ -94,17 +95,17 @@ namespace gdk
 
             // Update work \todo lock me at UPDATE RATE
             {
-                glfw::PollEvents();
+                glfwPollEvents();
 
                 me->m_MainUpdate(deltaTime); // Should be frame locked?
 
-                if (thread_count < 2) me->m_WorkerUpdate(); // Worker work is done on main if there is only one thread or if hardware_concurrency is "not well defined or not computable" (0)
+                if (thread_count < 2) me->m_WorkerUpdate(); // Worker work is done on main if there is only one thread or if hardware_concurrency is "not well defined or not computable" (indicated by a value of 0)
             }
             // Draw work \todo draw me as fast as possible. Need to interpolate things? Need speed, probably acceleration too.
             {
                 me->m_MainDraw(deltaTime); // Or this?
 
-                glfw::SwapBuffer();
+                glfwSwapBuffers(gdk::time::PRIVATE::pGLFWWindow);
             }
         };
 

@@ -36,14 +36,14 @@ namespace gdk
         const loop_function_type   m_MainDraw;
         const worker_function_type m_WorkerUpdate;
 
-        //! Constructs the loop and traps the calling thread until terminate is called.
+        /// \brief Constructs the loop and traps the calling thread until terminate is called.
         GameLoop(const loop_function_type aMainUpdate, const loop_function_type aMainDraw, const worker_function_type aWorkerUpdate);
 
     public:
-        //! ends the loop. Freeing the thread on which the loop was constructed
+        /// \brief ends the loop. Freeing the thread on which the loop was constructed
         void destroy();
 
-        //! Creates a new GameLoop instance. Returns a weak pointer to it
+        /// \brief Creates a new GameLoop instance. Returns a weak pointer to it
         static void Create(const loop_function_type aMainUpdate, const loop_function_type aMainDraw, const worker_function_type aWorkerUpdate);
     };
 }

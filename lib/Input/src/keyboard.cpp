@@ -1,13 +1,12 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 
-#include <gdk/exception.h>
-#include <gdk/glfw_wrapper.h>
 #include <gdk/keyboard.h>
-#include <gdk/logger.h>
+#include <gdk/input_private.h>
 
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <stdexcept>
 
 using namespace gdk;
 
@@ -140,11 +139,12 @@ static inline int glfwKeyCodeFromKey(const keyboard::Key &a)
 
 bool keyboard::getKeyDown(const Key &aKeyCode)
 {
-    return glfw::GetKey(glfwKeyCodeFromKey(aKeyCode));
+    return static_cast<bool>(glfwGetKey(gdk::input::PRIVATE::pGLFWwindow, glfwKeyCodeFromKey(aKeyCode))); //return glfw::GetKey(glfwKeyCodeFromKey(aKeyCode));
 }
 
 bool keyboard::getKey(const Key &aKeyCode)
 {
     (void)aKeyCode;
-    throw gdk::Exception(TAG, "keyboard::getKey(const Key &aKeyCode) not implemented");
+    
+    throw std::runtime_error(std::string(TAG).append("/keyboard::getKey(const Key &aKeyCode) not implemented"));
 }

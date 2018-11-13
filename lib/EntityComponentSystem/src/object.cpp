@@ -1,16 +1,16 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 
-#include <gdk/gameobject.h>
+#include <gdk/object.h>
 #include <gdk/component.h>
 #include <gdk/logger.h>
 
 #include <iostream>
 
-static constexpr char TAG[] = "GameObject";
+static constexpr char TAG[] = "Object";
 
 namespace gdk::ecs
 {
-std::ostream &operator<<(std::ostream &s, const GameObject &a)
+std::ostream &operator<<(std::ostream &s, const Object &a)
 {
     (void)a;
     
@@ -23,11 +23,11 @@ std::ostream &operator<<(std::ostream &s, const GameObject &a)
     return s;
 }
 
-GameObject::GameObject(const std::weak_ptr<Scene> &aScene)
+Object::Object(const std::weak_ptr<Scene> &aScene)
 : m_MyScene(aScene)
 {}
 
-void GameObject::update() const
+void Object::update() const
 {
     for (auto component : m_Components)
     {
@@ -41,7 +41,7 @@ void GameObject::update() const
     }
 }
 
-void GameObject::fixedUpdate() const
+void Object::fixedUpdate() const
 {
     for (auto component : m_Components)
     {
@@ -55,64 +55,64 @@ void GameObject::fixedUpdate() const
     }
 }
 
-std::weak_ptr<Component> GameObject::getComponent(const size_t aIndex) const
+std::weak_ptr<Component> Object::getComponent(const size_t aIndex) const
 {
     return m_Components[aIndex];
 }
 
-size_t  GameObject::getComponentCount() const
+size_t  Object::getComponentCount() const
 {
     return m_Components.size();
 }
 
-std::string GameObject::getName() const
+std::string Object::getName() const
 {
     return m_Name;
 }
 
-std::weak_ptr<Scene> GameObject::getScene() const
+std::weak_ptr<Scene> Object::getScene() const
 {
     return m_MyScene;
 }
 
-void GameObject::setName(const std::string &aName)
+void Object::setName(const std::string &aName)
 {
     m_Name = aName;
 }
 
-void GameObject::setPosition(const Math::Vector3 &aPosition)
+void Object::setPosition(const Math::Vector3 &aPosition)
 {
     m_Position = aPosition;
 }
 
-void GameObject::setPosition(const float aX,const float aY, const float aZ)
+void Object::setPosition(const float aX,const float aY, const float aZ)
 {
     m_Position.x = aX;
     m_Position.y = aY;
     m_Position.z = aZ;
 }
 
-void GameObject::setScale(const Math::Vector3 &aScale)
+void Object::setScale(const Math::Vector3 &aScale)
 {
     m_Scale = aScale;
 }
 
-void GameObject::setRotation(const Math::Quaternion &aRotation)
+void Object::setRotation(const Math::Quaternion &aRotation)
 {
     m_Rotation = aRotation;
 }
 
-Math::Vector3 GameObject::getPosition() const
+Math::Vector3 Object::getPosition() const
 {
     return m_Position;
 }
 
-Math::Vector3 GameObject::getScale() const
+Math::Vector3 Object::getScale() const
 {
     return m_Scale;
 }
 
-Math::Quaternion GameObject::getRotation() const
+Math::Quaternion Object::getRotation() const
 {
     return m_Rotation;
 }

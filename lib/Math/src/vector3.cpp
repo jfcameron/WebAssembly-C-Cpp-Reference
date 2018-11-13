@@ -2,6 +2,8 @@
 
 #include <gdk/vector3.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 #include <math.h>
 
@@ -18,15 +20,13 @@ const Vector3 Vector3::One      = { 1.f, 1.f, 1.f};
 
 std::ostream &gdk::operator<<(std::ostream &s,const gdk::Vector3 &a)
 {
-    s.clear(); s 
-
-    << "{"
-    << "x: " << a.x << ", "
-    << "y: " << a.y << ", "
-    << "z: " << a.z 
-    << "}";
-
-    return s;
+    return s << nlohmann::json
+    {
+        {"x", a.x},
+        {"y", a.y},
+        {"z", a.z},
+    }
+    .dump();
 }
 
 Vector3::Vector3(const float &aX, const float &aY, const float &aZ)

@@ -42,7 +42,7 @@ namespace gdk
             {
                 collection_type pool;
 
-                for(decltype(length) i = 0; i < length; ++i) pool[i] = std::make_shared<T>(aItemInitializer());
+                for (decltype(length) i = 0; i < length; ++i) pool[i] = std::make_shared<T>(aItemInitializer());
 
                 return pool;
             }())

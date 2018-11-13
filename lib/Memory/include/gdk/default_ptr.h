@@ -8,6 +8,7 @@
 namespace gdk
 {    
     /// \brief a weak pointer that returns a default pointer to T if the target pointer has become null.
+    /// \todo rename lock to get. If the internal lock fails, you still get a defualt value.. this is the whole point. should be ptr.get()
     template<typename T>
     class default_ptr final
     {

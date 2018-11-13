@@ -8,17 +8,17 @@
 
 namespace gdk
 {       
-    class GameObject;
+    class Object;
     class Transform;
     class Scene;
         
-    /// \brief Encapsulates behaviour and data used to manipulate GameObjects
+    /// \brief Encapsulates behaviour and data used to manipulate Objects
     class Component : public std::enable_shared_from_this<Component>
     {
         friend std::ostream &operator<< (std::ostream &, const ECS::Component &);
-        friend GDK::ECS::GameObject;
+        friend GDK::ECS::Object;
       
-        std::weak_ptr<GameObject> m_GameObject = {};
+        std::weak_ptr<Object> m_Object = {};
         bool m_DidInit = false;
             
     protected:
@@ -31,19 +31,19 @@ namespace gdk
         //! called every fixedupdate frame
         virtual void fixedUpdate() {}
             
-        //! Another component was added to my gameobject
-        virtual void onOtherComponentAddedToMyGameObject(const std::weak_ptr<Component> &) {}
+        //! Another component was added to my object
+        virtual void onOtherComponentAddedToMyObject(const std::weak_ptr<Component> &) {}
             
-        //! Another component was removed from my gameobject
-        virtual void onOtherComponentRemovedFromMyGameObject(const std::weak_ptr<Component> &) {}
+        //! Another component was removed from my object
+        virtual void onOtherComponentRemovedFromMyObject(const std::weak_ptr<Component> &) {}
             
-        //! This component instance was added to a gameobject
-        virtual void onAddedToGameObject(const std::weak_ptr<GameObject> &) {}
+        //! This component instance was added to a object
+        virtual void onAddedToObject(const std::weak_ptr<Object> &) {}
             
-        //virtual void onRemovedFromGameObject(const std::weak_ptr<GameObject>&) {}
+        //virtual void onRemovedFromObject(const std::weak_ptr<Object>&) {}
             
     public:
-        std::weak_ptr<GameObject> getGameObject() const;
+        std::weak_ptr<Object> getObject() const;
             
         Component &operator=(const Component &) = delete;
         Component &operator=(Component &&) = delete;

@@ -6,10 +6,13 @@
 #include <gdk/logger.h>
 #include <gdk/mat4x4.h>
 #include <gdk/model.h>
+#include <gdk/nlohmann_json_util.h>
 #include <gdk/opengl.h>
+#include <gdk/shaderprogram.h>
 #include <gdk/time.h>
 #include <gdk/vertexdata.h>
-#include <gdk/shaderprogram.h>
+
+#include <nlohmann/json.hpp>
 
 #include <iostream>
 
@@ -19,20 +22,19 @@ static constexpr char TAG[] = "Model";
 
 std::ostream& gdk::operator<<(std::ostream& s, const Model& a)
 {
-    s.clear(); s
-    << "{"
-    << "Name: "          << a.m_Name                  << ", "
-    << "m_ModelMatrix: " << a.m_ModelMatrix           << ", "
-    << "Mesh: "          << *a.m_VertexData.lock()    << ", "
-    << "ShaderProgram: " << *a.m_ShaderProgram.lock() << ", "
-    << "m_Textures: "    << a.m_Textures              << ", "
-    << "m_Floats: "      << a.m_Floats                << ", "
-    << "m_Vector2s: "    << a.m_Vector2s              << ", "
-    << "m_Vector3s: "    << a.m_Vector3s              << ", "
-    << "m_Vector4s: "    << a.m_Vector4s
-    << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"m_Name", jfc::insertion_operator_to_nlohmann_json_object(a.m_Name)},
+        {"m_ModelMatrix", jfc::insertion_operator_to_nlohmann_json_object(a.m_ModelMatrix)},
+        {"m_VertexData", jfc::insertion_operator_to_nlohmann_json_object(a.m_VertexData.lock())},
+        {"m_ShaderProgram", jfc::insertion_operator_to_nlohmann_json_object(a.m_ShaderProgram.lock())},
+        {"m_Textures", jfc::insertion_operator_to_nlohmann_json_object(a.m_Textures)},
+        {"m_Floats", jfc::insertion_operator_to_nlohmann_json_object(a.m_Floats)},
+        {"m_Vector2s", jfc::insertion_operator_to_nlohmann_json_object(a.m_Vector2s)},
+        {"m_Vector3s", jfc::insertion_operator_to_nlohmann_json_object(a.m_Vector3s)},
+        {"m_Vector4s", jfc::insertion_operator_to_nlohmann_json_object(a.m_Vector4s)},
+    }
+    .dump();
 }
 
 Model::Model(const std::string &aName, const default_ptr<VertexData> &aVertexData, const default_ptr<ShaderProgram> &aShaderProgram)

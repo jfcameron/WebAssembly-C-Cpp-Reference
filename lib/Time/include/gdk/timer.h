@@ -14,11 +14,14 @@ namespace gdk
         double lastTime =    {0};
     
     public:
-        double get(); //! get the elapsed time since timer started
+        /// \brief get the elapsed time since timer started
+        double get(); 
 
-        void reset(); //! restart the timer
+        /// \brief restart the timer
+        void reset(); 
 
-        double getAndReset(); //! get elapsed time and reset the timer
+        /// \brief get elapsed time and reset the timer
+        double getAndReset(); 
 
         Timer();
     };

@@ -7,8 +7,7 @@
 #include <gdk/database.h>
 #include <gdk/exception.h>
 #include <gdk/gameloop.h>
-#include <gdk/glfw_wrapper.h>
-#include <gdk/input_private.h>
+#include <gdk/input_protected.h>
 #include <gdk/intvector2.h>
 #include <gdk/keyboard.h>
 #include <gdk/logger.h>
@@ -18,9 +17,10 @@
 #include <gdk/resources.h>
 #include <gdk/resources_protected.h>
 #include <gdk/shaderprogram.h>
+#include <gdk/simpleglfwwindow.h>
 #include <gdk/texture.h>
 #include <gdk/time.h>
-#include <gdk/time_private.h>
+#include <gdk/time_protected.h>
 #include <gdk/vector3.h>
 #include <gdk/vertexdata.h>
 #include <gdk/vertexformat.h>
@@ -48,9 +48,16 @@ namespace
 
 int main()
 {
+    SimpleGLFWWindow simpleGLFWWindow("A very cool demo");
+
+    gdk::input::PROTECTED::initialize(simpleGLFWWindow.getPointerToGLFWWindow());
+    gdk::time::PROTECTED::initialize(simpleGLFWWindow.getPointerToGLFWWindow());
+
     std::shared_ptr<gdk::Camera> pCamera = std::make_shared<Camera>([&]()
     {
         Camera camera;
+
+        gdk::log(TAG, camera);
 
         camera.setViewportSize(0.5, 1.0);
             
@@ -214,8 +221,6 @@ int main()
     printTableExists(tableName);
     printTableExists("blimblam");
 
-    //////////////////////////////
-
     gdk::GameLoop::Create(
         // Main Update
         [&](const double &aDeltaTime)
@@ -239,7 +244,7 @@ int main()
         // Main Draw
         [&](const double &aDeltaTime)
         {
-            for (std::shared_ptr<gdk::Camera> &camera : cameras) camera->draw(aDeltaTime, glfw::GetWindowSize(), models);
+            for (std::shared_ptr<gdk::Camera> &camera : cameras) camera->draw(aDeltaTime, simpleGLFWWindow.GetWindowSize(), models);
         },
         // Worker Update
         [&]()

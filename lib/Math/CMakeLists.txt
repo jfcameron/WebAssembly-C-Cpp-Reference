@@ -17,6 +17,7 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 
         ${glm_INCLUDE_DIR}
+        ${nlohmann_INCLUDE_DIR}
 
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/intvector2.cpp

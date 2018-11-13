@@ -2,7 +2,10 @@
 
 #include <gdk/glh.h>
 #include <gdk/mat4x4uniformcollection.h>
+#include <gdk/nlohmann_json_util.h>
 #include <gdk/opengl.h>
+
+#include <nlohmann/json.hpp>
 
 #include <iostream>
 
@@ -10,21 +13,11 @@ namespace gdk
 {
 std::ostream &operator<<(std::ostream &s, const Mat4x4UniformCollection &a)
 {
-    s.clear(); s
-    
-    << "{";
-    
-    size_t i = 0;
-    
-    for (auto &pair : a.m_Map)
-    {
-        auto mat4x4 = pair.second;
-        s << i << ": " << "{Name: " << pair.first << ", " << "Matrix: " << mat4x4 << "}";
-    }
-    
-    s << "}";
-    
-    return s;
+    nlohmann::json root;
+
+    for (auto &pair : a.m_Map) root[pair.first] = jfc::insertion_operator_to_nlohmann_json_object(pair.second);
+
+    return s << root.dump();
 }
 
 void Mat4x4UniformCollection::bind(const GLuint aProgramHandle) const

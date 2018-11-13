@@ -8,12 +8,16 @@
 #include <gdk/logger.h>
 #include <gdk/mat4x4.h>
 #include <gdk/model.h>
+#include <gdk/nlohmann_json_util.h>
 #include <gdk/opengl.h>
 #include <gdk/quaternion.h>
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
+#include <sstream>
 
 using namespace gdk;
 
@@ -21,24 +25,23 @@ static constexpr char TAG[] = "Camera";
 
 std::ostream &gdk::operator<<(std::ostream &s, const Camera &a)
 {
-    s.clear(); s
-    << "{"
-    << "m_ViewMatrix:\n"       << a.m_ViewMatrix        // << ", "
-    << "m_ProjectionMatrix:\n" << a.m_ProjectionMatrix  // << ", "
-    << "m_ViewportPosition: "  << a.m_ViewportPosition  << ", "
-    << "m_ViewportSize: "      << a.m_ViewportSize      << ", "
-    << "m_FieldOfView: "       << a.m_FieldOfView       << ", "
-    << "m_NearClippingPlane: " << a.m_NearClippingPlane << ", "
-    << "m_FarClippingPlane: "  << a.m_FarClippingPlane
-    << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"m_ViewMatrix",        jfc::insertion_operator_to_nlohmann_json_object(a.m_ViewMatrix)},
+        {"m_ProjectionMatrix",  jfc::insertion_operator_to_nlohmann_json_object(a.m_ProjectionMatrix)},
+        {"m_ViewportPosition",  jfc::insertion_operator_to_nlohmann_json_object(a.m_ViewportPosition)},
+        {"m_ViewportSize",      jfc::insertion_operator_to_nlohmann_json_object(a.m_ViewportSize)},
+        {"m_FieldOfView",       jfc::insertion_operator_to_nlohmann_json_object(a.m_FieldOfView)},
+        {"m_NearClippingPlane", jfc::insertion_operator_to_nlohmann_json_object(a.m_NearClippingPlane)},
+        {"m_FarClippingPlane",  jfc::insertion_operator_to_nlohmann_json_object(a.m_FarClippingPlane)},
+    }
+    .dump();
 }
 
 Camera::Camera()
 {    
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_SCISSOR_TEST);   
+    glEnable(GL_SCISSOR_TEST);
 }
 
 //??????

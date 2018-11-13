@@ -5,6 +5,8 @@
 #include <gdk/vector2.h>
 #include <gdk/vector2uniformcollection.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 
 using namespace gdk;
@@ -17,8 +19,7 @@ std::ostream &gdk::operator<<(std::ostream &s, const Vector2UniformCollection &a
     
     size_t i = 0;
     
-    for (auto& pair : a.m_Map)
-        s << i << ": " << "{Name: " << pair.first << ", " << "Vector2: " << *pair.second.get() << "}";
+    for (auto& pair : a.m_Map) s << i++ << ": " << "{Name: " << pair.first << ", " << "Vector2: " << *pair.second.get() << "}";
     
     s << "}";
     

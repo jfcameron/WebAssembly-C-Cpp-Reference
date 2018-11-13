@@ -3,6 +3,8 @@
 #include <gdk/quaternion.h>
 #include <gdk/vector3.h>
 
+#include <nlohmann/json.hpp>
+
 #include <glm/gtc/quaternion.hpp>
 
 #include <iostream>
@@ -13,15 +15,14 @@ const Quaternion Quaternion::Identity = Quaternion();
 
 std::ostream &gdk::operator<< (std::ostream &s, const gdk::Quaternion &a)
 {
-    s.clear(); s
-    << "{"
-    << "x: " << a.x << ", "
-    << "y: " << a.y << ", "
-    << "z: " << a.z << ", "
-    << "w: " << a.w
-    << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"x", a.x},
+        {"y", a.y},
+        {"z", a.z},
+        {"w", a.w},
+    }
+    .dump();
 }
 
 Quaternion::Quaternion() : x(0.f), y(0.f), z(0.f), w(1.f)

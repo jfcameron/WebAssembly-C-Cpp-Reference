@@ -2,8 +2,10 @@
 
 #include <gdk/vector2.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 using namespace gdk;
 
@@ -15,13 +17,12 @@ const Vector2 Vector2::Zero  = { 0.f, 0.f};
 
 std::ostream &gdk::operator<<(std::ostream &s, const gdk::Vector2 &a)
 {
-    s.clear(); s
-    << "{"
-    << "x: " << a.x << ", "
-    << "y: " << a.y
-    << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"x", a.x},
+        {"y", a.y},
+    }
+    .dump();
 }
 
 Vector2::Vector2(const float aX, const float aY)

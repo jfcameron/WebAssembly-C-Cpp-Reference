@@ -3,7 +3,7 @@
 #include <gdk/scene.h>
 #include <gdk/exception.h>
 #include <gdk/logger.h>
-#include <gdk/gameobject.h>
+#include <gdk/object.h>
 #include <gdk/scenegraph.h>
 
 #include <iostream>
@@ -23,20 +23,20 @@ std::ostream &operator<<(std::ostream &s, const Scene &a)
     return s;
 }
 
-std::weak_ptr<GameObject> Scene::getGameObject(const std::string &aGameObjectName) const
+std::weak_ptr<Object> Scene::getObject(const std::string &aObjectName) const
 {
-    for (auto pGameObject : m_GameObjects)
-        if (pGameObject->getName() == aGameObjectName)
-            return std::weak_ptr<GameObject>(pGameObject);
+    for (auto pObject : m_Objects)
+        if (pObject->getName() == aObjectName)
+            return std::weak_ptr<Object>(pObject);
     
-    return std::weak_ptr<GameObject>();
+    return std::weak_ptr<Object>();
 }
 
-std::weak_ptr<GameObject> Scene::addGameObject()
+std::weak_ptr<Object> Scene::addObject()
 {
-    m_GameObjects.push_back(std::shared_ptr<GameObject>(new GameObject(std::weak_ptr<Scene>(shared_from_this()))));
+    m_Objects.push_back(std::shared_ptr<Object>(new Object(std::weak_ptr<Scene>(shared_from_this()))));
     
-    return m_GameObjects.back();
+    return m_Objects.back();
 }
 
 void Scene::draw(const Math::IntVector2 &aFrameBufferSize)
@@ -49,7 +49,7 @@ void Scene::fixedUpdate()
     switch(m_SceneState)
     {
         case State::Active:
-            for (auto pGameObject : m_GameObjects) pGameObject->fixedUpdate();
+            for (auto pObject : m_Objects) pObject->fixedUpdate();
             
             for (auto pScene : m_SceneGraphs) pScene->fixedUpdate();
             
@@ -64,7 +64,7 @@ void Scene::update()
     switch(m_SceneState)
     {
         case State::Active:
-            for (auto pGameObject : m_GameObjects) pGameObject->update();
+            for (auto pObject : m_Objects) pObject->update();
             
             for (auto pSceneGraph : m_SceneGraphs) pSceneGraph->update();
             
@@ -74,16 +74,16 @@ void Scene::update()
     }
 }
 
-void Scene::OnComponentAddedToAGameObject(const std::weak_ptr<Component> &aComponent)
+void Scene::OnComponentAddedToAObject(const std::weak_ptr<Component> &aComponent)
 {
     //parseRequireSceneGraphsAnnotation(aComponent);
     
-    for (auto pSceneGraph : m_SceneGraphs) pSceneGraph->OnComponentAddedToAGameObject(aComponent);
+    for (auto pSceneGraph : m_SceneGraphs) pSceneGraph->OnComponentAddedToAObject(aComponent);
 }
 
-void Scene::OnComponentRemovedFromAGameObject(const std::weak_ptr<Component> &)
+void Scene::OnComponentRemovedFromAObject(const std::weak_ptr<Component> &)
 {
-    throw gdk::Exception(TAG, "OnComponentAddedToAGameObject not supported");
+    throw gdk::Exception(TAG, "OnComponentAddedToAObject not supported");
 }
 
 void Scene::OnSceneGraphAdded(const std::weak_ptr<SceneGraph> &aSceneGraph)

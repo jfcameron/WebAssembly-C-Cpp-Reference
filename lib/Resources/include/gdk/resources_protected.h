@@ -26,7 +26,7 @@ namespace gdk::resources::PROTECTED
     ///
     /// \detailed logging_interface members are used by the resource project to record logs.
     /// log, warn, error represent different degrees of severity of the log.
-    /// \note if the user does not provide an implementation, then the default behaviour is to not log that severity level.
+    /// \note if the user does not provide an implementation, then the default behaviour is to not record logs of that severity level.
     namespace logging_interface
     {
         using logging_function_signature = std::function<void(std::string aTag, std::string aMessage)>;

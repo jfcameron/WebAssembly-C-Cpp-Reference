@@ -5,6 +5,8 @@
 #include <gdk/vector2.h>
 #include <gdk/vector3.h>
 
+#include <nlohmann/json.hpp>
+
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -17,16 +19,18 @@ const Mat4x4 Mat4x4::Identity = Mat4x4(); //This seems reversed...
 
 std::ostream &gdk::operator<< (std::ostream &s, const gdk::Mat4x4 &aMat)
 {
-    s.clear(); s
+    nlohmann::json array;
 
-    << "[" 
-    << "[" << aMat.m[0][0] << ", " << aMat.m[1][0] << ", " << aMat.m[2][0] << ", " << aMat.m[3][0] << "],\n"
-    << "[" << aMat.m[0][1] << ", " << aMat.m[1][1] << ", " << aMat.m[2][1] << ", " << aMat.m[3][1] << "],\n"
-    << "[" << aMat.m[0][2] << ", " << aMat.m[1][2] << ", " << aMat.m[2][2] << ", " << aMat.m[3][2] << "],\n"
-    << "[" << aMat.m[0][3] << ", " << aMat.m[1][3] << ", " << aMat.m[2][3] << ", " << aMat.m[3][3] << "]"
-    << "]";
-    
-    return s;
+    for (size_t i = 0; i < 4; ++i) 
+    {
+        nlohmann::json row;
+
+        for (size_t j = 0; j < 4; ++j) row.push_back(aMat.m[i][j]);
+
+        array.push_back(row);
+    }
+
+    return s << array.dump();
 }
 
 Mat4x4::Mat4x4() : m

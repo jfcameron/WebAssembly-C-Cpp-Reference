@@ -5,6 +5,8 @@
 #include <gdk/vector4.h>
 #include <gdk/vector4uniformcollection.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 
 using namespace gdk;

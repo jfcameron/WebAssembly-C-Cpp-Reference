@@ -3,6 +3,8 @@
 #include <gdk/vector3.h>
 #include <gdk/vector4.h>
 
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 
 using namespace gdk;
@@ -11,16 +13,14 @@ const Vector4 Vector4::Zero = {0., 0., 0., 0.};
 
 std::ostream &gdk::operator<<(std::ostream &s, const Vector4 &a)
 {
-    s.clear(); s 
-    
-    << "{"
-    << "x: " << a.x << ", "
-    << "y: " << a.y << ", "
-    << "z: " << a.z << ", "
-    << "w: " << a.w
-    << "}"; 
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"x", a.x},
+        {"y", a.y},
+        {"z", a.z},
+        {"w", a.w},
+    }
+    .dump();
 }
 
 Vector4::Vector4()
