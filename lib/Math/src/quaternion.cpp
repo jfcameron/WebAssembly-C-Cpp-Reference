@@ -11,12 +11,16 @@
 
 using namespace gdk;
 
+static constexpr char TAG[] = "Quaternion";
+
 const Quaternion Quaternion::Identity = Quaternion();
 
 std::ostream &gdk::operator<< (std::ostream &s, const gdk::Quaternion &a)
 {
     return s << nlohmann::json
     {
+        {"Type", TAG},
+        
         {"x", a.x},
         {"y", a.y},
         {"z", a.z},

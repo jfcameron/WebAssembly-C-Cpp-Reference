@@ -26,7 +26,7 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/timer.cpp
 )
 
-#[[if(JFC_BUILD_TESTS)
+if(JFC_BUILD_TESTS)
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
         jfc_add_tests(
             C++_STANDARD 17
@@ -41,10 +41,10 @@ jfc_project(library
             LIBRARIES
                 ${gdkresources_LIBRARIES}
 
-           DEPENDENCIES
-               "gdktime"
+            DEPENDENCIES
+                "gdktime"
         )
     else()
         jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
     endif()
-endif()]]
+endif()

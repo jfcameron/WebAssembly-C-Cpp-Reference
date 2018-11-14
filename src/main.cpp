@@ -102,6 +102,8 @@ int main()
             if (aSucceeded)
             {
                 auto pTex = std::make_shared<gdk::Texture>(gdk::Texture("awesome", aData));
+
+                gdk::log(TAG, *pTex.get());
             
                 pModel.get()->setTexture("_Texture", static_cast<std::shared_ptr<Texture>>(pTex));
             }
@@ -244,7 +246,7 @@ int main()
         // Main Draw
         [&](const double &aDeltaTime)
         {
-            for (std::shared_ptr<gdk::Camera> &camera : cameras) camera->draw(aDeltaTime, simpleGLFWWindow.GetWindowSize(), models);
+            for (std::shared_ptr<gdk::Camera> &camera : cameras) camera->draw(simpleGLFWWindow.GetTime(), aDeltaTime, simpleGLFWWindow.GetWindowSize(), models);
         },
         // Worker Update
         [&]()

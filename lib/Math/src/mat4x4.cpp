@@ -19,18 +19,27 @@ const Mat4x4 Mat4x4::Identity = Mat4x4(); //This seems reversed...
 
 std::ostream &gdk::operator<< (std::ostream &s, const gdk::Mat4x4 &aMat)
 {
-    nlohmann::json array;
+    nlohmann::json root;
 
-    for (size_t i = 0; i < 4; ++i) 
+    root["Type"] = TAG;
+
+    root["data"] = [&]()
     {
-        nlohmann::json row;
+        nlohmann::json array;
 
-        for (size_t j = 0; j < 4; ++j) row.push_back(aMat.m[i][j]);
+        for (size_t i = 0; i < 4; ++i) 
+        {
+            nlohmann::json row;
 
-        array.push_back(row);
-    }
+            for (size_t j = 0; j < 4; ++j) row.push_back(aMat.m[i][j]);
 
-    return s << array.dump();
+            array.push_back(row);
+        }
+
+        return array;
+    }();
+
+    return s << root.dump();
 }
 
 Mat4x4::Mat4x4() : m
@@ -38,7 +47,7 @@ Mat4x4::Mat4x4() : m
     {1.,0.,0.,0.},
     {0.,1.,0.,0.},
     {0.,0.,1.,0.},
-    {0.,0.,0.,1.}
+    {0.,0.,0.,1.},
 }
 {}
 
@@ -185,7 +194,7 @@ Mat4x4 Mat4x4::set(
 
 Mat4x4 Mat4x4::multiply(const Mat4x4 &right)
 {
-     set(
+    set(
         m[0][0] * right.m[0][0] + m[1][0] * right.m[0][1] + m[2][0] * right.m[0][2] + m[3][0] * right.m[0][3],
         m[0][1] * right.m[0][0] + m[1][1] * right.m[0][1] + m[2][1] * right.m[0][2] + m[3][1] * right.m[0][3],
         m[0][2] * right.m[0][0] + m[1][2] * right.m[0][1] + m[2][2] * right.m[0][2] + m[3][2] * right.m[0][3],
@@ -202,7 +211,7 @@ Mat4x4 Mat4x4::multiply(const Mat4x4 &right)
         m[0][1] * right.m[3][0] + m[1][1] * right.m[3][1] + m[2][1] * right.m[3][2] + m[3][1] * right.m[3][3],
         m[0][2] * right.m[3][0] + m[1][2] * right.m[3][1] + m[2][2] * right.m[3][2] + m[3][2] * right.m[3][3],
         m[0][3] * right.m[3][0] + m[1][3] * right.m[3][1] + m[2][3] * right.m[3][2] + m[3][3] * right.m[3][3]
-        );
+    );
     
     return *this;
 }

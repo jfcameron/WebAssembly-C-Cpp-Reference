@@ -9,16 +9,20 @@
 
 using namespace gdk;
 
-const IntVector2 IntVector2::Up    = { 0, 1};
-const IntVector2 IntVector2::Down  = { 0,-1};
-const IntVector2 IntVector2::Left  = {-1, 0};
+static constexpr char TAG[] = "IntVector2";
+
+const IntVector2 IntVector2::Up =    { 0, 1};
+const IntVector2 IntVector2::Down =  { 0,-1};
+const IntVector2 IntVector2::Left =  {-1, 0};
 const IntVector2 IntVector2::Right = { 1, 0};
-const IntVector2 IntVector2::Zero  = { 0, 0};
+const IntVector2 IntVector2::Zero =  { 0, 0};
 
 std::ostream &gdk::operator<<(std::ostream &s, const gdk::IntVector2 &a)
 {
     return s << nlohmann::json
     {
+        {"Type", TAG},
+
         {"x", a.x},
         {"y", a.y},
     }

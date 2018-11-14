@@ -8,11 +8,19 @@
 
 #include <iostream>
 
+static constexpr char TAG[] = "FloatUniformCollection";
+
 namespace gdk
 {
 std::ostream &operator<<(std::ostream &s, const FloatUniformCollection &a)
 {
-    nlohmann::json root;
+    nlohmann::json root = 
+    {
+        {"Type", TAG}, 
+        {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+            {}
+        },
+    };
 
     for (auto &pair : a.m_Map) root[pair.first] = *pair.second.get();
 

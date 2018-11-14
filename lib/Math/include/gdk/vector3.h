@@ -26,15 +26,15 @@ namespace gdk
         Vector3 operator-(const Vector3 &) const;
         Vector3 operator*(const float &) const;
             
-        Vector3& operator+=(const Vector3 &);
-        Vector3& operator-=(const Vector3 &);
-        Vector3& operator*=(const float &);
-        Vector3& operator=(const Vector3 &) = default;
+        Vector3 &operator+=(const Vector3 &);
+        Vector3 &operator-=(const Vector3 &);
+        Vector3 &operator*=(const float &);
+        Vector3 &operator=(const Vector3 &) = default;
             
         Vector3(const float &aX, const float &aY, const float &aZ);
         Vector3() = default;
-        Vector3(const Vector3& aVector3) = default;
-        Vector3(Vector3&&) = default;
+        Vector3(const Vector3 &aVector3) = default;
+        Vector3(Vector3 &&) = default;
         ~Vector3() = default;
             
         static const Vector3 Up;

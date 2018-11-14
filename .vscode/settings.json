@@ -52,6 +52,7 @@
         "valarray": "cpp",
         "__hash_table": "cpp",
         "__tree": "cpp",
-        "forward_list": "cpp"
+        "forward_list": "cpp",
+        "iostream": "cpp"
     }
 }

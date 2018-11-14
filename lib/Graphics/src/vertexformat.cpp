@@ -1,6 +1,7 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/glh.h>
+#include <gdk/nlohmann_json_util.h>
 #include <gdk/opengl.h>
 #include <gdk/vertexformat.h>
 
@@ -35,11 +36,16 @@ std::ostream &gdk::operator<<(std::ostream &s, const VertexFormat &a)
 {
     (void)a;
     
-    s << "{";
-    s << TAG << " << not implemented.";
-    s << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"Type", TAG}, 
+        {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+            {}
+        },
+        
+        {TAG, jfc::insertion_operator_to_nlohmann_json_object("Not Implemented!")},
+    }
+    .dump();
 }
 
 VertexFormat::VertexFormat(const std::vector<VertexAttribute> &aAttributes)

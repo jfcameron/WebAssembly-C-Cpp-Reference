@@ -11,13 +11,12 @@
 #include <emscripten.h>
 #endif
 
+#include <cassert>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <map>
 #include <vector>
-
-#include <assert.h> // Remove cstdlib dependencies
-#include <stdio.h>
-#include <string.h>
 
 static constexpr char TAG[] = "Gamepad";
 

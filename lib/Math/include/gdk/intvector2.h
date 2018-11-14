@@ -20,11 +20,7 @@ namespace gdk
 
         int x = {0}, y = {0};
 
-        //! create a Vector2 (related floating-point struct) from an IntVector2 instance
-        Vector2 toVector2() const;
-        
-        //! alias for toVector2() using explicit c++ cast semantics
-        explicit operator Vector2() const;
+        Vector2 toVector2() const; //<! create a Vector2 (related floating-point struct) from an IntVector2 instance
     
         bool operator==(const IntVector2 &) const;
         bool operator!=(const IntVector2 &) const;
@@ -42,6 +38,8 @@ namespace gdk
         IntVector2 &operator*=(const float);
 
         explicit operator std_pair_type() const;
+
+        explicit operator Vector2() const; //<! alias for toVector2() using explicit c++ cast semantics
 
         IntVector2(const int aX, const int aY);
         IntVector2(const std_pair_type &aPair);

@@ -3,13 +3,11 @@
 #include <gdk/camera.h>
 #include <gdk/default_ptr.h>
 #include <gdk/glh.h>
-#include <gdk/logger.h>
 #include <gdk/mat4x4.h>
 #include <gdk/model.h>
 #include <gdk/nlohmann_json_util.h>
 #include <gdk/opengl.h>
 #include <gdk/shaderprogram.h>
-#include <gdk/time.h>
 #include <gdk/vertexdata.h>
 
 #include <nlohmann/json.hpp>
@@ -24,7 +22,12 @@ std::ostream& gdk::operator<<(std::ostream& s, const Model& a)
 {
     return s << nlohmann::json
     {
-        {"m_Name", jfc::insertion_operator_to_nlohmann_json_object(a.m_Name)},
+        {"Type", TAG}, 
+        {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+            {}
+        },
+        
+        {"m_Name", a.m_Name},
         {"m_ModelMatrix", jfc::insertion_operator_to_nlohmann_json_object(a.m_ModelMatrix)},
         {"m_VertexData", jfc::insertion_operator_to_nlohmann_json_object(a.m_VertexData.lock())},
         {"m_ShaderProgram", jfc::insertion_operator_to_nlohmann_json_object(a.m_ShaderProgram.lock())},
@@ -49,7 +52,7 @@ Model::Model()
             gdk::default_ptr<gdk::ShaderProgram>(static_cast<std::shared_ptr<gdk::ShaderProgram>>(ShaderProgram::AlphaCutOff)))
 {}
 
-void Model::draw(const double &aDeltaTime, const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
+void Model::draw(const double &aTimeSinceStart, const double &aDeltaTime, const Mat4x4 &aViewMatrix, const Mat4x4 &aProjectionMatrix)
 {
     if (const auto pShader = m_ShaderProgram.lock())
     {
@@ -66,7 +69,7 @@ void Model::draw(const double &aDeltaTime, const Mat4x4 &aViewMatrix, const Mat4
             m_Mat4x4s .bind(programHandle);
     
             //bind standard uniforms
-            const float time      = time::sinceStart();
+            const float time      = aTimeSinceStart;//time::sinceStart(); // This is incorrect. needless dependency for a floating value provide this via param or via module interface.
             const float deltaTime = aDeltaTime; //time::getDeltaTime();
         
             const Mat4x4 p = aProjectionMatrix;

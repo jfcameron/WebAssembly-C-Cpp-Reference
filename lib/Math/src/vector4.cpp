@@ -9,12 +9,16 @@
 
 using namespace gdk;
 
+static constexpr char TAG[] = "Vector4";
+
 const Vector4 Vector4::Zero = {0., 0., 0., 0.};
 
 std::ostream &gdk::operator<<(std::ostream &s, const Vector4 &a)
 {
     return s << nlohmann::json
     {
+        {"Type", TAG},
+        
         {"x", a.x},
         {"y", a.y},
         {"z", a.z},

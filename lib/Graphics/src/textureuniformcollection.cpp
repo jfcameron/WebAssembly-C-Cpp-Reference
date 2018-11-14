@@ -1,9 +1,9 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
 #include <gdk/glh.h>
-#include <gdk/logger.h>
 #include <gdk/opengl.h>
 #include <gdk/textureuniformcollection.h>
+#include <gdk/nlohmann_json_util.h>
 
 #include <nlohmann/json.hpp>
 
@@ -15,21 +15,17 @@ constexpr auto TAG = "textureuniform";
 
 std::ostream& gdk::operator<<(std::ostream& s, const TextureUniformCollection& a)
 {
-    s.clear(); s
-    
-    << "{";
-    
-    size_t i = 0;
-    
-    for (auto &pair : a.m_Map)
+    nlohmann::json root = 
     {
-        auto texture = pair.second.lock();
-        s << i << ": " << "{Name: " << pair.first << ", " << "Texture: " << *texture.get() << "}";
-    }
-    
-    s << "}";
-    
-    return s;
+        {"Type", TAG}, 
+        {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+            {}
+        },
+    };
+
+    for (auto &pair : a.m_Map) root[pair.first] = jfc::insertion_operator_to_nlohmann_json_object(pair.second.lock());
+
+    return s << root.dump();
 }
 
 void TextureUniformCollection::bind(const GLuint aProgramHandle) const

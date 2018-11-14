@@ -2,16 +2,15 @@
 
 #include <gdkgraphics/buildinfo.h>
 
-#include <gdk/exception.h>
 #include <gdk/glh.h>
+#include <gdk/nlohmann_json_util.h>
 #include <gdk/shaderprogram.h>
-#include <gdk/logger.h>
 
 #include <nlohmann/json.hpp>
 
 #include <iostream>
 #include <sstream>
-
+#include <stdexcept>
 using namespace gdk;
 
 static constexpr char TAG[] = "ShaderProgram";
@@ -119,19 +118,34 @@ const gdk::lazy_ptr<gdk::ShaderProgram> ShaderProgram::AlphaCutOff([]()
 
 std::ostream &gdk::operator<<(std::ostream &s, const ShaderProgram &a) 
 {
-    GLint activeAttribs = 0, activeUniforms = 0;
-    glGetProgramiv(a.m_ProgramHandle, GL_ACTIVE_ATTRIBUTES, &activeAttribs);
-    glGetProgramiv(a.m_ProgramHandle, GL_ACTIVE_UNIFORMS, &activeUniforms);
-    
-    s.clear(); s
-    << "{"
-    << "m_Name: "            << a.m_Name          << ", "
-    << "m_Handle: "          << a.m_ProgramHandle << ", "
-    << "Active attributes: " << activeAttribs     << ", "
-    << "Active uniforms: "   << activeUniforms
-    << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"Type", TAG},
+        {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+            {"Active Attributes", [&]()
+                {
+                    GLint activeAttribs = 0;
+
+                    glGetProgramiv(a.m_ProgramHandle, GL_ACTIVE_ATTRIBUTES, &activeAttribs);
+
+                    return activeAttribs;
+                }()
+            },
+            {"Active Uniforms", [&]()
+                {
+                    GLint activeUniforms = 0;
+
+                    glGetProgramiv(a.m_ProgramHandle, GL_ACTIVE_UNIFORMS, &activeUniforms);
+
+                    return activeUniforms;
+                }()
+            },
+        },
+        
+        {"m_Name", jfc::insertion_operator_to_nlohmann_json_object(a.m_Name)},
+        {"m_ProgramHandle", jfc::insertion_operator_to_nlohmann_json_object(a.m_ProgramHandle)},
+    }
+    .dump();
 }
 
 ShaderProgram::ShaderProgram(const std::string &aName, std::string aVertexSource, std::string aFragmentSource)
@@ -176,9 +190,9 @@ ShaderProgram::ShaderProgram(const std::string &aName, std::string aVertexSource
         << std::endl << "vertex shader compilation log: " <<   glh::GetShaderInfoLog(vs) << std::endl
         << std::endl << "fragment shader compilation log: " << glh::GetShaderInfoLog(fs);
         
-        gdk::log(TAG, glh::GetShaderInfoLog(vs), ", ", glh::GetShaderInfoLog(fs));
+        //gdk::log(TAG, glh::GetShaderInfoLog(vs), ", ", glh::GetShaderInfoLog(fs)); // ??????????????
 
-        throw gdk::Exception(TAG, message.str());
+        throw std::runtime_error(std::string(TAG).append(message.str()));
     }
 
     return programHandle;

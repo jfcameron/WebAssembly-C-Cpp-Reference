@@ -9,6 +9,8 @@
 
 using namespace gdk;
 
+static constexpr char TAG[] = "Vector2";
+
 const Vector2 Vector2::Up    = { 0.f, 1.f};
 const Vector2 Vector2::Down  = { 0.f,-1.f};
 const Vector2 Vector2::Left  = {-1.f, 0.f};
@@ -19,6 +21,8 @@ std::ostream &gdk::operator<<(std::ostream &s, const gdk::Vector2 &a)
 {
     return s << nlohmann::json
     {
+        {"Type", TAG},
+        
         {"x", a.x},
         {"y", a.y},
     }

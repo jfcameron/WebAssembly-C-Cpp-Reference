@@ -32,3 +32,26 @@ jfc_project(library
     DEPENDENCIES
         "glfw"
 )
+
+if(JFC_BUILD_TESTS)
+    if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+        jfc_add_tests(
+            C++_STANDARD 17
+            C_STANDARD 90
+
+            TEST_SOURCE_FILES
+                ${CMAKE_CURRENT_LIST_DIR}/test/resources_test.cpp
+
+            INCLUDE_DIRECTORIES
+                ${gdkresources_INCLUDE_DIRECTORIES}
+
+            LIBRARIES
+                ${gdkresources_LIBRARIES}
+
+            DEPENDENCIES
+                "gdkinput"
+        )
+    else()
+        jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
+    endif()
+endif()

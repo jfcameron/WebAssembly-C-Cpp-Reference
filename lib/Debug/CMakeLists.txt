@@ -21,15 +21,25 @@ jfc_project(library
         ${CMAKE_CURRENT_SOURCE_DIR}/src/logger.cpp
 )
 
-#[[if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
-    jfc_add_tests(
-        C++_STANDARD 17
-        C_STANDARD 90
+if(JFC_BUILD_TESTS)
+    if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+        jfc_add_tests(
+            C++_STANDARD 17
+            C_STANDARD 90
 
-        TEST_SOURCE_FILES
-            ${CMAKE_CURRENT_LIST_DIR}/test/example_test.cpp
-    )
-else()
-    jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
-endif()]]
+            TEST_SOURCE_FILES
+                ${CMAKE_CURRENT_LIST_DIR}/test/resources_test.cpp
 
+            INCLUDE_DIRECTORIES
+                ${gdkresources_INCLUDE_DIRECTORIES}
+
+            LIBRARIES
+                ${gdkresources_LIBRARIES}
+
+            DEPENDENCIES
+                "gdkdebug"
+        )
+    else()
+        jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
+    endif()
+endif()

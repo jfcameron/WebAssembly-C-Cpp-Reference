@@ -68,7 +68,7 @@ namespace gdk
         void setClearColor(const gdk::Color &aColor);
             
         //! Draws a list of models to the framebuffer
-        void draw(const double &aDeltaTime, const gdk::IntVector2 &aFrameBufferSize, const std::vector<std::shared_ptr<gdk::Model>> &aModels);
+        void draw(const double &aTimeSinceStart, const double &aDeltaTime, const gdk::IntVector2 &aFrameBufferSize, const std::vector<std::shared_ptr<gdk::Model>> &aModels);
             
         Camera& operator=(const Camera &) = delete;
         Camera& operator=(Camera &&) = delete;

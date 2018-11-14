@@ -2,10 +2,8 @@
 
 #include <gdk/camera.h>
 #include <gdk/color.h>
-#include <gdk/exception.h>
 #include <gdk/glh.h>
 #include <gdk/intvector2.h>
-#include <gdk/logger.h>
 #include <gdk/mat4x4.h>
 #include <gdk/model.h>
 #include <gdk/nlohmann_json_util.h>
@@ -18,6 +16,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 using namespace gdk;
 
@@ -27,6 +26,11 @@ std::ostream &gdk::operator<<(std::ostream &s, const Camera &a)
 {
     return s << nlohmann::json
     {
+        {"Type", TAG}, 
+        {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+            {}
+        },
+
         {"m_ViewMatrix",        jfc::insertion_operator_to_nlohmann_json_object(a.m_ViewMatrix)},
         {"m_ProjectionMatrix",  jfc::insertion_operator_to_nlohmann_json_object(a.m_ProjectionMatrix)},
         {"m_ViewportPosition",  jfc::insertion_operator_to_nlohmann_json_object(a.m_ViewportPosition)},
@@ -53,7 +57,7 @@ static inline void calculateOrthographicProjection(gdk::Mat4x4 &aProjectionMatri
     (void)aFarClippingPlane;
     (void)aViewportAspectRatio;
     
-    throw gdk::Exception(TAG, "Camera::setToOrthographicProjection not implemented!");
+    throw std::runtime_error(std::string(TAG).append("Camera::setToOrthographicProjection not implemented!"));
 }
 
 //Why does this exist?
@@ -62,7 +66,7 @@ static inline void calculatePerspectiveProjection(gdk::Mat4x4& aProjectionMatrix
     aProjectionMatrix.setToPerspective(aFieldOfView, aNearClippingPlane, aFarClippingPlane, aViewportAspectRatio);
 }
 
-void Camera::draw(const double &aDeltaTime, const gdk::IntVector2 &aFrameBufferSize, const std::vector<std::shared_ptr<gdk::Model>> &aModels)
+void Camera::draw(const double &aTimeSinceStart, const double &aDeltaTime, const gdk::IntVector2 &aFrameBufferSize, const std::vector<std::shared_ptr<gdk::Model>> &aModels)
 {
     gdk::IntVector2 viewportPixelPosition(aFrameBufferSize * m_ViewportPosition);
     gdk::IntVector2 viewportPixelSize    (aFrameBufferSize * m_ViewportSize);
@@ -100,7 +104,7 @@ void Camera::draw(const double &aDeltaTime, const gdk::IntVector2 &aFrameBufferS
 
     //
     //
-    for (auto model : aModels) model->draw(aDeltaTime, m_ViewMatrix, getProjectionMatrix());
+    for (auto model : aModels) model->draw(aTimeSinceStart, aDeltaTime, m_ViewMatrix, getProjectionMatrix());
 }
 
 void Camera::setViewMatrix(const gdk::Vector3 &aWorldPos, const gdk::Quaternion &aRotation)

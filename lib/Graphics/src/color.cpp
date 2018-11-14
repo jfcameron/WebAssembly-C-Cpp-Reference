@@ -20,12 +20,20 @@ namespace gdk
         0.3921568627450980392156862745098,
         0.58431372549019607843137254901961,
         0.92941176470588235294117647058824,
-        1.);
+        1.
+    );
+
+    static constexpr char TAG[] = "Color";
 
     std::ostream &operator<< (std::ostream &s, const Color &a)
     {
         return s << nlohmann::json
         {
+            {"Type", TAG}, 
+            {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+                {}
+            },
+            
             {"r", a.r},
             {"g", a.g},
             {"b", a.b},

@@ -29,12 +29,12 @@ Object::Object(const std::weak_ptr<Scene> &aScene)
 
 void Object::update() const
 {
-    for (auto component : m_Components)
+    for (auto &component : m_Components)
     {
         if (!component->m_DidInit)
         {
             component->initialize();
-            component->m_DidInit = true;
+            component->m_DidInit = true; // this breaks basic encapsulation rules.
         }
         
         component->update();
@@ -48,7 +48,7 @@ void Object::fixedUpdate() const
         if (!component->m_DidInit)
         {
             component->initialize();
-            component->m_DidInit = true;
+            component->m_DidInit = true; // this breaks basic encapsulation rules.
         }
             
         component->fixedUpdate();

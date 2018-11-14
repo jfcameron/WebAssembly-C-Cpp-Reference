@@ -1,14 +1,14 @@
 // © 2018 Joseph Cameron - All Rights Reserved
 
-#include <gdk/exception.h>
 #include <gdk/glh.h>
-#include <gdk/logger.h>
+#include <gdk/nlohmann_json_util.h>
 #include <gdk/opengl.h>
 #include <gdk/vertexdata.h>
 
 #include <nlohmann/json.hpp>
 
 #include <iostream>
+#include <stdexcept>
 
 using namespace gdk;
 
@@ -82,15 +82,19 @@ const gdk::lazy_ptr<gdk::VertexData> VertexData::Cube([](){
 
 std::ostream& gdk::operator<<(std::ostream &s, const VertexData &a)
 {
-    s.clear(); s
-    << "{"
-    << "Name: "         << a.m_Name               << ", "
-    << "Handle: "       << a.m_VertexBufferHandle << ", "
-    << "VertexCount: "  << a.m_VertexCount        << ", "
-    << "VertexFormat: " << a.m_VertexFormat
-    << "}";
-    
-    return s;
+    return s << nlohmann::json
+    {
+        {"Type", TAG}, 
+        {"Debug Info", //This part is expensive. Should only be written if some symbol is defined etc. "Debug Info" should also be standardized.
+            {}
+        },
+        
+        {"m_Name", jfc::insertion_operator_to_nlohmann_json_object(a.m_Name)},
+        {"m_VertexBufferHandle", jfc::insertion_operator_to_nlohmann_json_object(a.m_VertexBufferHandle)},
+        {"m_VertexCount", jfc::insertion_operator_to_nlohmann_json_object(a.m_VertexCount)},
+        {"m_VertexFormat", jfc::insertion_operator_to_nlohmann_json_object(a.m_VertexFormat)},
+    }
+    .dump();
 }
 
 static GLenum VertexDataTypeToOpenGLDrawType(const VertexData::Type &aType)
@@ -114,13 +118,8 @@ static GLenum PrimitiveModeToOpenGLPrimitiveType(const VertexData::PrimitiveMode
 
 void VertexData::draw(const GLuint aShaderProgramHandle) const
 {
-    //
-    
-    std::string error;
-    
-    while(glh::GetError(&error)) gdk::log(TAG, "glerror: ", error);
-    
-    //
+    //std::string error;
+    //while(glh::GetError(&error)) std::cout << TAG << ", glerror: " << error; // ???????????
     
     glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferHandle);
     
@@ -169,7 +168,7 @@ void VertexData::updateVertexData(
     
         std::string errorCode;
         
-        if (glh::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
+        if (glh::GetError(&errorCode)) std::runtime_error(std::string(TAG).append(errorCode));
     }
 }
 
@@ -190,7 +189,7 @@ VertexData::VertexData(const std::string &aName, const VertexData::Type &aType, 
     
         std::string errorCode;
         
-        if (glh::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
+        if (glh::GetError(&errorCode)) std::runtime_error(std::string(TAG).append(errorCode));
     }
     
     return ibo;
@@ -198,7 +197,7 @@ VertexData::VertexData(const std::string &aName, const VertexData::Type &aType, 
 , m_IndexCount((GLsizei)aIndexData.size())
 , m_VertexBufferHandle([&aVertexData, &aType]() -> GLuint
 {
-    if (aVertexData.size() <= 0) gdk::Exception(TAG, "bad vertex data");
+    if (aVertexData.size() <= 0) std::runtime_error(std::string(TAG).append("bad vertex data"));
     
     GLuint vbo = 0;
     
@@ -209,7 +208,7 @@ VertexData::VertexData(const std::string &aName, const VertexData::Type &aType, 
     
     std::string errorCode;
 
-    if (glh::GetError(&errorCode)) gdk::Exception(TAG, errorCode);
+    if (glh::GetError(&errorCode)) std::runtime_error(std::string(TAG).append(errorCode));
     
     return vbo;
 }())
