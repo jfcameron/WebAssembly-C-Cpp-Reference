@@ -8,47 +8,53 @@
 
 namespace gdk
 {       
-    class Object;
+    class Entity;
     class Transform;
     class Scene;
         
-    /// \brief Encapsulates behaviour and data used to manipulate Objects
+    /// \brief Encapsulates behaviour and data used to manipulate Entitys
     class Component : public std::enable_shared_from_this<Component>
     {
-        friend std::ostream &operator<< (std::ostream &, const ECS::Component &);
-        friend GDK::ECS::Object;
+        //friend std::ostream &operator<< (std::ostream &, const Component &);
+        friend gdk::Entity; // is this REALLY necessary?
       
-        std::weak_ptr<Object> m_Object = {};
+        std::weak_ptr<Entity> m_Entity = {};
+
         bool m_DidInit = false;
             
     protected:
-        //! called once per component instance, as early as possible
+        /// \brief JSON representation of the Component derivative. Required for serializing to JSON, for serializing to disk and logging e.g: state of a Scene
+        virtual std::string toJSON() {return "{\"Type:\" \"Unimplemented!\"}"}
+
+        /// \brief called once per component instance, as early as possible
         virtual void initialize() {}
             
-        //! called every update frame
+        /// \brief called every update frame
         virtual void update() {}
             
-        //! called every fixedupdate frame
+        /// \brief called every fixedupdate frame
         virtual void fixedUpdate() {}
             
-        //! Another component was added to my object
-        virtual void onOtherComponentAddedToMyObject(const std::weak_ptr<Component> &) {}
+        /// \brief Another component was added to my Entity
+        virtual void onOtherComponentAddedToMyEntity(const std::weak_ptr<Component> &) {}
             
-        //! Another component was removed from my object
-        virtual void onOtherComponentRemovedFromMyObject(const std::weak_ptr<Component> &) {}
+        /// \brief Another component was removed from my Entity
+        virtual void onOtherComponentRemovedFromMyEntity(const std::weak_ptr<Component> &) {}
             
-        //! This component instance was added to a object
-        virtual void onAddedToObject(const std::weak_ptr<Object> &) {}
-            
-        //virtual void onRemovedFromObject(const std::weak_ptr<Object>&) {}
+        /// \brief This component instance was added to a Entity
+        virtual void onAddedToEntity(const std::weak_ptr<Entity> &) {}
+
+        //virtual void onRemovedFromEntity(const std::weak_ptr<Entity>&) {}
             
     public:
-        std::weak_ptr<Object> getObject() const;
+        std::weak_ptr<Entity> getEntity() const;
             
+        std::ostream& operator<<(std::ostream &s);
+
         Component &operator=(const Component &) = delete;
         Component &operator=(Component &&) = delete;
       
-    protected:
+//    protected:
         Component() = default;
     private:
         Component(const Component &) = delete;
@@ -57,7 +63,7 @@ namespace gdk
         virtual ~Component() = default;
     };
 
-    std::ostream &operator<< (std::ostream &, const ECS::Component &);
+    std::ostream &operator<< (std::ostream &, const Component &);
 }
 
 #endif

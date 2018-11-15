@@ -4,6 +4,7 @@
 
 #include <gdk/camera.h>
 #include <gdk/color.h>
+#include <gdk/component.h>
 #include <gdk/database.h>
 #include <gdk/exception.h>
 #include <gdk/gameloop.h>
@@ -222,6 +223,23 @@ int main()
 
     printTableExists(tableName);
     printTableExists("blimblam");
+
+    /*class : public gdk::Component
+    {
+
+    } MyVeryCoolComponent = {};*/
+
+    gdk::Component MyVeryCoolComponent;
+
+    if (const auto ptr = MyVeryCoolComponent.getEntity().lock())
+    {
+
+    }
+
+    //gdk::log(TAG, MyVeryCoolComponent);
+    //std::cout << MyVeryCoolComponent;
+
+    MyVeryCoolComponent << std::cout;
 
     gdk::GameLoop::Create(
         // Main Update

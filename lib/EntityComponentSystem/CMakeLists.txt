@@ -2,40 +2,59 @@
 
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-#if (JFC_BUILD_LIB)
-    project("gdkentitycomponentsystem"
-        VERSION "0.0"
-        DESCRIPTION "GDK Entity Component System core library")
+jfc_project(library
+    NAME "gdkentitycomponentsystem"
+    VERSION 0.0
+    DESCRIPTION "an entity component system lib"
+    C++_STANDARD 17
+    C_STANDARD 90
+    TYPE STATIC
 
-    add_library(${PROJECT_NAME} STATIC
-        # Core
-    	${CMAKE_CURRENT_SOURCE_DIR}/src/component.cpp
-    	${CMAKE_CURRENT_SOURCE_DIR}/src/object.cpp
+    PUBLIC_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+
+    PRIVATE_INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+
+        ${gdkmath_INCLUDE_DIRECTORIES}
+
+        ${nlohmann_INCLUDE_DIR}
+
+    SOURCE_LIST 
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/component.cpp
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/entity.cpp
     	${CMAKE_CURRENT_SOURCE_DIR}/src/scene.cpp
     	${CMAKE_CURRENT_SOURCE_DIR}/src/scenegraph.cpp
-    	${CMAKE_CURRENT_SOURCE_DIR}/src/scenemanager.cpp
+#    	${CMAKE_CURRENT_SOURCE_DIR}/src/scenemanager.cpp
 
-        #hacks
-        #${CMAKE_CURRENT_SOURCE_DIR}/src/hack.cpp
-    )
-    
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${stb_INCLUDE_DIR}
-        ${glm_INCLUDE_DIR})
+    LIBRARIES
+        ${gdkmath_LIBRARIES}
+        
+        #${glfw_LIBRARIES}
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+ #   DEPENDENCIES
+#        "glfw"
+)
 
-    #set_property(TARGET ${PROJECT_NAME} PROPERTY   C_STANDARD 11)
-    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-    
-    set(${PROJECT_NAME}_INCLUDE_DIR
-        ${CMAKE_CURRENT_LIST_DIR}/include
-        CACHE PATH "${PROJECT_NAME}_INCLUDE_DIR include directory" FORCE)
-    
-    set(${PROJECT_NAME}_LIBRARIES
-        ${PROJECT_BINARY_DIR}/lib${PROJECT_NAME}.a;
-        ${stb_LIBRARIES}
-        CACHE PATH "${PROJECT_NAME}_LIBRARIES library object list" FORCE)
-#endif()
+if(JFC_BUILD_TESTS)
+    if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+        jfc_add_tests(
+            C++_STANDARD 17
+            C_STANDARD 90
+
+            TEST_SOURCE_FILES
+                ${CMAKE_CURRENT_LIST_DIR}/test/example_test.cpp
+
+            INCLUDE_DIRECTORIES
+                ${gdkentitycomponentsystem_INCLUDE_DIRECTORIES}
+
+            LIBRARIES
+                ${gdkentitycomponentsystem_LIBRARIES}
+
+            DEPENDENCIES
+                "gdkentitycomponentsystem"
+        )
+    else()
+        jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
+    endif()
+endif()

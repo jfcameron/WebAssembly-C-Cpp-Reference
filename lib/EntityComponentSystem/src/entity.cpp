@@ -1,16 +1,16 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 
-#include <gdk/object.h>
+#include <gdk/entity.h>
 #include <gdk/component.h>
-#include <gdk/logger.h>
+//#include <gdk/logger.h>
 
 #include <iostream>
 
-static constexpr char TAG[] = "Object";
+static constexpr char TAG[] = "Entity";
 
-namespace gdk::ecs
+namespace gdk
 {
-std::ostream &operator<<(std::ostream &s, const Object &a)
+std::ostream &operator<<(std::ostream &s, const Entity &a)
 {
     (void)a;
     
@@ -23,11 +23,11 @@ std::ostream &operator<<(std::ostream &s, const Object &a)
     return s;
 }
 
-Object::Object(const std::weak_ptr<Scene> &aScene)
+Entity::Entity(const std::weak_ptr<Scene> &aScene)
 : m_MyScene(aScene)
 {}
 
-void Object::update() const
+void Entity::update() const
 {
     for (auto &component : m_Components)
     {
@@ -41,7 +41,7 @@ void Object::update() const
     }
 }
 
-void Object::fixedUpdate() const
+void Entity::fixedUpdate() const
 {
     for (auto component : m_Components)
     {
@@ -55,64 +55,64 @@ void Object::fixedUpdate() const
     }
 }
 
-std::weak_ptr<Component> Object::getComponent(const size_t aIndex) const
+std::weak_ptr<Component> Entity::getComponent(const size_t aIndex) const
 {
     return m_Components[aIndex];
 }
 
-size_t  Object::getComponentCount() const
+size_t  Entity::getComponentCount() const
 {
     return m_Components.size();
 }
 
-std::string Object::getName() const
+std::string Entity::getName() const
 {
     return m_Name;
 }
 
-std::weak_ptr<Scene> Object::getScene() const
+std::weak_ptr<Scene> Entity::getScene() const
 {
     return m_MyScene;
 }
 
-void Object::setName(const std::string &aName)
+void Entity::setName(const std::string &aName)
 {
     m_Name = aName;
 }
 
-void Object::setPosition(const Math::Vector3 &aPosition)
+void Entity::setPosition(const Vector3 &aPosition)
 {
     m_Position = aPosition;
 }
 
-void Object::setPosition(const float aX,const float aY, const float aZ)
+void Entity::setPosition(const float aX,const float aY, const float aZ)
 {
     m_Position.x = aX;
     m_Position.y = aY;
     m_Position.z = aZ;
 }
 
-void Object::setScale(const Math::Vector3 &aScale)
+void Entity::setScale(const Vector3 &aScale)
 {
     m_Scale = aScale;
 }
 
-void Object::setRotation(const Math::Quaternion &aRotation)
+void Entity::setRotation(const Quaternion &aRotation)
 {
     m_Rotation = aRotation;
 }
 
-Math::Vector3 Object::getPosition() const
+Vector3 Entity::getPosition() const
 {
     return m_Position;
 }
 
-Math::Vector3 Object::getScale() const
+Vector3 Entity::getScale() const
 {
     return m_Scale;
 }
 
-Math::Quaternion Object::getRotation() const
+Quaternion Entity::getRotation() const
 {
     return m_Rotation;
 }

@@ -15,7 +15,7 @@ namespace gdk
     /// \brief No description provided for SceneManager
     class SceneManager final
     {
-        friend std::ostream& operator<< (std::ostream &, const ECS::SceneManager &);
+        friend std::ostream& operator<< (std::ostream &, const SceneManager &);
       
         std::map<std::string, std::shared_ptr<Scene>> m_Scenes = {};
 
@@ -27,7 +27,7 @@ namespace gdk
             
         void update();
         void fixedUpdate();
-        void draw(const Math::IntVector2 &aFrameBufferSize);
+        void draw(const IntVector2 &aFrameBufferSize);
             
         SceneManager &operator=(const SceneManager &) = delete;
         SceneManager &&operator=(SceneManager &&) = delete;
@@ -38,7 +38,7 @@ namespace gdk
         ~SceneManager() = default;
     };
 
-    std::ostream &operator<< (std::ostream &, const ECS::SceneManager &);
+    std::ostream &operator<< (std::ostream &, const SceneManager &);
 }
 
 #endif

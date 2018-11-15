@@ -12,15 +12,16 @@ namespace gdk
 {
     struct IntVector2;
  
-    class Object;
+    class Entity;
     class SceneGraph;
     class Component; 
         
-    /// \brief A 3D space, contains Objects. The capabilities of the scene are defined by its SceneGraphs
+    /// \brief the spacial context in which a collection of entities exist. scene components modify the naturue of the context (does it have 3D audio? Does it have 2D graphics? Is there physics?)
+    /// see https://en.wikipedia.org/wiki/Scene_graph
     class Scene final : public std::enable_shared_from_this<Scene>
     {
-        friend std::ostream &operator<< (std::ostream &, const ECS::Scene &);
-        friend Object;
+        friend std::ostream &operator<< (std::ostream &, const Scene &);
+        friend Entity;
       
     public:
         enum class State { Active, Paused };
@@ -31,10 +32,10 @@ namespace gdk
         State m_SceneState = State::Active;
             
         std::vector<std::shared_ptr<SceneGraph>> m_SceneGraphs = {};
-        std::vector<std::shared_ptr<Object>> m_Objects = {};
+        std::vector<std::shared_ptr<Entity>> m_Entitys = {};
             
-        void OnComponentAddedToAObject(const std::weak_ptr<Component> &);
-        void OnComponentRemovedFromAObject(const std::weak_ptr<Component> &);
+        void OnComponentAddedToAEntity(const std::weak_ptr<Component> &);
+        void OnComponentRemovedFromAEntity(const std::weak_ptr<Component> &);
             
         void OnSceneGraphAdded(const std::weak_ptr<SceneGraph> &aSceneGraph);
         void OnSceneGraphRemoved(const std::weak_ptr<SceneGraph> &aSceneGraphRemoved);
@@ -42,7 +43,7 @@ namespace gdk
         void logError();
             
     public:
-        std::weak_ptr<Object> getObject(const std::string &) const;
+        std::weak_ptr<Entity> getEntity(const std::string &) const;
         std::string const &getName() const;
         State const &getSceneState() const;
             
@@ -79,9 +80,9 @@ namespace gdk
             
         void update();
         void fixedUpdate();
-        void draw(const Math::IntVector2 &aFrameBufferSize);
+        void draw(const IntVector2 &aFrameBufferSize);
             
-        std::weak_ptr<Object> addObject();
+        std::weak_ptr<Entity> addEntity();
       
         Scene &operator=(const Scene &) = delete;
         Scene &operator=(Scene &&) = delete;
@@ -95,7 +96,7 @@ namespace gdk
         ~Scene() = default;
     };
 
-    std::ostream &operator<< (std::ostream &, const ECS::Scene &);
+    std::ostream &operator<< (std::ostream &, const Scene &);
 }
 
 #endif

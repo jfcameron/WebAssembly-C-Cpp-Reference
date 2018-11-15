@@ -8,6 +8,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Time")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Graphics")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Resources")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Input")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/EntityComponentSystem")
 
 jfc_project(library
     NAME "gdk"
@@ -22,7 +23,7 @@ jfc_project(library
 
         ${gdkgraphics_INCLUDE_DIRECTORIES}
         ${gdkdebug_INCLUDE_DIRECTORIES}
-        #${gdkentitycomponentsystem_INCLUDE_DIRECTORIES}
+        ${gdkentitycomponentsystem_INCLUDE_DIRECTORIES}
         ${gdkglfwwrapper_INCLUDE_DIRECTORIES}
         ${gdkinput_INCLUDE_DIRECTORIES}
         ${gdkmath_INCLUDE_DIRECTORIES}
@@ -32,7 +33,7 @@ jfc_project(library
 
     LIBRARIES
         ${gdkdebug_LIBRARIES}
-        #${gdkentitycomponentsystem_LIBRARIES}
+        ${gdkentitycomponentsystem_LIBRARIES}
         ${gdkglfwwrapper_LIBRARIES}
         ${gdkgraphics_LIBRARIES}
         ${gdkinput_LIBRARIES}
@@ -43,7 +44,7 @@ jfc_project(library
 
     DEPENDENCIES
         "gdkdebug"
-        #"gdkentitycomponentsystem"
+        "gdkentitycomponentsystem"
         "gdkglfwwrapper"
         "gdkgraphics"
         "gdkinput"

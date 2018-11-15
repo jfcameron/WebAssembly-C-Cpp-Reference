@@ -16,7 +16,7 @@ namespace gdk
     /// \brief Defines a scene capability. ECS abstraction of a Renderer or Physics Engine etc.
     class SceneGraph
     {
-        friend std::ostream& operator<< (std::ostream &, const ECS::SceneGraph &);
+        friend std::ostream& operator<< (std::ostream &, const SceneGraph &);
         friend Scene;
       
         Scene *m_MyScene = nullptr; //?
@@ -24,12 +24,12 @@ namespace gdk
     protected:
         Scene *getMyScene() const {return m_MyScene;}
             
-        virtual void draw(const Math::IntVector2 &aFrameBufferSize) = 0;
+        virtual void draw(const IntVector2 &aFrameBufferSize) = 0;
         virtual void fixedUpdate() = 0;
         virtual void update()      = 0;
             
-        virtual void OnComponentAddedToAObject(const std::weak_ptr<ECS::Component> &) = 0;
-        virtual void OnComponentRemovedFromAObject(const std::weak_ptr<ECS::Component> &) = 0;
+        virtual void OnComponentAddedToAEntity(const std::weak_ptr<Component> &) = 0;
+        virtual void OnComponentRemovedFromAEntity(const std::weak_ptr<Component> &) = 0;
             
     public:
         SceneGraph &operator=(const SceneGraph &) = delete;
@@ -46,7 +46,7 @@ namespace gdk
       
     };
 
-    std::ostream &operator<< (std::ostream &, const ECS::SceneGraph &);
+    std::ostream &operator<< (std::ostream &, const SceneGraph &);
 }
 
 #endif

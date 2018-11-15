@@ -18,7 +18,6 @@ jfc_project(library
         
         ${gdkmath_INCLUDE_DIRECTORIES}
         ${gdkmemory_INCLUDE_DIRECTORIES}
-        #${gdktime_INCLUDE_DIRECTORIES}
         #${gdkglfwwrapper_INCLUDE_DIRECTORIES} # This is required for Windows because glew is hidden in glfw. These must be separated.
 
         ${stb_INCLUDE_DIR}

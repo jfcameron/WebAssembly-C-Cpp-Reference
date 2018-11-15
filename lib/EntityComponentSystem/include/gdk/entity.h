@@ -1,7 +1,7 @@
 // © 2017 Joseph Cameron - All Rights Reserved
 
-#ifndef GDK_ECS_OBJECT_H
-#define GDK_ECS_OBJECT_H
+#ifndef GDK_ECS_Entity_H
+#define GDK_ECS_Entity_H
 
 #include <gdk/component.h>
 #include <gdk/scene.h>
@@ -15,38 +15,38 @@
 
 namespace gdk
 {
-    /// \brief Object has a list of components and belongs to a scene
-    class Object final : public std::enable_shared_from_this<Object>
+    /// \brief Entity has a list of components and belongs to a scene
+    class Entity final : public std::enable_shared_from_this<Entity>
     {
-        friend std::ostream &operator<< (std::ostream &, const ECS::Object &);
-        friend GDK::ECS::Scene;
+        friend std::ostream &operator<< (std::ostream &, const Entity &);
+        friend Scene;
             
         std::string m_Name = "Unnamed";
             
         std::weak_ptr<Scene> m_MyScene = {};
         std::vector<std::shared_ptr<Component>> m_Components = {};
             
-        Math::Vector3 m_Position = Math::Vector3::Zero;
-        Math::Vector3 m_Scale    = {1.f,1.f,1.f};
-        Math::Quaternion m_Rotation = Math::Quaternion::Identity;
+        Vector3 m_Position = Vector3::Zero;
+        Vector3 m_Scale    = {1.f,1.f,1.f};
+        Quaternion m_Rotation = Quaternion::Identity;
             
         void update() const;
         void fixedUpdate() const;
             
     public:
         std::string getName() const;
-        Math::Vector3 getPosition() const;
-        Math::Vector3 getScale() const;
-        Math::Quaternion getRotation() const;
+        Vector3 getPosition() const;
+        Vector3 getScale() const;
+        Quaternion getRotation() const;
         std::weak_ptr<Scene> getScene() const;
         std::weak_ptr<Component> getComponent(const size_t aIndex) const;
         size_t getComponentCount() const;
             
         void setName(const std::string &aName);
-        void setPosition(const Math::Vector3 &);
+        void setPosition(const Vector3 &);
         void setPosition(const float aX, const float aY, const float aZ);
-        void setScale(const Math::Vector3 &);
-        void setRotation(const Math::Quaternion &);
+        void setScale(const Vector3 &);
+        void setRotation(const Quaternion &);
             
         template<class T> std::weak_ptr<T> addComponent()
         {
@@ -54,21 +54,21 @@ namespace gdk
                 
             if (auto pScene = m_MyScene.lock())
             {
-                std::weak_ptr<Object> wpThis = std::weak_ptr<Object>(shared_from_this());
+                std::weak_ptr<Entity> wpThis = std::weak_ptr<Entity>(shared_from_this());
                     
                 std::shared_ptr<T> spNewT(new T());
                 std::weak_ptr<T>   wpNewT(spNewT);
                     
                 std::shared_ptr<Component> spNewComponent = std::static_pointer_cast<Component>(spNewT);
                     
-                spNewComponent->m_Object = wpThis;
-                spNewComponent->onAddedToObject(wpThis);
+                spNewComponent->m_Entity = wpThis;
+                spNewComponent->onAddedToEntity(wpThis);
                     
                 m_Components.push_back(std::static_pointer_cast<Component>(spNewT));
                     
-                pScene->OnComponentAddedToAObject(wpNewT);
+                pScene->OnComponentAddedToAEntity(wpNewT);
                     
-                for (auto component : m_Components) component->onOtherComponentAddedToMyObject(wpNewT);
+                for (auto component : m_Components) component->onOtherComponentAddedToMyEntity(wpNewT);
                     
                 return wpNewT;
             }
@@ -86,11 +86,11 @@ namespace gdk
                     {
                         std::weak_ptr<Component> removedComponent(m_Components[i]);
                             
-                        pScene->OnComponentRemovedFromAObject(removedComponent);
+                        pScene->OnComponentRemovedFromAEntity(removedComponent);
                             
                         for(size_t j; j < m_Components.size(); j++)
                             if (j != i)
-                                m_Components[j]->onOtherComponentRemovedFromMyObject(removedComponent);
+                                m_Components[j]->onOtherComponentRemovedFromMyEntity(removedComponent);
                             
                         m_Components.erase(m_Components.begin()+i);
                     }
@@ -116,19 +116,19 @@ namespace gdk
             return components;
         }
             
-        Object &operator=(const Object &) = delete;
-        Object &operator=(Object &&) = delete;
+        Entity &operator=(const Entity &) = delete;
+        Entity &operator=(Entity &&) = delete;
             
     private:
-        Object(const std::weak_ptr<Scene> &aScene);
-        Object() = delete;
-        Object(const Object &) = delete;
-        Object(Object &&) = delete;
+        Entity(const std::weak_ptr<Scene> &aScene);
+        Entity() = delete;
+        Entity(const Entity &) = delete;
+        Entity(Entity &&) = delete;
     public:
-        ~Object() = default;
+        ~Entity() = default;
     };
 
-    std::ostream &operator<< (std::ostream &, const ECS::Object &);
+    std::ostream &operator<< (std::ostream &, const Entity &);
 }
 
 #endif
