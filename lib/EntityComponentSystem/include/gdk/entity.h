@@ -47,7 +47,11 @@ namespace gdk
         void setPosition(const float aX, const float aY, const float aZ);
         void setScale(const Vector3 &);
         void setRotation(const Quaternion &);
-            
+        
+        /*
+        void addComponents() /// TODO: variadic template (?) to allow adding loads of components in 1 go
+        */
+
         template<class T> std::weak_ptr<T> addComponent()
         {
             static_assert(std::is_base_of<Component, T>::value == true, "T must be a kind of component");

@@ -31,7 +31,8 @@ namespace gdk
         std::map<KeyT, mapped_type_sharedptr> m_Map;
 
     public:
-        // Iterators
+        ///\name Iterators
+        ///\{
         iterator               begin()         {return m_Map.begin();  }
         const_iterator         begin()   const {return m_Map.begin();  }
         const_iterator         cbegin()  const {return m_Map.cbegin(); }
@@ -45,26 +46,34 @@ namespace gdk
         reverse_iterator       rend()        {return m_Map.rend(); }
         const_reverse_iterator rend()  const {return m_Map.rend(); }
         const_reverse_iterator crend() const {return m_Map.crend();}
-            
-        // Capacity
+        ///\}
+
+        ///\name Capacity 
+        ///\{
         bool      empty()    const {return m_Map.empty();   }
         size_type size()     const {return m_Map.size();    }
         size_type max_size() const {return m_Map.max_size();}
+        ///\}
             
-        // Element access
+        ///\name Element access
+        ///\{
         mapped_type_weakptr operator[] (const key_type& k) {return mapped_type_weakptr(m_Map[k]);}
         mapped_type_weakptr operator[] (key_type&& k)      {return mapped_type_weakptr(m_Map[k]);}
             
         mapped_type_weakptr&       at (const key_type& k)       {return mapped_type_weakptr(m_Map.at(k));}
         const mapped_type_weakptr& at (const key_type& k) const {return mapped_type_weakptr(m_Map.at(k));}
+        ///\}
             
-        // Modifiers
+        ///\name Modifiers
+        ///\{
         void insert (const KeyT &aKey, ValueT &&aValue) {m_Map.insert({aKey,std::make_shared<ValueT>(std::move(aValue))});}
         void erase (const KeyT &aKey) {m_Map.erase(aKey);}
         void swap (auth_map& x) {m_Map.swap(x.m_Map);}
         void clear() {m_Map.clear();}
+        ///\}
             
-        // Operations
+        ///\name Operations
+        ///\{
         iterator find (const key_type& k) {return m_Map.find(k);}
         const_iterator find (const key_type& k) const {return m_Map.find(k);}
         size_type count (const key_type& k) const {m_Map.count(k);}
@@ -74,16 +83,21 @@ namespace gdk
         const_iterator upper_bound (const key_type& k) const {return m_Map.upper_bound(k);}
         std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const {m_Map.equal_range(k);}
         std::pair<iterator,iterator> equal_range (const key_type& k) {m_Map.equal_range(k);}
+        ///\}
             
-        // Mutating operators
+        ///\name Mutating operators
+        ///\{
         auth_map &operator=(const auth_map &) = delete;
         auth_map &operator=(auth_map &&) = delete;
+        ///\}
             
         // Constructors, destructors
+        ///\{
         auth_map() = default;
         auth_map(const auth_map&) = delete;
         auth_map(auth_map&&) = default;
         ~auth_map() = default;
+        ///\}
     };
 }
 
