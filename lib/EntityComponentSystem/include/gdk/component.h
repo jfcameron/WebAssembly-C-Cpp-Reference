@@ -24,7 +24,7 @@ namespace gdk
             
     protected:
         /// \brief JSON representation of the Component derivative. Required for serializing to JSON, for serializing to disk and logging e.g: state of a Scene
-        virtual std::string toJSON() {return "{\"Type:\" \"Unimplemented!\"}"}
+        virtual std::string toJSON();
 
         /// \brief called once per component instance, as early as possible
         virtual void initialize() {}

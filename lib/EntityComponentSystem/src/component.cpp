@@ -29,4 +29,11 @@ namespace gdk
     {
         return m_Entity;
     }
+
+
+    std::string Component::toJSON()
+    {
+        return "{\"Type:\" \"Unimplemented!\"}";
+    }
 }
+

@@ -23,3 +23,4 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin" OR CMAKE_SYSTEM_NAME MATCHES "Linux" OR CM
 endif()
 
 jfc_add_dependencies(${dependencies})
+

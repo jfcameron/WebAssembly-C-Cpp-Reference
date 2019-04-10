@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 using namespace gdk;
 

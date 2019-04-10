@@ -4,7 +4,6 @@
 #include <gdk/vector3.h>
 
 #include <nlohmann/json.hpp>
-
 #include <glm/gtc/quaternion.hpp>
 
 #include <iostream>

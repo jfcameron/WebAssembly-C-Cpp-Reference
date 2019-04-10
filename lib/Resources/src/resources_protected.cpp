@@ -5,6 +5,7 @@
 #include <gdk/resources_protected.h>
 
 #include <functional>
+#include <string>
 
 namespace gdk::resources::PROTECTED
 {
