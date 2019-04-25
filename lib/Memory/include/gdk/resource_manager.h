@@ -10,6 +10,9 @@
 #include <memory>
 #include <map>
 
+//TODO: "ResourceManager" can surely be abstracted more. Could it be a specialization of a map with defualt values for example.
+//TODO: Why is the key type forced to be a string? This doesnt make much sense.
+
 namespace gdk
 {
     /// \brief responsible for solely managing the lifetime of some object T.

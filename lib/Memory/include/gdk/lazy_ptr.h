@@ -8,13 +8,16 @@
 #include <memory>
 #include <mutex>
 
+//TODO: change language contained from "internal ptr" and type "T" to resource and resource_type
+
 namespace gdk
 {
     /// \brief pointer that delays initialization until the first time it is dereferenced or casted
+    /// that is to say, until the first time the resource is used.
     template<typename T> class lazy_ptr final
     {
     public:
-        using InitializerSignature = std::function<T *const ()>;
+        using InitializerSignature = std::function<T *const()>;
 
     private:
         const InitializerSignature m_Initializer; //!< function wrapper called at first dereference to init T instance pointee
@@ -30,7 +33,7 @@ namespace gdk
         }
 
     public:
-        //! Check if the lazy_ptr has initialized its internal ptr
+        //! Check whether or not the lazy_ptr has initialized its internal ptr
         bool initialized() const
         {
             return m_SharedPtr.get() != nullptr;
@@ -73,7 +76,10 @@ namespace gdk
         lazy_ptr &operator= (lazy_ptr &&a) = default;
 
         //! \param aInitializer function used to lazily initialize the T instance 
-        lazy_ptr(const InitializerSignature aInitializer) : m_Initializer(aInitializer) {}            
+        lazy_ptr(const InitializerSignature aInitializer) 
+        : m_Initializer(aInitializer) 
+        {}            
+        
         lazy_ptr() = delete;
         lazy_ptr(const lazy_ptr &) = default;
         lazy_ptr(lazy_ptr &&) = default;

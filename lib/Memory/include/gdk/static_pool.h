@@ -7,6 +7,8 @@
 #include <functional>
 #include <memory>
 
+//TODO: should the pool initialize all up front (as does now) or should it init as needed with option to prealloc?
+
 namespace gdk
 {
     namespace Memory

@@ -5,6 +5,8 @@
 
 #include <memory>
 
+//TODO: replace T with target_type
+
 namespace gdk
 {    
     /// \brief a weak pointer that returns a default pointer to T if the target pointer has become null.

@@ -44,10 +44,10 @@ namespace gdk
             //! Try to reduce poolsize back to its initial size by removing any unused items while current size is > init size
             void trim() const
             {
-                for (size_type i = 0; i < m_Pool.size(); ++i)
-                    if (m_Pool.size() <= m_InitialPoolSize)
-                        return;
-                    else if (m_Pool[i].use_count() == 1)
+                if (m_Pool.size() <= m_InitialPoolSize) return;
+
+                for (size_type i = 0; i < m_Pool.size(); ++i) // TODO: user iterators instead.
+                    if (m_Pool[i].use_count() == 1)
                         m_Pool.erase(m_Pool.begin() + i);
             }
 
@@ -73,3 +73,4 @@ namespace gdk
 }
 
 #endif
+
