@@ -55,3 +55,4 @@ if(JFC_BUILD_TESTS)
         jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
     endif()
 endif()
+

@@ -25,15 +25,10 @@ jfc_project(library
     	${CMAKE_CURRENT_SOURCE_DIR}/src/entity.cpp
     	${CMAKE_CURRENT_SOURCE_DIR}/src/scene.cpp
     	${CMAKE_CURRENT_SOURCE_DIR}/src/scenegraph.cpp
-#    	${CMAKE_CURRENT_SOURCE_DIR}/src/scenemanager.cpp
+        #${CMAKE_CURRENT_SOURCE_DIR}/src/scenemanager.cpp
 
     LIBRARIES
         ${gdkmath_LIBRARIES}
-        
-        #${glfw_LIBRARIES}
-
- #   DEPENDENCIES
-#        "glfw"
 )
 
 if(JFC_BUILD_TESTS)
@@ -58,3 +53,4 @@ if(JFC_BUILD_TESTS)
         jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
     endif()
 endif()
+

@@ -26,3 +26,4 @@ TEST_CASE( "Some::other::thing test", "[Some::thing]" )
         REQUIRE( secret == "This is a secret" );
     }
 }
+

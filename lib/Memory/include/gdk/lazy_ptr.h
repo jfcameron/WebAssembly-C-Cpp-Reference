@@ -17,10 +17,10 @@ namespace gdk
     template<typename T> class lazy_ptr final
     {
     public:
-        using InitializerSignature = std::function<T *const()>;
+        using initializer_type = std::function<T *const()>;
 
     private:
-        const InitializerSignature m_Initializer; //!< function wrapper called at first dereference to init T instance pointee
+        const initializer_type m_Initializer; //!< function wrapper called at first dereference to init T instance pointee
 
         mutable std::once_flag m_IsInitialized; //!< indicates whether or not pointee is initialized 
 
@@ -76,7 +76,7 @@ namespace gdk
         lazy_ptr &operator= (lazy_ptr &&a) = default;
 
         //! \param aInitializer function used to lazily initialize the T instance 
-        lazy_ptr(const InitializerSignature aInitializer) 
+        lazy_ptr(const initializer_type aInitializer) 
         : m_Initializer(aInitializer) 
         {}            
         
