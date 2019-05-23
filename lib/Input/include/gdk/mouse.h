@@ -5,6 +5,7 @@
 
 #include <memory>
 
+//TODO: add scroll support
 namespace gdk
 {
     struct Vector2;

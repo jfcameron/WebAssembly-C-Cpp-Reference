@@ -33,7 +33,7 @@ namespace gdk
             LeftShift, Comma, Period, ForwardSlash, RightShift, 
             
             //Bottom row
-            LeftControl, LeftAlt, Space, RightAlt, RightControl, 
+            LeftControl, LeftAlt, Space, RightAlt, RightControl,  //macos command button? windows button?
             
             //Arrow keys
             LeftArrow, RightArrow, UpArrow, DownArrow, 
@@ -45,7 +45,7 @@ namespace gdk
             Num1, Num2, Num3, NumEnter, 
             Num0, NumPeriod
         };
-            
+ 
         /// \brief Check if the key is being held down
         bool getKeyDown(const Key &aKeyCode);
             

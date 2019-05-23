@@ -13,6 +13,8 @@ jfc_project(library
     PUBLIC_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 
+        ${gdkmath_INCLUDE_DIRECTORIES}
+
     PRIVATE_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 
@@ -28,9 +30,11 @@ jfc_project(library
 
     LIBRARIES
         ${glfw_LIBRARIES}
+        ${gdkmath_INCLUDE_DIRECTORIES}
 
     DEPENDENCIES
         "glfw"
+        "gdkmath"
 )
 
 if(JFC_BUILD_TESTS)
@@ -55,3 +59,4 @@ if(JFC_BUILD_TESTS)
         jfc_log(STATUS "test" "testing not supported on ${CMAKE_SYSTEM_NAME}. Skipping...")
     endif()
 endif()
+

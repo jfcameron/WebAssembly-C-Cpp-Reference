@@ -5,9 +5,13 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Memory")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Math")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/GLFWWrapper")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Time")
+
+
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Input")
+
+jfc_log(WARN "BLIM" "${gdkmath_INCLUDE_DIRECTORIES}")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Graphics")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Resources")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Input")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/EntityComponentSystem")
 
 jfc_project(library
@@ -21,11 +25,11 @@ jfc_project(library
     PUBLIC_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 
+        ${gdkinput_INCLUDE_DIRECTORIES}
         ${gdkgraphics_INCLUDE_DIRECTORIES}
         ${gdkdebug_INCLUDE_DIRECTORIES}
         ${gdkentitycomponentsystem_INCLUDE_DIRECTORIES}
         ${gdkglfwwrapper_INCLUDE_DIRECTORIES}
-        ${gdkinput_INCLUDE_DIRECTORIES}
         ${gdkmath_INCLUDE_DIRECTORIES}
         ${gdkmemory_INCLUDE_DIRECTORIES}
         ${gdkresources_INCLUDE_DIRECTORIES}

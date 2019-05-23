@@ -16,12 +16,12 @@ jfc_project(library
     PRIVATE_INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/include
         
-        ${gdkmath_INCLUDE_DIRECTORIES}
-        ${gdkmemory_INCLUDE_DIRECTORIES}
+        ${gdkmath_INCLUDE_DIRECTORIES} # Either move this to a submodule OR declare math interfaces and use those. Interfaces is imo the CORRECT solution but it is harder for users to use
+        ${gdkmemory_INCLUDE_DIRECTORIES} # Move this to a submodule, hide headers in private header directory.
         #${gdkglfwwrapper_INCLUDE_DIRECTORIES} # This is required for Windows because glew is hidden in glfw. These must be separated.
 
         ${stb_INCLUDE_DIR}
-        ${glfw_INCLUDE_DIR} # this was required on windwos to get access to glew. This is a good reason to separate the two
+        ${glfw_INCLUDE_DIR} # this was required on windows to get access to glew. This is a good reason to separate the two
         ${nlohmann_INCLUDE_DIR}
 
     LIBRARIES
@@ -31,6 +31,7 @@ jfc_project(library
 
     DEPENDENCIES
         "stb"
+        "gdkmath"
 
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
