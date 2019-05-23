@@ -60,7 +60,7 @@ int main()
 
         gdk::log(TAG, camera);
 
-        camera.setViewportSize(0.5, 1.0);
+        camera.setViewportSize(1.0, 1.0);
             
         return camera;
     }());
@@ -77,7 +77,7 @@ int main()
     }());
 
     cameras.push_back(pCamera);
-    cameras.push_back(pCamera2);
+    //cameras.push_back(pCamera2);
 
     std::shared_ptr<gdk::Model> pModel = std::make_shared<Model>([&]()
     {

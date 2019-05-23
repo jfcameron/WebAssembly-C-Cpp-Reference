@@ -16,7 +16,7 @@ namespace gdk
     class Component : public std::enable_shared_from_this<Component>
     {
         //friend std::ostream &operator<< (std::ostream &, const Component &);
-        friend gdk::Entity; // is this REALLY necessary?
+        friend gdk::Entity; // is this REALLY necessary? The answwer is no. a potential source of headaches and makes both classes harder to read.
       
         std::weak_ptr<Entity> m_Entity = {};
 

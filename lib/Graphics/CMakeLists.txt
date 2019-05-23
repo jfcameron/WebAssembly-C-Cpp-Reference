@@ -31,6 +31,7 @@ jfc_project(library
 
     DEPENDENCIES
         "stb"
+        "gdkmath"
 
     SOURCE_LIST
         ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
