@@ -9,7 +9,7 @@
 #include <mutex>
 
 //TODO: change language contained from "internal ptr" and type "T" to resource and resource_type
-
+//TODO: consider rename from "lazy" to "proxy" to match the standard design pattern's name. although lazy does seem to be in common use as a prefix for something that delays initialization as late as possible. lazy probably generally more understandable. proxy i think immediately makes sense so long as you are aware of the pattern.
 namespace gdk
 {
     /// \brief pointer that delays initialization until the first time it is dereferenced or casted

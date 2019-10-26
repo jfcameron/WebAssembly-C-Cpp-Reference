@@ -29,7 +29,9 @@ namespace gdk
             
             m_queue.push(std::forward<T>(task));
         }
-        
+       
+        //TODO: out ref is no longer recommendened cpp stye. should replace bool with optional that contains both bool and out.
+        // or possibly just get rid of it. class is called "locking queue" which implies a std queue but mutexed so why doesnt pop match std::queue::pop's signature?
         //! if size > 0, assigns front to out, pops the front and returns true. otherwise returns false.
         bool pop(T &out)
         {
